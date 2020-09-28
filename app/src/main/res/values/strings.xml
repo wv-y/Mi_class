@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">米课堂</string>
+    <string name="phone_number">手机号</string>
+    <string name="password">密码</string>
+    <string name="password_again">再次输入密码</string>
+    <string name="verification_code">验证码</string>
+</resources>
