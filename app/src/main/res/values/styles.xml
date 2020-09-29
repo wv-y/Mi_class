@@ -1,10 +1,11 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowTranslucentStatus">true</item> //透明的状态栏
+        <item name="android:fitsSystemWindows">true</item>  //窗口跟随系统布局
+        <item name="android:windowIsTranslucent">true</item> //将默认启动白色背景设为透明
+
     </style>
 
 </resources>
