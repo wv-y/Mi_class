@@ -4,4 +4,10 @@
     <string name="password">密码</string>
     <string name="password_again">再次输入密码</string>
     <string name="verification_code">验证码</string>
+
+    <array name="tab_main_title">
+        <item>课程</item>
+        <item>对话</item>
+        <item>用户</item>
+    </array>
 </resources>

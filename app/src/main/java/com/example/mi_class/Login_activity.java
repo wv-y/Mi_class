@@ -1,5 +1,6 @@
 package com.example.mi_class;
 
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +16,7 @@ public class Login_activity extends AppCompatActivity {
     private TextView login_go_sign_up, login_go_revise_password;
     private ImageView clear_phone_number_login, set_password_show_login;
     private EditText phone_number_login, password_login;
+    private Button back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,7 @@ public class Login_activity extends AppCompatActivity {
         //去掉标题栏
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         login_go_sign_up = (TextView)findViewById(R.id.login_go_sign_up);
         login_go_revise_password = (TextView)findViewById(R.id.login_go_revise_password);
@@ -36,6 +38,7 @@ public class Login_activity extends AppCompatActivity {
         phone_number_login = (EditText) findViewById(R.id.phone_number_login);
         password_login = (EditText) findViewById(R.id.password_login);
 
+        back = findViewById(R.id.back);
         //点击没有账户，跳转到注册界面
         login_go_sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +56,14 @@ public class Login_activity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Login_activity.this,Forget_password_activity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login_activity.this,MainActivity.class);
                 startActivity(intent);
             }
         });

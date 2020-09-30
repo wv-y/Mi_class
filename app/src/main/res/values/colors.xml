@@ -10,4 +10,7 @@
     <color name="black">#000000</color>
     <color name="blue">#0099FF</color>
     <color name="ger">#5F5F5F</color>
+
+    <color name="main_bottom_tab_textcolor_normal">#666666</color>
+    <color name="main_bottom_tab_textcolor_selected">#32CD32</color>
 </resources>
