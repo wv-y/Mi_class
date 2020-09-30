@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 29
@@ -18,6 +19,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+}
+MobSDK {
+//    domain 'jp'
+    appKey '27fd733fae1f6'
+    appSecret '59f41408b34b3f1528fa0fa736a6e348'
+
+    SMSSDK {
+        // 若使用GUI的自动填充验证码功能，需打开此设置
+//        autoSMS true
+
     }
 }
 

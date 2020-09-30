@@ -51,6 +51,7 @@
 
             <ImageView
                 android:id="@+id/clear_phone_number_login"
+                android:visibility="gone"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
