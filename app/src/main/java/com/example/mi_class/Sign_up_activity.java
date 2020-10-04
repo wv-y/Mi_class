@@ -1,21 +1,19 @@
 package com.example.mi_class;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -33,7 +31,6 @@ import java.util.HashMap;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import cn.smssdk.gui.RegisterPage;
 
 import static com.example.mi_class.tool.MD5.md5;
 import static com.example.mi_class.tool.Match.match_mobile;
@@ -56,6 +53,11 @@ public class Sign_up_activity extends AppCompatActivity {
     private String phone, paw, paw_again; //用户输入
     private boolean is_show_password = true; //是否隐藏密码
     private boolean is_show_password_again =true;
+
+    private int time = 60;  // 60s后重新获取验证码
+    private Handler handler;
+    public static final int BUTTON_TRUE = 1;
+    public  static final int BUTTON_FALSE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +124,7 @@ public class Sign_up_activity extends AppCompatActivity {
             public void onFocusChange(View view, boolean b) {
                 phone = phone_number_sign_up.getText().toString();
                 if(b){
-                    phone_number_sign_up.setBackgroundResource(R.drawable.edit_nack_onfocus);
+                    phone_number_sign_up.setBackgroundResource(R.drawable.edit_back_onfocus);
                     if(phone.length()!=0){
                         clear_phone_number_sign_up.setVisibility(View.VISIBLE); //可见
                     }
@@ -163,7 +165,7 @@ public class Sign_up_activity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(hasFocus){ //获取焦点
-                    password_sign_up.setBackgroundResource(R.drawable.edit_nack_onfocus);
+                    password_sign_up.setBackgroundResource(R.drawable.edit_back_onfocus);
                 }
                 else{
                     password_sign_up.setBackgroundResource(R.drawable.edit_back);
@@ -174,11 +176,23 @@ public class Sign_up_activity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(hasFocus){ //获取焦点
-                    password_again_sign_up.setBackgroundResource(R.drawable.edit_nack_onfocus);
+                    password_again_sign_up.setBackgroundResource(R.drawable.edit_back_onfocus);
                 }
                 else{
                     password_again_sign_up.setBackgroundResource(R.drawable.edit_back);
                 }
+            }
+        });
+
+        // 输入验证码文本框变色
+        sign_up_code.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    sign_up_code.setBackgroundResource(R.drawable.edit_back_onfocus);
+                }
+                else
+                    sign_up_code.setBackgroundResource(R.drawable.edit_back);
             }
         });
 
@@ -211,7 +225,7 @@ public class Sign_up_activity extends AppCompatActivity {
                     is_show_password_again = false;
                 }
                 else{   //隐藏
-                    set_password_show_sign.setImageResource(R.drawable.eyes_close);
+                    set_password_again_show_sign.setImageResource(R.drawable.eyes_close);
                     password_again_sign_up.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     is_show_password_again = true;
                 }
@@ -220,6 +234,7 @@ public class Sign_up_activity extends AppCompatActivity {
                 password_again_sign_up.setSelection(index);
             }
         });
+
 
 
 
@@ -255,12 +270,16 @@ public class Sign_up_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 flag = "S";
+                student.setImageResource(R.drawable.selected);
+                teacher.setImageResource(R.drawable.select_student_or_teacher);
             }
         });
         teacher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 flag = "T";
+                teacher.setImageResource(R.drawable.selected);
+                student.setImageResource(R.drawable.select_student_or_teacher);
             }
         });
         sign_go_login.setOnClickListener(new View.OnClickListener() {
@@ -274,17 +293,62 @@ public class Sign_up_activity extends AppCompatActivity {
         login_get_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String phone = phone_number_sign_up.getText().toString();
-                if(match_mobile(phone))
-                {
-                    System.out.println("发送");
-                    SMSSDK.getVerificationCode("86", phone);
-                    Toast.makeText(a,"已发送验证码",Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(a,"请输入正确手机号码",Toast.LENGTH_SHORT).show();
+                // 验证两次输入的密码是否相同
+                String paw = password_sign_up.getText().toString();
+                String paw_again = password_again_sign_up.getText().toString();
+                if(paw.equals(paw_again)){
+                    if(paw_again.length()==0){
+                        password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                        password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                        Toast.makeText(a,"密码不能为空",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        password_again_sign_up.setBackgroundResource(R.drawable.edit_back);
+                        password_sign_up.setBackgroundResource(R.drawable.edit_back);
+                        String phone = phone_number_sign_up.getText().toString();
+                        if(match_mobile(phone))
+                        {
+                            System.out.println("发送");
+                            SMSSDK.getVerificationCode("86", phone);
+                            Toast.makeText(a,"已发送验证码",Toast.LENGTH_SHORT).show();
+
+                            // 将按钮置为不可用同时倒计时
+                            time = 60;
+                            new Thread(new button_get_code()).start();
+
+                        }else{
+                            Toast.makeText(a,"请输入正确手机号码",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else{
+                    password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                    password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                    Toast.makeText(a,"两次密码输入不一致",Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what){
+                    case BUTTON_TRUE:
+                        login_get_code.setClickable(true);
+                        login_get_code.setBackgroundResource(R.drawable.but_bg);
+                        login_get_code.setText("获取验证码");
+                        break;
+                    case BUTTON_FALSE:
+                        login_get_code.setClickable(false);
+                        login_get_code.setBackgroundResource(R.drawable.button_back_not_click);
+                        login_get_code.setText("重新获取("+time+"s)");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+
         eh=new EventHandler(){
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -337,6 +401,28 @@ public class Sign_up_activity extends AppCompatActivity {
 
 //注册一个事件回调监听，用于处理SMSSDK接口请求的结果
         SMSSDK.registerEventHandler(eh);
+    }
+
+    // 倒计时60s线程
+    class button_get_code implements Runnable{
+        public void run(){
+            time --;
+            if(time<=0){
+                Message message = new Message();
+                message.what = BUTTON_TRUE;
+                handler.sendMessage(message);
+            } else{
+                Message message = new Message();
+                message.what = BUTTON_FALSE;
+                handler.sendMessage(message);
+                handler.postDelayed(this,1000);
+                /*try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+            }
+        }
     }
 
 }

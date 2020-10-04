@@ -121,7 +121,7 @@
                 android:id="@+id/sign_up_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:paddingTop="10dp"
@@ -139,9 +139,11 @@
                 android:id="@+id/login_get_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/but_bg"
                 android:text="获取验证码"
+                android:textSize="15sp"
                 android:textColor="@color/withe" />
 
         </LinearLayout>
@@ -173,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:src="@drawable/vector_drawable_select_teacher">
+                    android:src="@drawable/select_student_or_teacher">
                 </ImageView>
             </LinearLayout>
 
@@ -184,20 +186,21 @@
                 android:layout_marginRight="15dp"
                 android:gravity="center"
                 android:orientation="horizontal">
+
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="我是学生"
                     android:textSize="20sp"
-                    android:textColor="@color/black"></TextView>
+                    android:textColor="@color/black" />
                 <ImageView
                     android:id="@+id/student"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:src="@drawable/vector_drawable_select_student">
+                    android:src="@drawable/select_student_or_teacher">
                 </ImageView>
             </LinearLayout>
         </LinearLayout>

@@ -82,7 +82,7 @@ public class Login_activity extends AppCompatActivity {
             public void onFocusChange(View view, boolean hasFocus) {
                 String phone_number = phone_number_login.getText().toString();
                 if(hasFocus){ //获取焦点
-                    phone_number_login.setBackgroundResource(R.drawable.edit_nack_onfocus);
+                    phone_number_login.setBackgroundResource(R.drawable.edit_back_onfocus);
                     if(phone_number.length()!=0) {
                         clear_phone_number_login.setVisibility(View.VISIBLE); //可见
                     }
@@ -124,7 +124,7 @@ public class Login_activity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(hasFocus){ //获取焦点
-                    password_login.setBackgroundResource(R.drawable.edit_nack_onfocus);
+                    password_login.setBackgroundResource(R.drawable.edit_back_onfocus);
                 }
                 else{
                     password_login.setBackgroundResource(R.drawable.edit_back);
