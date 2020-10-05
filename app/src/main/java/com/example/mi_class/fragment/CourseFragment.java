@@ -28,13 +28,6 @@ public class CourseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        button =getActivity().findViewById(R.id.tishi);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(),"消息提示", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

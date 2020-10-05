@@ -4,14 +4,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="this is courses Fragment"
-              android:textSize="30sp"/>
-
-    <Button
-        android:id="@+id/tishi"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="提示"></Button>
+        android:padding="15dp">
+
+        <EditText
+            android:id="@+id/edit_find_course"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColorHint="#34000000"
+            android:textColor="@color/black"
+            android:background="@drawable/edit_back"
+            android:textSize="20sp"
+            android:hint="请输入课程码"
+            android:inputType="text" />
+
+        <ImageView
+            android:id="@+id/button_find_course"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/edit_find_course"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/vector_drawable_find_button" />
+    </RelativeLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
 
 </LinearLayout>

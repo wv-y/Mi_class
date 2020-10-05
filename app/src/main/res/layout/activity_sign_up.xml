@@ -119,11 +119,11 @@
 
             <EditText
                 android:id="@+id/sign_up_code"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:paddingStart="5dp"
@@ -137,9 +137,10 @@
 
             <Button
                 android:id="@+id/login_get_code"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/but_bg"
                 android:text="获取验证码"
@@ -215,9 +216,9 @@
 
             <TextView
                 android:id="@+id/sign_go_login"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="已有账户，去登录"
                 android:textSize="15sp"
@@ -226,9 +227,9 @@
 
             <Button
                 android:id="@+id/sign_up"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/but_bg"
                 android:text="注册"
