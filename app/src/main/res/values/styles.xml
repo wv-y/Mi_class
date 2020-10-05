@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowTranslucentStatus">true</item> //透明的状态栏
        <!-- <item name="android:fitsSystemWindows">true</item>  //窗口跟随系统布局-->
-        <item name="android:windowIsTranslucent">true</item> //将默认启动白色背景设为透明
+        <!--<item name="android:windowIsTranslucent">true</item> //将默认启动白色背景设为透明-->
     </style>
 
 </resources>
