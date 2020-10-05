@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/message_item_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#ffffff"
+            android:scaleType="centerInside"
+            android:src="@drawable/vector_drawable_teacher"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="10dp">
+        <TextView
+            android:id="@+id/message_item_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="用户名"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentTop="true"/>
+        <TextView
+            android:id="@+id/message_item_identity"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="教师"
+            android:textSize="15sp"
+
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"/>
+        <TextView
+            android:id="@+id/message_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="20：56"
+            android:textSize="12sp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:background="@drawable/red_point"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:text="1"
+            android:textSize="8dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="10dp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
