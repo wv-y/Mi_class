@@ -63,6 +63,7 @@ public class Sign_up_activity extends AppCompatActivity {
     private Handler handler;
     public static final int BUTTON_TRUE = 1;
     public  static final int BUTTON_FALSE = 2;
+    private boolean sign = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,13 +271,19 @@ public class Sign_up_activity extends AppCompatActivity {
                 System.out.println("验证");
                 String code = sign_up_code.getText().toString();
                 String phone = phone_number_sign_up.getText().toString();
-                if(flag.equals(""))
-                {
-                    Toast.makeText(a,"请您选择身份",Toast.LENGTH_LONG).show();
+                if(code.equals("")) {
+                    if (sign) {
+                        if (flag.equals("")) {
+                            Toast.makeText(a, "请您选择身份", Toast.LENGTH_LONG).show();
+                        } else {
+                            SMSSDK.submitVerificationCode("86", phone, code);
+                        }
+                    } else {
+                        Toast.makeText(a, "请正确填写以上信息", Toast.LENGTH_LONG).show();
+                    }
                 }else{
-                    SMSSDK.submitVerificationCode("86", phone, code);
+                    Toast.makeText(a, "验证码不能为空", Toast.LENGTH_LONG).show();
                 }
-
             }
         });
         student.setOnClickListener(new View.OnClickListener() {
@@ -309,36 +316,39 @@ public class Sign_up_activity extends AppCompatActivity {
                 // 验证两次输入的密码是否相同
                 String paw = password_sign_up.getText().toString();
                 String paw_again = password_again_sign_up.getText().toString();
-                if(paw.equals(paw_again)){
-                    if(paw_again.length()==0){
+                phone = phone_number_sign_up.getText().toString();
+                if(match_mobile(phone)) { //判断手机号是否合法
+                    if(paw.equals(paw_again)){  // 判断两次输入密码是否一致
+                        if(paw_again.equals("")){  // 判断密码是否为空
+                            password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                            password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                            Toast.makeText(a,"密码不能为空",Toast.LENGTH_SHORT).show();
+                        } else{
+                                String phone = phone_number_sign_up.getText().toString();
+                                if(paw_again.length()<=20 && paw_again.length()>=6) { // 判断密码长度 6-20
+                                    System.out.println("发送");
+                                    SMSSDK.getVerificationCode("86", phone);
+                                    Toast.makeText(a,"已发送验证码",Toast.LENGTH_SHORT).show();
+                                    sign = true;  // 将sign 设为true
+                                    // 将按钮置为不可用同时倒计时
+                                    time = 60;
+                                    new Thread(new button_get_code()).start();
+                                } else{
+                                    password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                                    password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                                    Toast.makeText(a,"密码长度应为6-20位",Toast.LENGTH_SHORT).show();
+                                }
+                        }
+                    } else{
                         password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
                         password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                        Toast.makeText(a,"密码不能为空",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(a,"两次密码输入不一致",Toast.LENGTH_SHORT).show();
                     }
-                    else{
-                        password_again_sign_up.setBackgroundResource(R.drawable.edit_back);
-                        password_sign_up.setBackgroundResource(R.drawable.edit_back);
-                        String phone = phone_number_sign_up.getText().toString();
-                        if(match_mobile(phone))
-                        {
-                            System.out.println("发送");
-                            SMSSDK.getVerificationCode("86", phone);
-                            Toast.makeText(a,"已发送验证码",Toast.LENGTH_SHORT).show();
-
-                            // 将按钮置为不可用同时倒计时
-                            time = 60;
-                            new Thread(new button_get_code()).start();
-
-                        }else{
-                            Toast.makeText(a,"请输入正确手机号码",Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                }else{
+                    phone_number_sign_up.setBackgroundResource(R.drawable.edit_back_error);
+                    Toast.makeText(a,"请输入正确手机号码",Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                    password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                    Toast.makeText(a,"两次密码输入不一致",Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
 
@@ -359,6 +369,9 @@ public class Sign_up_activity extends AppCompatActivity {
                     case 200:
                         String info = msg.getData().getString("info");
                         if(info.equals("1")){
+                            Intent intent = new Intent(Sign_up_activity.this, Login_activity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                             Toast.makeText(a,"注册成功",Toast.LENGTH_LONG).show();
 
                         }else if(info.equals("-1")){
