@@ -6,10 +6,10 @@
     <color name="login_text">#208FE6</color>
     <color name="login_back">#17404348</color>
     <color name="login_input_text">#72000000</color>
-    <color name="withe">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="blue">#0099FF</color>
-    <color name="ger">#5F5F5F</color>
+    <color name="gray">#F6F6F6</color>
 
     <color name="main_bottom_tab_textcolor_normal">#666666</color>
     <color name="main_bottom_tab_textcolor_selected">#0099ff</color>

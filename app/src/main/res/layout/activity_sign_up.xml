@@ -145,7 +145,7 @@
                 android:background="@drawable/but_bg"
                 android:text="获取验证码"
                 android:textSize="15sp"
-                android:textColor="@color/withe" />
+                android:textColor="@color/white" />
 
         </LinearLayout>
         
@@ -233,7 +233,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/but_bg"
                 android:text="注册"
-                android:textColor="@color/withe"
+                android:textColor="@color/white"
                 android:textSize="20sp" />
 
 

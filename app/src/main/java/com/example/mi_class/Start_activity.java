@@ -40,6 +40,8 @@ public class Start_activity extends AppCompatActivity {
 //            intent.setClass(MainActivity.this, LoginActivity.class);
 //            startActivity(intent);
         }*/
+        //透明状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //状态栏文字自适应
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         //去掉标题栏

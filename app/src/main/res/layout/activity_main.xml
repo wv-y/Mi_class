@@ -16,6 +16,6 @@
     <com.example.mi_class.mainToolbar.TabContainerView
             android:layout_width="match_parent" android:layout_height="50dp"
             android:id="@+id/main_toolbar"
-            android:background="@color/withe"/>
+            android:background="@color/white"/>
 
 </LinearLayout>

@@ -104,7 +104,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="50dp"
             android:text="登录"
-            android:textColor="@color/withe"
+            android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
 
