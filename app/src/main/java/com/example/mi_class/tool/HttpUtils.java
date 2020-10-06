@@ -13,17 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpUtils {
-    private static String PATH = "http://192.168.43.165:8080/login";
+    private static String PATH = "http://192.168.43.165:8080/";
     private static URL url;
     public HttpUtils() {}
 
-    static{
-        try {
-            url = new URL(PATH);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
+//    static{
+//        try {
+//            url = new URL(PATH);
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     /**
@@ -31,7 +31,7 @@ public class HttpUtils {
      * @param encode 字节编码
      * @return
      */
-    public static String sendPostMessage(Map<String, String> params,String encode){
+    public static String sendPostMessage(Map<String, String> params,String encode,String TAG){
         StringBuffer buffer = new StringBuffer();
         buffer.append("{");
         try {//把请求的主体写入正文！！
@@ -52,6 +52,7 @@ public class HttpUtils {
             buffer.append("}");
             System.out.println(new String(buffer).toString());
             byte[] mydata = buffer.toString().getBytes();
+            url = new URL(PATH+TAG);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(3000);
             connection.setDoInput(true);//表示从服务器获取数据
