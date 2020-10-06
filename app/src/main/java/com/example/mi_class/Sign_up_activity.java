@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,6 +35,7 @@ import java.util.HashMap;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import cn.smssdk.gui.RegisterPage;
 
 import static com.example.mi_class.tool.MD5.md5;
 import static com.example.mi_class.tool.Match.match_mobile;
@@ -71,14 +75,14 @@ public class Sign_up_activity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_sign_up);
         initView();
-//        try {   //BuildConfig.APPLICATION_ID   当前应用包名
-//            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID,
-//                    PackageManager.GET_SIGNATURES);
-//            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
-//            Log.e("获取应用签名", BuildConfig.APPLICATION_ID + ":" + signValidString);
-//        } catch (Exception e) {
-//            Log.e("获取应用签名", "异常:" + e);
-//        }
+        try {   //BuildConfig.APPLICATION_ID   当前应用包名
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID,
+                    PackageManager.GET_SIGNATURES);
+            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
+            Log.e("获取应用签名", BuildConfig.APPLICATION_ID + ":" + signValidString);
+        } catch (Exception e) {
+            Log.e("获取应用签名", "异常:" + e);
+        }
 
     }
     private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException, NoSuchAlgorithmException {
@@ -266,7 +270,13 @@ public class Sign_up_activity extends AppCompatActivity {
                 System.out.println("验证");
                 String code = sign_up_code.getText().toString();
                 String phone = phone_number_sign_up.getText().toString();
-                SMSSDK.submitVerificationCode("86", phone, code);
+                if(flag.equals(""))
+                {
+                    Toast.makeText(a,"请您选择身份",Toast.LENGTH_LONG).show();
+                }else{
+                    SMSSDK.submitVerificationCode("86", phone, code);
+                }
+
             }
         });
         student.setOnClickListener(new View.OnClickListener() {
@@ -346,6 +356,17 @@ public class Sign_up_activity extends AppCompatActivity {
                         login_get_code.setBackgroundResource(R.drawable.button_back_not_click);
                         login_get_code.setText("重新获取("+time+"s)");
                         break;
+                    case 200:
+                        String info = msg.getData().getString("info");
+                        if(info.equals("1")){
+                            Toast.makeText(a,"注册成功",Toast.LENGTH_LONG).show();
+
+                        }else if(info.equals("-1")){
+                            Toast.makeText(a,"您已有账号",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(a,"异常错误",Toast.LENGTH_LONG).show();
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -373,12 +394,11 @@ public class Sign_up_activity extends AppCompatActivity {
 
                     String s = password_sign_up.getText().toString();
                     params = new HashMap<String, String>();
-                    params.put("name","");
-                    params.put("password",md5(md5(s)));
+                    params.put("user_pwd",md5(md5(s)));
                     params.put("identity",flag);
                     HashMap t = AES.encode(phone);
                     params.put("key",(String)t.get("key"));
-                    params.put("phone",(String)t.get("value"));
+                    params.put("user_phone",(String)t.get("value"));
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -387,8 +407,8 @@ public class Sign_up_activity extends AppCompatActivity {
                             Bundle b = new Bundle();
                             b.putString("info",res);
                             m.setData(b);
-                            m.what = 2;
-                            //handler.sendMessage(m);
+                            m.what = 200;
+                            handler.sendMessage(m);
                         }
                     }).start();
 
