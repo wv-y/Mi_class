@@ -36,14 +36,13 @@
             android:layout_marginEnd="10dp"
             android:layout_alignParentTop="true"/>
         <TextView
-            android:id="@+id/message_item_identity"
+            android:id="@+id/message_item_last_message"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="教师"
+            android:text="干哈？？？"
             android:textSize="15sp"
-
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="1dp"/>
         <TextView
             android:id="@+id/message_item_time"
             android:layout_width="wrap_content"
@@ -62,7 +61,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:text="1"
-            android:textSize="8dp"
+            android:textSize="8sp"
             android:gravity="center_horizontal|center_vertical"
             android:textColor="#ffffff"
             android:layout_marginBottom="8dp"

@@ -19,7 +19,7 @@
             android:textColor="@color/black"
             android:background="@drawable/edit_back"
             android:textSize="20sp"
-            android:hint="请输入课程码"
+            android:hint="请输入搜索内容"
             android:inputType="text" />
 
         <ImageView
