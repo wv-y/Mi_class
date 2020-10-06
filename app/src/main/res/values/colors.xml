@@ -12,5 +12,5 @@
     <color name="ger">#5F5F5F</color>
 
     <color name="main_bottom_tab_textcolor_normal">#666666</color>
-    <color name="main_bottom_tab_textcolor_selected">#32CD32</color>
+    <color name="main_bottom_tab_textcolor_selected">#0099ff</color>
 </resources>
