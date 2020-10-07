@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="3dp"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:paddingTop="3dp">
+
+    <RelativeLayout
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/chat_right_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/vector_drawable_teacher"
+            />
+        <TextView
+            android:id="@+id/chat_right_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:background="@drawable/chat_right_bg"
+            android:layout_toStartOf="@+id/chat_right_img"
+            />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/chat_left_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:layout_gravity="end"
+        android:text="2020-10-7 20:40:36"/>
+</LinearLayout>

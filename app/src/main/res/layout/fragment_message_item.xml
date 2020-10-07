@@ -8,15 +8,17 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginStart="15dp"
+
         android:gravity="center">
         <ImageView
             android:id="@+id/message_item_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="#ffffff"
             android:scaleType="centerInside"
-            android:src="@drawable/vector_drawable_teacher"/>
+            android:src="@drawable/vector_drawable_teacher"
+            android:background="@drawable/circle_corner"
+            />
     </RelativeLayout>
 
     <RelativeLayout
@@ -62,7 +64,7 @@
             android:layout_alignParentBottom="true"
             android:text="1"
             android:textSize="8sp"
-            android:gravity="center_horizontal|center_vertical"
+            android:gravity="center"
             android:textColor="#ffffff"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="10dp"
