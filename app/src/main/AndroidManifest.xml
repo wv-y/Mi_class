@@ -16,6 +16,7 @@
         <activity android:name=".activity.AnnouncementActivity" />
         <activity android:name=".activity.CourseDetailsActivity" />
         <activity android:name=".activity.UserInfoActivity" />
+        <activity android:name=".activity.ChatActivity"/>
         <activity android:name=".MainActivity" />
         <activity android:name=".Start_activity">
             <intent-filter>
