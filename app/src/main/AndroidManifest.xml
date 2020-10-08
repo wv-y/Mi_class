@@ -9,6 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.FileActivity"></activity>
+        <activity android:name=".activity.HomeworkActivity" />
+        <activity android:name=".activity.MemberActivity" />
+        <activity android:name=".activity.SignInActivity" />
+        <activity android:name=".activity.AnnouncementActivity" />
+        <activity android:name=".activity.CourseDetailsActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".activity.ChatActivity"></activity>
         <activity android:name=".activity.CourseDetailsActivity"></activity>
         <activity android:name=".MainActivity"></activity>
@@ -21,7 +28,7 @@
         </activity>
         <activity android:name=".Forget_password_activity" />
         <activity android:name=".Sign_up_activity" />
-        <activity android:name=".Login_activity"></activity>
+        <activity android:name=".Login_activity" />
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"

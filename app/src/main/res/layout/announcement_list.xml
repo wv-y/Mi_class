@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+   <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:background="@drawable/linearlayout_back">
+        <TextView
+            android:id="@+id/announcement_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="最新公告（标题）"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/announcement_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="最新公告（内容）"
+            android:lineSpacingMultiplier="1.2"
+            android:textSize="16sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/announcement_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="end"
+            android:text="2020/10/6  12:35"
+            android:textSize="13sp"
+            android:textColor="@color/black"/>
+    </LinearLayout>

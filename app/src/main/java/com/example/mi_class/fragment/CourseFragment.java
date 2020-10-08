@@ -64,6 +64,7 @@ public class CourseFragment extends Fragment {
                 String course_code = course.getCourse_code();
                 Intent intent = new Intent(getActivity(), CourseDetailsActivity.class);
                 intent.putExtra("course_code",course_code);
+                intent.putExtra("course_name",course.getCourse_name());
                 startActivity(intent);
             }
         });

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="15dp">
+    <TextView
+        android:id="@+id/file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="文件标题"
+        android:textSize="18sp"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/file_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="是否下载"
+        android:textSize="13sp"
+        android:textColor="@color/login_input_text"/>
+    <TextView
+        android:id="@+id/file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/file_name"
+        android:gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:text="文件大小"
+        android:textSize="13sp"
+        android:textColor="@color/login_input_text"/>
+
+</RelativeLayout>

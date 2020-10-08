@@ -26,6 +26,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/announcement_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/vector_drawable_announcement"/>
@@ -47,6 +48,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/sign_in_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/vector_drawable_sign_in"/>
@@ -68,6 +70,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/member_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/vector_drawable_member"/>
@@ -96,6 +99,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/homework_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/vector_drawable_homework"/>
@@ -116,6 +120,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
+                    android:id="@+id/file_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/vector_drawable_file"/>

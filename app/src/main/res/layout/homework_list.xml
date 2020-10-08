@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/homework_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="作业标题"
+        android:textColor="@color/black"
+        android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/homework_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/homework_name"
+        android:layout_marginTop="20dp"
+        android:text="截止时间"
+        android:textColor="@color/login_input_text"
+        android:textSize="13sp"/>
+    <TextView
+        android:id="@+id/homework_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="未提交"
+        android:textColor="@color/red"
+        android:textSize="13sp"/>
+
+</RelativeLayout>

@@ -14,4 +14,6 @@
 
     <color name="main_bottom_tab_textcolor_normal">#666666</color>
     <color name="main_bottom_tab_textcolor_selected">#0099ff</color>
+
+    <color name="red">#FFDF0D0D</color>
 </resources>
