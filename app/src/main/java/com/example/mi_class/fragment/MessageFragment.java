@@ -1,15 +1,19 @@
 package com.example.mi_class.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.mi_class.R;
+import com.example.mi_class.activity.ChatActivity;
 import com.example.mi_class.adapter.MessageAdapter;
 import com.example.mi_class.domain.Message;
 
@@ -40,7 +44,18 @@ public class MessageFragment extends Fragment {
         return view;
     }
 
-
-
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Message message = list.get(position);
+                String name = message.getName();
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                intent.putExtra("chat_name",name);
+                startActivity(intent);
+            }
+        });
+    }
 }
