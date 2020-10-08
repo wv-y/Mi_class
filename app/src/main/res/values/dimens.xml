@@ -8,5 +8,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="tab_icon_width">22dp</dimen>
     <dimen name="tab_icon_height">22dp</dimen>
+    <dimen name="sp_18">18sp</dimen>
 
 </resources>

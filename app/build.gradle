@@ -14,6 +14,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    configurations {
+        cleanedAnnotations
+        compile.exclude group: 'org.jetbrains' , module:'annotations'
+    }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -43,5 +49,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.airbnb.android:lottie:2.8.0'
     implementation 'com.android.support:recyclerview-v7:29.0.0'
+    implementation 'com.github.minminaya:GenaralRoundLayout:1.0.0'
 
 }

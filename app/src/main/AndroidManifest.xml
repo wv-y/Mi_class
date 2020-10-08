@@ -15,10 +15,8 @@
         <activity android:name=".activity.SignInActivity" />
         <activity android:name=".activity.AnnouncementActivity" />
         <activity android:name=".activity.CourseDetailsActivity" />
+        <activity android:name=".activity.UserInfoActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".activity.ChatActivity"></activity>
-        <activity android:name=".activity.CourseDetailsActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
         <activity android:name=".Start_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
