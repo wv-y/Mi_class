@@ -101,35 +101,35 @@ public class Forget_password_activity extends AppCompatActivity {
         forget_get_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String paw = password_forget.getText().toString();
-                String paw_again = password_again_forget.getText().toString();
-                if(paw.equals(paw_again)){
-                    if(paw_again.length()==0){
-                        password_forget.setBackgroundResource(R.drawable.edit_back_error);
-                        password_again_forget.setBackgroundResource(R.drawable.edit_back_error);
-                        Toast.makeText(a,"密码不能为空",Toast.LENGTH_LONG).show();
-                    }else{
-                        password_forget.setBackgroundResource(R.drawable.edit_back);
-                        password_again_forget.setBackgroundResource(R.drawable.edit_back);
-                        String phone = edit_phone_number.getText().toString();
-                        if(match_mobile(phone))
-                        {
+                String phone = edit_phone_number.getText().toString();
+                if(match_mobile(phone)){
+                    String paw = password_forget.getText().toString();
+                    String paw_again = password_again_forget.getText().toString();
+                    if(paw.equals(paw_again)){
+                        if(paw_again.length()==0){
+                            password_forget.setBackgroundResource(R.drawable.edit_back_error);
+                            password_again_forget.setBackgroundResource(R.drawable.edit_back_error);
+                            Toast.makeText(a,"密码不能为空",Toast.LENGTH_LONG).show();
+                        }else{
+                            password_forget.setBackgroundResource(R.drawable.edit_back);
+                            password_again_forget.setBackgroundResource(R.drawable.edit_back);
                             System.out.println("发送");
                             SMSSDK.getVerificationCode("86", phone);
                             Toast.makeText(a,"已发送验证码",Toast.LENGTH_LONG).show();
                             // 倒计时60s
                             time = 60;
                             new Thread(new button_get_code()).start();
-                        }else{
-                            Toast.makeText(a,"请输入正确手机号码",Toast.LENGTH_LONG).show();
                         }
                     }
+                    else{
+                        password_forget.setBackgroundResource(R.drawable.edit_back_error);
+                        password_again_forget.setBackgroundResource(R.drawable.edit_back_error);
+                        Toast.makeText(a,"两次输入的密码不一致",Toast.LENGTH_LONG).show();
+                    }
+                }else{
+                    Toast.makeText(a,"请输入正确手机号码",Toast.LENGTH_LONG).show();
                 }
-                else{
-                    password_forget.setBackgroundResource(R.drawable.edit_back_error);
-                    password_again_forget.setBackgroundResource(R.drawable.edit_back_error);
-                    Toast.makeText(a,"两次输入的密码不一致",Toast.LENGTH_LONG).show();
-                }
+
             }
         });
         // 倒计时
@@ -146,6 +146,18 @@ public class Forget_password_activity extends AppCompatActivity {
                         forget_get_code.setClickable(false);
                         forget_get_code.setBackgroundResource(R.drawable.button_back_not_click);
                         forget_get_code.setText("重新获取("+time+"s)");
+                        break;
+                    case 3:
+                        if(msg.getData().getString("info").equals("200")){
+                            //修改成功
+                            Toast.makeText(Forget_password_activity.this,"修改成功",Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(Forget_password_activity.this,Login_activity.class);
+                            startActivity(intent);
+                            Forget_password_activity.this.finish();
+                        }else {
+                            //错误
+                            Toast.makeText(Forget_password_activity.this, "修改失败 请重试", Toast.LENGTH_LONG).show();
+                        }
                         break;
                     default:
                         break;
@@ -175,20 +187,21 @@ public class Forget_password_activity extends AppCompatActivity {
                     String s = password_forget.getText().toString();
                     params = new HashMap<String, String>();
                     params.put("name","");
-                    params.put("password",md5(md5(s)));
+                    params.put("user_pwd",md5(md5(s)));
                     HashMap t = AES.encode(phone);
                     params.put("key",(String)t.get("key"));
-                    params.put("phone",(String)t.get("value"));
+                    params.put("user_phone",(String)t.get("value"));
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            String res = HttpUtils.sendPostMessage(params,"utf-8","login");
+                            String res = HttpUtils.sendPostMessage(params,"utf-8","forget_pwd");
                             Message m = new Message();
                             Bundle b = new Bundle();
                             b.putString("info",res);
+                            System.err.println(res);
                             m.setData(b);
-                            m.what = 2;
-                            //handler.sendMessage(m);
+                            m.what = 3;
+                            handler.sendMessage(m);
                         }
                     }).start();
 
@@ -238,7 +251,12 @@ public class Forget_password_activity extends AppCompatActivity {
                 }
             }
         });
-
+        clear_phone_number_forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_phone_number.setText("");
+            }
+        });
         //密码框获取焦点变色
         password_forget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

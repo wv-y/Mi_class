@@ -5,13 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,7 +57,14 @@ public class Start_activity extends AppCompatActivity {
         setContentView(R.layout.activity_start_activity);
         openAnimationView = (LottieAnimationView) findViewById(R.id.openLottieView);
 
-
+        try {   //BuildConfig.APPLICATION_ID   当前应用包名
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID,
+                    PackageManager.GET_SIGNATURES);
+            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
+            Log.e("获取应用签名", BuildConfig.APPLICATION_ID + ":" + signValidString);
+        } catch (Exception e) {
+            Log.e("获取应用签名", "异常:" + e);
+        }
        start_main_activity();
     }
 
@@ -69,6 +81,28 @@ public class Start_activity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         openAnimationView.cancelAnimation();
+    }
+    private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException, NoSuchAlgorithmException {
+        MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+        localMessageDigest.update(paramArrayOfByte);
+        return toHexString(localMessageDigest.digest());
+    }
+
+    public String toHexString(byte[] paramArrayOfByte) {
+        if (paramArrayOfByte == null) {
+            return null;
+        }
+        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
+        for (int i = 0; ; i++) {
+            if (i >= paramArrayOfByte.length) {
+                return localStringBuilder.toString();
+            }
+            String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
+            if (str.length() == 1) {
+                str = "0" + str;
+            }
+            localStringBuilder.append(str);
+        }
     }
     //延时3s跳转到登录界面
     private void start_main_activity(){
