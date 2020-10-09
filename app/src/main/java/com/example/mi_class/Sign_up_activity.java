@@ -415,7 +415,7 @@ public class Sign_up_activity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            String res = HttpUtils.sendPostMessage(params,"utf-8","login");
+                            String res = HttpUtils.sendPostMessage(params,"utf-8","signup");
                             Message m = new Message();
                             Bundle b = new Bundle();
                             b.putString("info",res);

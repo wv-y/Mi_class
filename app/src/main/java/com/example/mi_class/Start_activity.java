@@ -2,7 +2,9 @@ package com.example.mi_class;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -73,10 +75,22 @@ public class Start_activity extends AppCompatActivity {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(Start_activity.this, Login_activity.class);
-                startActivity(intent);
                 overridePendingTransition(0, 0);
+                SharedPreferences pf = getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                if(pf.getString("phone","").equals("")){
+                    //无登录态
+                    Intent intent = new Intent(Start_activity.this, Login_activity.class);
+                    startActivity(intent);
+                }else{
+                    //有登录态
+                    System.out.println(pf.getString("phone","没有手机号"));
+                    System.out.println(pf.getString("identity","没有身份"));
+                    Intent intent = new Intent(Start_activity.this,MainActivity.class);
+                    startActivity(intent);
+
+                }
                 Start_activity.this.finish();
+
             }
         };
         Timer timer = new Timer();
