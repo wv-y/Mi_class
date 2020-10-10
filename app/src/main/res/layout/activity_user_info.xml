@@ -8,24 +8,36 @@
         android:layout_height="match_parent"
         tools:context=".activity.UserInfoActivity">
 
-    <ImageView
-            android:background="@drawable/boy_head"
-            android:id="@+id/user_image"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+<!--    <ImageView-->
+<!--            android:background="@drawable/boy_head"-->
+<!--            android:id="@+id/user_image"-->
+<!--            android:layout_width="150dp"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="50dp"/>-->
+
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/select_image"
+            android:layout_width="120dp"
+            android:padding="@dimen/dp_10"
+            android:layout_height="120dp"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"/>
+            android:layout_marginTop="50dp"/>
+
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             android:orientation="vertical">
         <LinearLayout
-                android:layout_width="match_parent" android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:orientation="horizontal"
-                android:layout_marginStart="10dp">
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_back"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp">
             <TextView
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_18"
@@ -36,15 +48,19 @@
 
             <EditText
                     android:id="@+id/edit_username"
+                    android:layout_marginEnd="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"/>
         </LinearLayout>
 
         <LinearLayout
-                android:layout_width="match_parent" android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:orientation="horizontal"
-                android:layout_marginStart="10dp">
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_back"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp">
             <TextView
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_18"
@@ -74,10 +90,13 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
-                android:layout_width="match_parent" android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:orientation="horizontal"
-                android:layout_marginStart="10dp">
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_back"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp">
             <TextView
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_18"
@@ -87,15 +106,19 @@
                     android:gravity="center"/>
 
             <EditText
+                    android:layout_marginEnd="5dp"
                     android:id="@+id/edit_school"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"/>
         </LinearLayout>
         <LinearLayout
-                android:layout_width="match_parent" android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:orientation="horizontal"
-                android:layout_marginStart="10dp">
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_back"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp">
             <TextView
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_18"
@@ -105,6 +128,7 @@
                     android:gravity="center"/>
 
             <EditText
+                    android:layout_marginEnd="5dp"
                     android:id="@+id/edit_id"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"/>
