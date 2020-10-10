@@ -1,11 +1,20 @@
 package com.example.mi_class;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +24,14 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.mi_class.tool.AES;
+import com.example.mi_class.tool.HttpUtils;
+
+import java.util.HashMap;
+
+import static com.example.mi_class.tool.MD5.md5;
 
 public class Login_activity extends AppCompatActivity {
 
@@ -22,6 +39,8 @@ public class Login_activity extends AppCompatActivity {
     private ImageView clear_phone_number_login, set_password_show_login;
     private EditText phone_number_login, password_login;
     private Button back;
+    private HashMap<String, String> params;
+    private Handler handler;
 
     private boolean is_show_password = true;// 输入框密码是否是隐藏的，默认为true
 
@@ -68,14 +87,83 @@ public class Login_activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        handler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what){
+                    case 200:
+                        String info = msg.getData().getString("info");
+                        if(info.equals("400")){
+                            //学生
+                            SharedPreferences pf = getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor ed = pf.edit();
+                            ed.putString("phone",phone_number_login.getText().toString());
+                            ed.putString("identity","S");
+                            ed.commit();
+                            System.out.println("S");
+                            Intent intent = new Intent(Login_activity.this,MainActivity.class);
+                            startActivity(intent);
+                            Login_activity.this.finish();
+                        }else if(info.equals("500")){
+                            //教师
+                            SharedPreferences pf = getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor ed = pf.edit();
+                            ed.putString("phone",phone_number_login.getText().toString());
+                            ed.putString("identity","T");
+                            ed.commit();
+                            System.out.println("T");
+                            Intent intent = new Intent(Login_activity.this,MainActivity.class);
+                            startActivity(intent);
+                            Login_activity.this.finish();
+                        }
+                        else if(info.equals("401")){
+                            Toast.makeText(Login_activity.this,"账号或密码错误",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(Login_activity.this,"异常错误",Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
         //点击登录跳转到mainactivity
         back.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login_activity.this,MainActivity.class);
-                startActivity(intent);
-                Login_activity.this.finish();
+                String phone = phone_number_login.getText().toString();
+                String pwd = password_login.getText().toString();
+//                System.err.println(phone);
+//                System.err.println(pwd);
+                if(phone.equals(""))
+                {
+                    Toast.makeText(Login_activity.this,"请输入手机号",Toast.LENGTH_LONG).show();
+                }
+                else if(pwd.equals(""))
+                {
+                    Toast.makeText(Login_activity.this,"请输入密码",Toast.LENGTH_LONG).show();
+                }else{
+                    params = new HashMap<String, String>();
+                    params.put("user_pwd",md5(md5(pwd)));
+                    HashMap t = AES.encode(phone);
+                    params.put("key",(String)t.get("key"));
+                    params.put("user_phone",(String)t.get("value"));
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String res = HttpUtils.sendPostMessage(params,"utf-8","login");
+                            Message m = new Message();
+                            Bundle b = new Bundle();
+                            System.out.println(res);
+                            b.putString("info",res);
+                            m.setData(b);
+                            m.what = 200;
+                            handler.sendMessage(m);
+                        }
+                    }).start();
+                }
+
             }
         });
 
