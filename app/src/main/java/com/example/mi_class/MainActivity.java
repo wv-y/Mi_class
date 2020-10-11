@@ -1,7 +1,8 @@
 package com.example.mi_class;
 
-import android.app.ActionBar;
-import android.content.ClipData;
+import android.app.AlertDialog;
+
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,7 +14,7 @@ import android.view.View;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import com.example.mi_class.R;
+
 import com.example.mi_class.adapter.MainPagerAdapter;
 import com.example.mi_class.fragment.CourseFragment;
 import com.example.mi_class.fragment.MessageFragment;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     private ViewPager viewPager ;
-
+    private String identity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         initToolbar();
+
+        Intent intent =  getIntent();
+        //identity = intent.getStringExtra("identity");
+        identity = "T";
     }
 
     private void initToolbar() {        //加载导航栏
@@ -115,7 +120,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.action_cart) {//监听菜单按钮
-            Toast.makeText(this, "add selected!", Toast.LENGTH_SHORT).show();
+            if(identity.equals("S")){
+                Toast.makeText(this, "学生添加课程", Toast.LENGTH_SHORT).show();
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.show();
+                alertDialog.getWindow().setContentView(R.layout.activity_dialog_student);
+
+            }else{
+                Toast.makeText(this, "教师添加课程", Toast.LENGTH_SHORT).show();
+
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.show();
+                alertDialog.getWindow().setContentView(R.layout.activity_dialog_teacher);
+            }
+            //Toast.makeText(this, "add selected!", Toast.LENGTH_SHORT).show();
+
         }
         return super.onOptionsItemSelected(item);
     }
