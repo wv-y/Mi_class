@@ -142,10 +142,13 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
     <TextView
             android:background="@drawable/linearlayout_back"
-            android:layout_marginTop="150dp"
-        android:id="@+id/exit_login"
+            android:id="@+id/exit_login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="退出登录"
@@ -154,6 +157,6 @@
             android:gravity="center"/>
 
 
-
+    </LinearLayout>
 
 </LinearLayout>
