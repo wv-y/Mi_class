@@ -4,11 +4,14 @@
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
+        android:background="@color/back"
         android:layout_height="match_parent">
 
     <LinearLayout
+            android:layout_marginTop="15dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:background="@drawable/linearlayout_back"
             android:layout_height="200dp">
 
         <com.minminaya.widget.GeneralRoundFrameLayout
@@ -16,7 +19,7 @@
                 android:layout_height="120dp"
                 app:corner_radius="60dp"
                 android:layout_gravity="center"
-                android:background="@drawable/boy_head"
+                android:background="@drawable/portrait_1"
                 android:layout_marginStart="30dp">
             <ImageView
                     android:layout_gravity="center"
@@ -53,12 +56,10 @@
         </LinearLayout>
 
     </LinearLayout>
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/darker_gray"/>
 
     <LinearLayout
+            android:layout_marginTop="15dp"
+            android:background="@drawable/linearlayout_back"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="wrap_content">
@@ -86,10 +87,6 @@
 
         </LinearLayout>
 
-        <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"  />
 
         <LinearLayout
                 android:layout_marginStart="15dp"
@@ -115,10 +112,6 @@
 
         </LinearLayout>
 
-        <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"  />
 
         <LinearLayout
                 android:layout_marginStart="15dp"
@@ -145,20 +138,13 @@
 
         </LinearLayout>
 
-        <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@android:color/darker_gray"  />
 
 
     </LinearLayout>
 
-    <ImageView
-            android:layout_marginTop="200dp"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/darker_gray"/>
     <TextView
+            android:background="@drawable/linearlayout_back"
+            android:layout_marginTop="150dp"
         android:id="@+id/exit_login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -166,10 +152,6 @@
             android:textSize="20sp"
             android:textColor="#ED0909"
             android:gravity="center"/>
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/darker_gray"/>
 
 
 
