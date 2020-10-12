@@ -1,6 +1,7 @@
 package com.example.mi_class.adapter;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,6 +12,7 @@ import com.example.mi_class.R;
 import com.example.mi_class.domain.Message;
 import com.example.mi_class.fragment.MessageFragment;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -66,9 +68,10 @@ public class MessageAdapter extends BaseAdapter {
         viewHolder.head_portrait.setImageResource(R.drawable.vector_drawable_teacher);
       //  viewHolder.head_portrait.setImageBitmap(messageList.get(position).getHead_portrait());
         viewHolder.last_message.setText(messageList.get(position).getLast_message().trim());
-
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(messageList.get(position).getTime());
         //时间处理（未做）
-        viewHolder.time.setText("20:30");
+        viewHolder.time.setText(simpleDateFormat.format(date));
 //        viewHolder.time.setText(String.valueOf(messageList.get(position).getTime()));
 
         return convertView;

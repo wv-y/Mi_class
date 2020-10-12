@@ -51,4 +51,13 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:29.0.0'
     implementation 'com.github.minminaya:GenaralRoundLayout:1.0.0'
 
+    // javaWebSocket
+    implementation 'org.java-websocket:Java-WebSocket:1.5.1'
+    // Evenbus
+    implementation 'org.greenrobot:eventbus:3.2.0'
+    // fastJson
+    implementation 'com.alibaba:fastjson:1.1.71.android'
+    // okHttp
+    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+
 }

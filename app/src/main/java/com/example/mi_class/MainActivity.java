@@ -1,12 +1,21 @@
 package com.example.mi_class;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,18 +24,32 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import com.example.mi_class.R;
 import com.example.mi_class.adapter.MainPagerAdapter;
+import com.example.mi_class.domain.message_temp;
 import com.example.mi_class.fragment.CourseFragment;
 import com.example.mi_class.fragment.MessageFragment;
 import com.example.mi_class.fragment.UserFragment;
 import com.example.mi_class.mainToolbar.TabContainerView;
+import com.example.mi_class.tool.HttpUtils;
+import com.example.mi_class.tool.MyWebSocket;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
     private int fragmentIndex = 0;
+    private String url = "ws://192.168.43.165:8080/ws/";
 
+    String ph;
+    List<message_temp> temp_ms_data;
+    Handler handler;
     private final int[][] icons = {
             {R.drawable.ic_courses,R.drawable.ic_courses_checked},
             {R.drawable.ic_message,R.drawable.ic_message_checked},
@@ -38,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             new MessageFragment(),
             new UserFragment()
     ));
-
+    private static final int getMsData = 100;
     private int[] TAB_COLORS = {
             R.color.main_bottom_tab_textcolor_normal,
             R.color.main_bottom_tab_textcolor_selected};
@@ -58,8 +81,60 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         initToolbar();
+        //开始连接ws
+        MyWebSocket.OK = true;
+        if(MyWebSocket.myWebSocket == null)
+            connServer();
+        //加载历史记录
+        handler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what){
+                    case getMsData:
+                        SharedPreferences preferences = getSharedPreferences(ph+"_ms",MODE_PRIVATE);
+                        SharedPreferences.Editor ed = preferences.edit();
+                        ed.putString("message_list",(String)msg.getData().getString("res"));
+                        System.out.println("ook拿到数据:"+(String)msg.getData().getString("res"));
+                        break;
+                }
+            }
+        };
+
+
     }
 
+
+    //websocket 连接
+    public void connServer(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String ph = getSharedPreferences("user_login_info",MODE_PRIVATE).getString("phone","");
+                    if(ph.equals("")){
+                        //无登陆态
+                    }else{
+                        //有登陆
+                        String u = url + ph;
+                        System.out.println(u);
+                        if(MyWebSocket.myWebSocket == null){
+                            MyWebSocket.myWebSocket = new MyWebSocket(u);
+                            if (MyWebSocket.myWebSocket.connectBlocking()) {
+                                Log.i("s", "run: 连接服务器成功");
+                            } else {
+                                Log.i("s", "run: 连接服务器失败");
+                            }
+                        }
+                    }
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
     private void initToolbar() {        //加载导航栏
         MainPagerAdapter mAdapter = new MainPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setOffscreenPageLimit(1);
