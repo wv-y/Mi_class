@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mi_class.activity.UserInfoActivity;
 import com.example.mi_class.tool.AES;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.Match;
@@ -128,7 +129,7 @@ public class Login_activity extends AppCompatActivity {
                 }
             }
         };
-        //点击登录跳转到mainactivity
+        //点击登录跳转到mainActivity
         back.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -167,7 +168,6 @@ public class Login_activity extends AppCompatActivity {
                         }
                     }).start();
                 }
-
             }
         });
 
