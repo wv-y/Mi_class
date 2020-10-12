@@ -271,7 +271,7 @@ public class Sign_up_activity extends AppCompatActivity {
                 System.out.println("验证");
                 String code = sign_up_code.getText().toString();
                 String phone = phone_number_sign_up.getText().toString();
-                if(code.equals("")) {
+                if(!code.equals("")) {
                     if (sign) {
                         if (flag.equals("")) {
                             Toast.makeText(a, "请您选择身份", Toast.LENGTH_LONG).show();
