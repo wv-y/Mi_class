@@ -18,7 +18,7 @@
             android:textColor="@color/black"
             android:background="@drawable/edit_back"
             android:textSize="20sp"
-            android:hint="请输入课程码"
+            android:hint="请输入"
             android:inputType="text" />
 
         <ImageView
@@ -30,6 +30,16 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/vector_drawable_find_button" />
     </RelativeLayout>
+    <TextView
+        android:id="@+id/is_null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/dp_10"
+        android:visibility="gone"
+        android:gravity="center"
+        android:text="点击加号，添加课程"
+        android:textColor="@color/login_input_text"
+        android:textSize="20sp"/>
     <ListView
         android:id="@+id/course_list"
         android:layout_width="match_parent"
