@@ -14,7 +14,9 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.mi_class.tool.MyWebSocket;
 
+import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Timer;
@@ -23,7 +25,8 @@ import java.util.TimerTask;
 public class Start_activity extends AppCompatActivity {
 
     private LottieAnimationView openAnimationView;
-
+//    static public MyWebSocket myWebSocketClient = null;
+    private String url = "ws://192.168.43.165:8080/ws/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +68,10 @@ public class Start_activity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e("获取应用签名", "异常:" + e);
         }
-       start_main_activity();
+
+        start_main_activity();
     }
+
 
     @Override
     protected void onStart() {
@@ -81,6 +86,11 @@ public class Start_activity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         openAnimationView.cancelAnimation();
+//        try {
+//            this.myWebSocketClient.closeBlocking();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
     private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException, NoSuchAlgorithmException {
         MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");

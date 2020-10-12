@@ -1,7 +1,9 @@
 package com.example.mi_class.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
+
+import com.example.mi_class.Login_activity;
+import com.example.mi_class.MainActivity;
 import com.example.mi_class.R;
 import com.example.mi_class.activity.UserInfoActivity;
+import com.example.mi_class.tool.MyWebSocket;
 
 public class UserFragment extends Fragment {
 
@@ -40,6 +46,23 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showInfoDialog();
+            }
+        });
+        //退出登录
+        view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences pf = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                MyWebSocket.OK = false;
+                MyWebSocket.myWebSocket = null;
+                SharedPreferences.Editor editor = pf.edit();
+                editor.putString("phone","");
+                editor.putString("identity","");
+                editor.commit();
+
+                Intent intent = new Intent(getActivity(), Login_activity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
             }
         });
     }

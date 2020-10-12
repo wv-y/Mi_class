@@ -1,6 +1,7 @@
 package com.example.mi_class.adapter;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mi_class.R;
 import com.example.mi_class.domain.Message;
 
+import java.util.Date;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -46,16 +48,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = mDatas.get(position);
-        int  time = message.getTime();
+        long  time = message.getTime();
         String msg = message.getLast_message();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(time);
+        String t = simpleDateFormat.format(date);
         if(holder instanceof ChatLeftViewHolder){
             Log.d("GGGGGG","发生1");
-            ((ChatLeftViewHolder) holder).left_msg.setText("在？");
-            ((ChatLeftViewHolder) holder).left_time.setText("2020/10/8 13:55:20");
+            ((ChatLeftViewHolder) holder).left_msg.setText(msg);
+            ((ChatLeftViewHolder) holder).left_time.setText(t);
         }else if(holder instanceof ChatRightViewHolder){
             Log.d("GGGGGG","发生2");
-            ((ChatRightViewHolder) holder).right_msg.setText("不在");
-            ((ChatRightViewHolder) holder).right_time.setText("2020/10/8 13:56:10");
+            ((ChatRightViewHolder) holder).right_msg.setText(msg);
+            ((ChatRightViewHolder) holder).right_time.setText(t);
         }
     }
 
