@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mi_class.activity.UserInfoActivity;
 import com.example.mi_class.tool.AES;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.Match;
@@ -128,11 +129,13 @@ public class Login_activity extends AppCompatActivity {
                 }
             }
         };
-        //点击登录跳转到mainactivity
+        //点击登录跳转到mainActivity
         back.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(Login_activity.this, MainActivity.class));
+
                 String phone = phone_number_login.getText().toString();
                 String pwd = password_login.getText().toString();
 //                System.err.println(phone);
@@ -167,7 +170,6 @@ public class Login_activity extends AppCompatActivity {
                         }
                     }).start();
                 }
-
             }
         });
 
