@@ -134,8 +134,6 @@ public class Login_activity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Login_activity.this, MainActivity.class));
-
                 String phone = phone_number_login.getText().toString();
                 String pwd = password_login.getText().toString();
 //                System.err.println(phone);
