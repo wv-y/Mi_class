@@ -84,7 +84,7 @@ public class HttpUtils {
             e.printStackTrace();
         }
 
-        return "";
+        return "-999";
     }
     /**
      * 将一个输入流转换成字符串

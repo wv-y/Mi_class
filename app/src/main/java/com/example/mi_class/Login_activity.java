@@ -26,8 +26,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mi_class.activity.UserInfoActivity;
 import com.example.mi_class.tool.AES;
 import com.example.mi_class.tool.HttpUtils;
+import com.example.mi_class.tool.Match;
 
 import java.util.HashMap;
 
@@ -127,7 +129,7 @@ public class Login_activity extends AppCompatActivity {
                 }
             }
         };
-        //点击登录跳转到mainactivity
+        //点击登录跳转到mainActivity
         back.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -139,6 +141,9 @@ public class Login_activity extends AppCompatActivity {
                 if(phone.equals(""))
                 {
                     Toast.makeText(Login_activity.this,"请输入手机号",Toast.LENGTH_LONG).show();
+                }
+                else if(!phone.equals("") && !Match.match_mobile(phone)){
+                    Toast.makeText(Login_activity.this,"请输入正确的手机号",Toast.LENGTH_LONG).show();
                 }
                 else if(pwd.equals(""))
                 {
@@ -163,7 +168,6 @@ public class Login_activity extends AppCompatActivity {
                         }
                     }).start();
                 }
-
             }
         });
 

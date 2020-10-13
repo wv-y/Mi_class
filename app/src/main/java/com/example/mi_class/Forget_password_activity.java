@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -85,7 +86,7 @@ public class Forget_password_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Forget_password_activity.this, Login_activity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
@@ -136,6 +137,7 @@ public class Forget_password_activity extends AppCompatActivity {
         handler = new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
+                Log.d("handler",handler.toString());
                 switch (msg.what){
                     case BUTTON_TRUE:
                         forget_get_code.setClickable(true);
@@ -148,12 +150,13 @@ public class Forget_password_activity extends AppCompatActivity {
                         forget_get_code.setText("重新获取("+time+"s)");
                         break;
                     case 3:
-                        if(msg.getData().getString("info").equals("200")){
+                        if(msg.getData().getString("info").equals("201")){
                             //修改成功
                             Toast.makeText(Forget_password_activity.this,"修改成功",Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(Forget_password_activity.this,Login_activity.class);
                             startActivity(intent);
-                            Forget_password_activity.this.finish();
+                            SMSSDK.unregisterEventHandler(eh);
+                            //Forget_password_activity.this.finish();
                         }else {
                             //错误
                             Toast.makeText(Forget_password_activity.this, "修改失败 请重试", Toast.LENGTH_LONG).show();
@@ -171,39 +174,45 @@ public class Forget_password_activity extends AppCompatActivity {
             @Override
             public void afterEvent(int event, int result, Object data) {
                 // TODO 此处不可直接处理UI线程，处理后续操作需传到主线程中操作
-                Message msg = new Message();
-                msg.arg1 = event;
-                msg.arg2 = result;
-                msg.obj = data;
+//                Message msg = new Message();
+//                msg.arg1 = event;
+//                msg.arg2 = result;
+//                msg.obj = data;
+                System.out.println("我是Mob的handler\n当前事件："+event);
                 if (result == SMSSDK.RESULT_COMPLETE) {
-                    // 处理成功的结果
-                    HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
-                    // 国家代码，如“86”
-                    String country = (String) phoneMap.get("country");
-                    // 手机号码，如“13800138000”
-                    String phone = (String) phoneMap.get("phone");
-                    System.out.println(phone);
+                    System.out.println("Mob验证成功");
+                    if(event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE)
+                    {
+                        System.out.println("Mob验证提交后");
+                        // 处理成功的结果
+                        HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
+                        // 国家代码，如“86”
+                        String country = (String) phoneMap.get("country");
+                        // 手机号码，如“13800138000”
+                        String phone = (String) phoneMap.get("phone");
+                        System.out.println(phone);
 
-                    String s = password_forget.getText().toString();
-                    params = new HashMap<String, String>();
-                    params.put("name","");
-                    params.put("user_pwd",md5(md5(s)));
-                    HashMap t = AES.encode(phone);
-                    params.put("key",(String)t.get("key"));
-                    params.put("user_phone",(String)t.get("value"));
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String res = HttpUtils.sendPostMessage(params,"utf-8","forget_pwd");
-                            Message m = new Message();
-                            Bundle b = new Bundle();
-                            b.putString("info",res);
-                            System.err.println(res);
-                            m.setData(b);
-                            m.what = 3;
-                            handler.sendMessage(m);
-                        }
-                    }).start();
+                        String s = password_forget.getText().toString();
+                        params = new HashMap<String, String>();
+                        params.put("user_pwd",md5(md5(s)));
+                        HashMap t = AES.encode(phone);
+                        params.put("key",(String)t.get("key"));
+                        params.put("user_phone",(String)t.get("value"));
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String res = HttpUtils.sendPostMessage(params,"utf-8","forget_pwd");
+                                Message m = new Message();
+                                Bundle b = new Bundle();
+                                b.putString("info",res);
+                                System.err.println(res);
+                                m.setData(b);
+                                m.what = 3;
+                                handler.sendMessage(m);
+                            }
+                        }).start();
+                    }
+
 
                     // TODO 利用国家代码和手机号码进行后续的操作
                 } else{

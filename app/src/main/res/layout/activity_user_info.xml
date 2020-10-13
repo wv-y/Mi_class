@@ -8,23 +8,27 @@
         android:layout_height="match_parent"
         tools:context=".activity.UserInfoActivity">
 
-<!--    <ImageView-->
-<!--            android:background="@drawable/boy_head"-->
-<!--            android:id="@+id/user_image"-->
-<!--            android:layout_width="150dp"-->
-<!--            android:layout_height="150dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="50dp"/>-->
+    <LinearLayout 
+            android:orientation="vertical"
+            android:layout_width="match_parent" 
+            android:layout_height="220dp">
+        <androidx.viewpager.widget.ViewPager
+                android:id="@+id/select_image"
+                android:layout_width="120dp"
+                android:padding="@dimen/dp_10"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:text="请左右滑动切换头像"
+                android:visibility="gone"/>
 
-    <androidx.viewpager.widget.ViewPager
-            android:id="@+id/select_image"
-            android:layout_width="120dp"
-            android:padding="@dimen/dp_10"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"/>
-
-
+    </LinearLayout>
+    
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,6 +54,7 @@
                     android:id="@+id/edit_username"
                     android:layout_marginEnd="5dp"
                     android:layout_width="match_parent"
+                    android:background="@null"
                     android:layout_height="50dp"/>
         </LinearLayout>
 
@@ -109,6 +114,8 @@
                     android:layout_marginEnd="5dp"
                     android:id="@+id/edit_school"
                     android:layout_width="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/ic_down"
                     android:layout_height="50dp"/>
         </LinearLayout>
         <LinearLayout
@@ -131,6 +138,7 @@
                     android:layout_marginEnd="5dp"
                     android:id="@+id/edit_id"
                     android:layout_width="match_parent"
+                    android:background="@null"
                     android:layout_height="50dp"/>
         </LinearLayout>
     </LinearLayout>
@@ -140,9 +148,11 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         app:corner_radius="10dp"
-        android:layout_width="match_parent" android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:id="@+id/save">
-    <Button android:layout_width="match_parent" android:layout_height="match_parent"
+    <Button android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="#0099ff"
             android:text="保存"
             android:textSize="20sp"
