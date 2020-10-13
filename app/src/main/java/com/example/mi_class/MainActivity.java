@@ -2,10 +2,15 @@ package com.example.mi_class;
 
 import android.app.AlertDialog;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -119,19 +124,29 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
         if (item.getItemId() == R.id.action_cart) {//监听菜单按钮
             if(identity.equals("S")){
-                Toast.makeText(this, "学生添加课程", Toast.LENGTH_SHORT).show();
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.show();
-                alertDialog.getWindow().setContentView(R.layout.activity_dialog_student);
-
+                //Toast.makeText(this, "学生添加课程", Toast.LENGTH_SHORT).show();
+                View dialogView = inflater.inflate(R.layout.activity_dialog_student,null);
+                AlertDialog alterDialog = new AlertDialog.Builder(MainActivity.this).create();
+                //alterDialog.setView(dialogView);
+                alterDialog.show();
+                alterDialog.setCancelable(true);
+                Window window = alterDialog.getWindow();
+                //去掉背景白色实现对话框四个角完全曲化
+                window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setContentView(dialogView);
             }else{
-                Toast.makeText(this, "教师添加课程", Toast.LENGTH_SHORT).show();
-
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.show();
-                alertDialog.getWindow().setContentView(R.layout.activity_dialog_teacher);
+                //Toast.makeText(this, "教师添加课程", Toast.LENGTH_SHORT).show();
+                View dialogView = inflater.inflate(R.layout.activity_dialog_teacher,null);
+                AlertDialog alterDialog = new AlertDialog.Builder(MainActivity.this).create();
+                //alterDialog.setView(dialogView);
+                alterDialog.show();
+                alterDialog.setCancelable(true);
+                Window window = alterDialog.getWindow();
+                window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setContentView(dialogView);
             }
             //Toast.makeText(this, "add selected!", Toast.LENGTH_SHORT).show();
 
