@@ -306,7 +306,6 @@ public class Sign_up_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Sign_up_activity.this, Login_activity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
@@ -355,6 +354,7 @@ public class Sign_up_activity extends AppCompatActivity {
         handler = new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
+                Log.d("handler_sign",handler.toString());
                 switch (msg.what){
                     case BUTTON_TRUE:
                         login_get_code.setClickable(true);
@@ -370,11 +370,13 @@ public class Sign_up_activity extends AppCompatActivity {
                         String info = msg.getData().getString("info");
                         if(info.equals("1")){
                             Intent intent = new Intent(Sign_up_activity.this, Login_activity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
+                            SMSSDK.unregisterEventHandler(eh);
                             Toast.makeText(a,"注册成功",Toast.LENGTH_LONG).show();
 
                         }else if(info.equals("-1")){
+                            System.out.println("我是signup的handler");
                             Toast.makeText(a,"您已有账号",Toast.LENGTH_LONG).show();
                         }else{
                             Toast.makeText(a,"异常错误",Toast.LENGTH_LONG).show();
@@ -460,5 +462,6 @@ public class Sign_up_activity extends AppCompatActivity {
             }
         }
     }
+
 
 }
