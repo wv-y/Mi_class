@@ -4,6 +4,11 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.example.mi_class.domain.Message;
+import com.example.mi_class.domain.message_temp;
+import com.example.mi_class.fragment.MessageFragment;
+
 import android.content.SharedPreferences;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.enums.ReadyState;
@@ -87,6 +92,17 @@ public class MyWebSocket extends WebSocketClient {
     @Override
     public void onMessage(String s) {
         Log.i(TAG, "收到消息" + s);
+        JSONObject res = JSONObject.parseObject(s);
+        message_temp ms = new message_temp();
+        ms.setContent((String)res.get("content"));
+        ms.setFrom_user_id((String)res.get("from_user_id"));
+        ms.setState(0);
+        ms.setTime(Long.parseLong((String)res.get("time")));
+        ms.setTo_user_id((String)res.get("to_user_id"));
+        MessageFragment.temp_ms_data.add(ms);
+        android.os.Message m = new android.os.Message();
+        m.what = 102;
+        MessageFragment.handler.sendMessage(m);
 //        MessageData messageData = JSON.parseObject(s, MessageData.class);
 //        System.out.println("msg："+messageData.getMsgData());
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
