@@ -116,6 +116,8 @@ public class ChatActivity extends AppCompatActivity {
 
         chatAdapter = new ChatAdapter(this,chatList);
         recyclerView.setAdapter(chatAdapter);
+        //底部
+        recyclerView.scrollToPosition(chatList.size()-1);
 
         Intent intent = getIntent();
         name = intent.getStringExtra("chat_name");
@@ -195,6 +197,8 @@ public class ChatActivity extends AppCompatActivity {
         }
         chatAdapter = new ChatAdapter(this,chatList);
         recyclerView.setAdapter(chatAdapter);
+        //底部
+        recyclerView.scrollToPosition(chatList.size()-1);
     }
     public String toJson(HashMap<String,String> hash){
         String res = "{";

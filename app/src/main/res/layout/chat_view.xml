@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
-
         android:layout_above="@+id/chat_tail_linear"
         >
 
@@ -20,7 +19,8 @@
         android:orientation="horizontal"
         android:id="@+id/chat_tail_linear"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circle_corner"
         android:layout_alignParentBottom="true">
         <EditText
             android:id="@+id/chat_edit_msg"
@@ -28,16 +28,22 @@
             android:layout_height="match_parent"
             android:hint="请输入内容"
             android:layout_weight="1"
-            android:textSize="20sp"/>
+            android:background="@drawable/edit_back"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:elevation="8dip"
+
+            android:textSize="15sp"/>
         <Button
             android:id="@+id/chat_send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="发送"
             android:layout_marginEnd="10dp"
-            android:background="@color/login_text"
-            android:textSize="20sp"
+            android:background="@drawable/but_bg"
+            android:elevation="8dip"
+            android:textSize="15sp"
             android:textColor="@color/white"
-            android:padding="10dp"/>
+            />
     </LinearLayout>
 </RelativeLayout>

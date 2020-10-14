@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -111,10 +112,6 @@ public class MessageFragment extends Fragment {
         Message message = new Message();
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.vector_drawable_teacher);
         message.setHead_portrait(bitmap);
-        message.setName("张三");
-        message.setLast_message("你好啊！");
-        message.setTime(200);
-        list.add(message);
         messageAdapter = new MessageAdapter(MessageFragment.this,list);
         listView.setAdapter(messageAdapter);
         setHasOptionsMenu(true);
