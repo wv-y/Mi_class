@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -22,6 +24,8 @@ import com.example.mi_class.R;
 import com.example.mi_class.activity.UserInfoActivity;
 import com.example.mi_class.tool.MyWebSocket;
 
+import org.jetbrains.annotations.NotNull;
+
 public class UserFragment extends Fragment {
 
     private ImageView feedback_cha;
@@ -31,7 +35,15 @@ public class UserFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         initView(view);
+        setHasOptionsMenu(true);
         return view;
+    }
+
+    // 隐藏我的碎片中的menu
+    @Override
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.setGroupVisible(R.menu.main_add_btn,false);
     }
 
     private void initView(View view){

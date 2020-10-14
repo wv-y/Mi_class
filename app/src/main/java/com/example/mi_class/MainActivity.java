@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
         switch (position){
             case 0 : setTitle("全部课程");break;
-            case 1 : setTitle("信息");break;
+            case 1 : setTitle("消息");break;
             case 2 : setTitle("我的");break;
          }
     }

@@ -9,6 +9,8 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,6 +28,7 @@ import com.example.mi_class.domain.Message;
 import com.example.mi_class.domain.message_temp;
 import com.example.mi_class.tool.HttpUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -114,8 +117,16 @@ public class MessageFragment extends Fragment {
         list.add(message);
         messageAdapter = new MessageAdapter(MessageFragment.this,list);
         listView.setAdapter(messageAdapter);
+        setHasOptionsMenu(true);
         return view;
     }
+    // 隐藏消息碎片中的menu
+   @Override
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.setGroupVisible(R.menu.main_add_btn,false);
+    }
+
     public void reList()
     {
         list = new ArrayList<Message>();
