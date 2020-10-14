@@ -38,13 +38,13 @@ public class CourseFragment extends Fragment {
         is_null = (TextView) view.findViewById(R.id.is_null);
 
         // 默认数据显示用
-        Course course = new Course("C语言","课程码:wumu","2019-2020\n第二学期","99人已加入");
+        Course course = new Course("C语言","wumu","2019-2020\n第二学期","99人已加入");
         course_list = new ArrayList<Course>();
         course_list.add(course);
         course_list.add(course);
 
         //判断用户是否有添加课程设置视图
-        if(is_show) {
+        if(true) {
             course_adapter = new CourseAdapter(getActivity(), R.layout.fragment_courses_list, course_list);     //初始化适配器
             course_list_view.setAdapter(course_adapter); //设置适配器，显示查询结果
         } else{

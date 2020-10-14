@@ -64,7 +64,7 @@ public class CourseAdapter extends  ArrayAdapter{
 
         assert course != null;
         course_name.setText(course.getCourse_name()); //为文本视图设置文本内容
-        course_code.setText(course.getCourse_code());
+        course_code.setText("课程码："+course.getCourse_code());
         course_semester.setText(course.getCourse_semester());
         course_member_number.setText(course.getCouse_member_number());
         return view;

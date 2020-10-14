@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.app.AlertDialog;
 
@@ -21,7 +23,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -116,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         Intent intent =  getIntent();
         //identity = intent.getStringExtra("identity");
-        identity = "T";
+        identity = "S";
     }
 
 
@@ -227,16 +232,24 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             alterDialog = new AlertDialog.Builder(MainActivity.this).create();
             //alterDialog.setView(dialogView);
             alterDialog.show();
+            alterDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
             alterDialog.setCancelable(false);
             Window window = alterDialog.getWindow();
             //去掉背景白色实现对话框四个角完全曲化
             window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             window.setContentView(dialogView);
             stu_dialog_cha = dialogView.findViewById(R.id.stu_dialog_cha);
+            final EditText insert_course_code = dialogView.findViewById(R.id.insert_course_code);
             stu_dialog_cha.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     alterDialog.cancel();
+                }
+            });
+            insert_course_code.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    change_edit_style(b,insert_course_code);
                 }
             });
         }else{
@@ -251,16 +264,72 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             window.setContentView(dialogView);
             tea_dialog_cha = dialogView.findViewById(R.id.tea_dialog_cha);
+            final EditText insert_course_introduce = dialogView.findViewById(R.id.insert_course_introduce);
+            final EditText insert_course_name = dialogView.findViewById(R.id.insert_course_name);
+            final TextView course_introduce_num = dialogView.findViewById(R.id.course_introduce_num);
+
             tea_dialog_cha.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     alterDialog.cancel();
                 }
             });
+            // 获得焦点改变视图
+            insert_course_introduce.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    change_edit_style(b,insert_course_introduce);
+                }
+            });
+            insert_course_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    change_edit_style(b,insert_course_name);
+                }
+            });
+            // 限制课程描述字数小于300
+            insert_course_introduce.addTextChangedListener(new TextWatcher() {
+                CharSequence temp;
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    temp = charSequence;
+                    if(temp.length()==300){
+                        insert_course_introduce.setBackgroundResource(R.drawable.edit_back_error);
+                    } else{
+                        insert_course_introduce.setBackgroundResource(R.drawable.edit_back_onfocus);
+                    }
+                }
 
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    course_introduce_num.setText(charSequence.length()+"/300");
+                    if(temp.length()==300){
+                        insert_course_introduce.setBackgroundResource(R.drawable.edit_back_error);
+                        //Toast.makeText(getApplicationContext(),"课程描述最多300字",Toast.LENGTH_SHORT).show();
+                    } else{
+                        insert_course_introduce.setBackgroundResource(R.drawable.edit_back_onfocus);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    int editStart = insert_course_introduce.getSelectionStart();
+                    int editEnd = insert_course_introduce.getSelectionEnd();
+                    if (temp.length() > 300) {
+                        editable.delete(editStart - 1, editEnd);
+                        insert_course_introduce.setText(editable);
+                        insert_course_introduce.setSelection(editable.length());
+                    }
+                }
+            });
         }
-        //Toast.makeText(this, "add selected!", Toast.LENGTH_SHORT).show();
+    }
 
-
+    public void change_edit_style(boolean b,EditText editText){
+        if(b)
+            editText.setBackgroundResource(R.drawable.edit_back_onfocus);
+        else
+            editText.setBackgroundResource(R.drawable.edit_back);
     }
 }
