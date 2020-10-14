@@ -42,18 +42,20 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MessageFragment extends Fragment {
     private ListView listView;
-    private List<Message> list;
+    private  List<Message> list;
     private MessageAdapter messageAdapter;
-    private Handler handler;
-    List<message_temp> temp_ms_data;
+    public static Handler handler;
+    public static List<message_temp> temp_ms_data;
     private static final int setLocalHistory = 101;
     String ph;
     HashMap<String,String> p;
     private static final int getMsData = 100;
+    private static final int refresh = 102;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
+        System.out.println("消息message碎片onCreateView");
         listView = (ListView) view.findViewById(R.id.message_list);
         list = new ArrayList<Message>();
         handler = new Handler(){
@@ -75,6 +77,28 @@ public class MessageFragment extends Fragment {
                         System.out.println("拿到本地数据："+show);
                         reList(show);
                         break;
+                    case refresh:
+                        reList();
+                        SharedPreferences preferences1 = getActivity().getSharedPreferences(ph+"_ms",MODE_PRIVATE);
+                        String s = "[";
+                        for(int i = 0 ; i < temp_ms_data.size() ; i ++)
+                        {
+                            s += "{\"to_user_id\":\""+temp_ms_data.get(i).getTo_user_id()+"\","+"\"time\":"+temp_ms_data.get(i).getTime()+",\"state\":"+temp_ms_data.get(i).getState()+",\"content\":\""+temp_ms_data.get(i).getContent()+"\",\"from_user_id\":\""+temp_ms_data.get(i).getFrom_user_id()+"\"},";
+                        }
+                        s = s.substring(0,s.length()-1);
+                        s += "]";
+                        SharedPreferences.Editor e = preferences1.edit();
+                        e.putString("message_list",s);
+                        e.commit();
+                        if(ChatActivity.handler != null)
+                        {
+                            android.os.Message sm = new android.os.Message();
+                            sm.what = 100;
+                            ChatActivity.mess1 = temp_ms_data;
+                            ChatActivity.handler.sendMessage(sm);
+                        }
+
+                        break;
                 }
             }
         };
@@ -92,6 +116,48 @@ public class MessageFragment extends Fragment {
         listView.setAdapter(messageAdapter);
         return view;
     }
+    public void reList()
+    {
+        list = new ArrayList<Message>();
+        //转temp list
+        HashSet<String> session = new HashSet<>();
+        for(int i = 0 ; i < temp_ms_data.size();i++)
+        {
+            if(!temp_ms_data.get(i).getFrom_user_id().equals(ph)){
+                session.add(temp_ms_data.get(i).getFrom_user_id());
+            }
+            if (!temp_ms_data.get(i).getTo_user_id().equals(ph)){
+                session.add(temp_ms_data.get(i).getTo_user_id());
+            }
+        }
+        Iterator<String> iterator = session.iterator();
+        while(iterator.hasNext()){
+            String name = iterator.next();
+            long max = 0;
+            String lastContent = "";
+            for(int i = 0; i < temp_ms_data.size() ; i ++)
+            {
+                if(temp_ms_data.get(i).getTo_user_id().equals(name)||temp_ms_data.get(i).getFrom_user_id().equals(name))
+                {
+                    if(max < temp_ms_data.get(i).getTime()){
+                        max = temp_ms_data.get(i).getTime();
+                        lastContent = temp_ms_data.get(i).getContent();
+                    }
+                }
+            }
+            Message message = new Message();
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.vector_drawable_teacher);
+            message.setHead_portrait(bitmap);
+            message.setName(name);
+            message.setLast_message(lastContent);
+            message.setTime(max);
+            list.add(message);
+        }
+        System.out.println("会话个数："+list.size());
+        messageAdapter = new MessageAdapter(MessageFragment.this,list);
+        listView.setAdapter(messageAdapter);
+    }
+
     public void reList(String res){
         list = new ArrayList<Message>();
         SharedPreferences preferences = getActivity().getSharedPreferences(ph+"_ms",MODE_PRIVATE);
@@ -147,7 +213,6 @@ public class MessageFragment extends Fragment {
                     list.add(message);
                 }
                 System.out.println("会话个数："+list.size());
-
                 messageAdapter = new MessageAdapter(MessageFragment.this,list);
                 listView.setAdapter(messageAdapter);
             } catch (JSONException e) {
