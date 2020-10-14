@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private ViewPager viewPager ;
     private String identity;
+    private ImageView tea_dialog_cha,stu_dialog_cha;
+    private View dialogView;
+    private AlertDialog alterDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,33 +205,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-        if (item.getItemId() == R.id.action_cart) {//监听菜单按钮
-            if(identity.equals("S")){
-                //Toast.makeText(this, "学生添加课程", Toast.LENGTH_SHORT).show();
-                View dialogView = inflater.inflate(R.layout.activity_dialog_student,null);
-                AlertDialog alterDialog = new AlertDialog.Builder(MainActivity.this).create();
-                //alterDialog.setView(dialogView);
-                alterDialog.show();
-                alterDialog.setCancelable(true);
-                Window window = alterDialog.getWindow();
-                //去掉背景白色实现对话框四个角完全曲化
-                window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setContentView(dialogView);
-            }else{
-                //Toast.makeText(this, "教师添加课程", Toast.LENGTH_SHORT).show();
-                View dialogView = inflater.inflate(R.layout.activity_dialog_teacher,null);
-                AlertDialog alterDialog = new AlertDialog.Builder(MainActivity.this).create();
-                //alterDialog.setView(dialogView);
-                alterDialog.show();
-                alterDialog.setCancelable(true);
-                Window window = alterDialog.getWindow();
-                window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setContentView(dialogView);
-            }
-            //Toast.makeText(this, "add selected!", Toast.LENGTH_SHORT).show();
 
-        }
+        if (item.getItemId() == R.id.action_cart) {//监听菜单按钮
+            showCourseDialog();
+           }
         return super.onOptionsItemSelected(item);
     }
 
@@ -237,5 +218,49 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         item.setVisible(fragmentIndex == 0);
 
         return super.onPrepareOptionsMenu(menu);
+    }
+    public void showCourseDialog(){
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+        if(identity.equals("S")){
+            //Toast.makeText(this, "学生添加课程", Toast.LENGTH_SHORT).show();
+            dialogView = inflater.inflate(R.layout.activity_dialog_student,null);
+            alterDialog = new AlertDialog.Builder(MainActivity.this).create();
+            //alterDialog.setView(dialogView);
+            alterDialog.show();
+            alterDialog.setCancelable(false);
+            Window window = alterDialog.getWindow();
+            //去掉背景白色实现对话框四个角完全曲化
+            window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            window.setContentView(dialogView);
+            stu_dialog_cha = dialogView.findViewById(R.id.stu_dialog_cha);
+            stu_dialog_cha.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alterDialog.cancel();
+                }
+            });
+        }else{
+            //Toast.makeText(this, "教师添加课程", Toast.LENGTH_SHORT).show();
+            dialogView = inflater.inflate(R.layout.activity_dialog_teacher,null);
+            alterDialog = new AlertDialog.Builder(MainActivity.this).create();
+            //alterDialog.setView(dialogView);
+            alterDialog.show();
+            alterDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            alterDialog.setCancelable(false);
+            Window window = alterDialog.getWindow();
+            window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            window.setContentView(dialogView);
+            tea_dialog_cha = dialogView.findViewById(R.id.tea_dialog_cha);
+            tea_dialog_cha.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alterDialog.cancel();
+                }
+            });
+
+        }
+        //Toast.makeText(this, "add selected!", Toast.LENGTH_SHORT).show();
+
+
     }
 }

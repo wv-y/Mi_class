@@ -1,69 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        android:orientation="vertical"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_round_back"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/round_corner_button"
-            android:layout_margin="15dp">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
         <TextView
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="邮箱地址:"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="意见反馈"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/feedback_cha"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/cha"
+                android:layout_marginStart="-30dp"
+                android:layout_marginTop="10dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/round_corner_button">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="邮箱地址:"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
         <EditText
-                android:id="@+id/email"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:layout_weight="1"
-                android:layout_marginEnd="10dp"/>
+            android:id="@+id/email"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@null" />
 
     </LinearLayout>
 
     <TextView
-            android:textColor="@color/black"
-            android:textSize="@dimen/sp_18"
-            android:layout_marginStart="20dp"
-            android:layout_width="match_parent" android:layout_height="50dp"
-            android:text="意见:"
-            android:gravity="center_vertical"/>
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:gravity="center_vertical"
+        android:text="意见:"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_18" />
+
     <LinearLayout
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@drawable/round_corner_button">
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/round_corner_button">
 
         <EditText
-                android:id="@+id/feedback"
-                android:layout_margin="7dp"
-                android:background="@null"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textMultiLine"
-                android:gravity="start|top"
-                android:minLines="4"/>
+            android:id="@+id/feedback"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="7dp"
+            android:background="@null"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:minLines="4" />
 
     </LinearLayout>
 
     <Button
-            android:textSize="20sp"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/commit"
-            android:layout_width="100dp" android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/but_bg"
-            android:text="提交"
-            android:textColor="@color/white"/>
-
+        android:id="@+id/commit"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/but_bg"
+        android:text="提交"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
 
 </LinearLayout>

@@ -11,6 +11,6 @@
     <solid android:color="@android:color/white"/>
 
     <!--圆角设置-->
-    <corners android:radius="20dp"/>
+    <corners android:radius="15dp"/>
 
 </shape>

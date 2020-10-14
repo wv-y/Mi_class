@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
@@ -20,6 +23,8 @@ import com.example.mi_class.activity.UserInfoActivity;
 import com.example.mi_class.tool.MyWebSocket;
 
 public class UserFragment extends Fragment {
+
+    private ImageView feedback_cha;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,11 +75,20 @@ public class UserFragment extends Fragment {
     public void showFeedbackDialog(){
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_feedback,null,false);
         final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).create();
-
+        Window window = dialog.getWindow();
+        //去掉背景白色实现对话框四个角完全曲化
+        window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(false);
         Button commit = view.findViewById(R.id.commit);
         final EditText feedback = view.findViewById(R.id.feedback);
         final EditText email = view.findViewById(R.id.email);
-
+        feedback_cha = view.findViewById(R.id.feedback_cha);
+        feedback_cha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

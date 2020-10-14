@@ -44,22 +44,30 @@
                 android:textSize="20sp" />
 
             <Button
-                android:id="@+id/btn_submit"
-                android:layout_width="70dp"
-                android:layout_height="35dp"
+                android:id="@+id/stu_btn_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
+                android:paddingTop="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="10dp"
                 android:background="@drawable/but_bg"
                 android:text="确认"
-                android:textColor="@color/white" />
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                />
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/cha"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:id="@+id/stu_dialog_cha"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/cha"
-            android:layout_marginLeft="-40dp"
+            android:layout_marginStart="-30dp"
+            android:layout_marginTop="10dp"
             >
 
         </ImageView>
