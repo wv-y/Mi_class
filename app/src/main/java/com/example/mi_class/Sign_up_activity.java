@@ -5,12 +5,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -55,7 +58,7 @@ public class Sign_up_activity extends AppCompatActivity {
     private Activity a;
     private Button sign_up;
 
-    private String phone, paw, paw_again; //用户输入
+    private String phone, paw, paw_again, code; //用户输入
     private boolean is_show_password = true; //是否隐藏密码
     private boolean is_show_password_again =true;
 
@@ -268,21 +271,9 @@ public class Sign_up_activity extends AppCompatActivity {
         sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("验证");
-                String code = sign_up_code.getText().toString();
-                String phone = phone_number_sign_up.getText().toString();
-                if(!code.equals("")) {
-                    if (sign) {
-                        if (flag.equals("")) {
-                            Toast.makeText(a, "请您选择身份", Toast.LENGTH_LONG).show();
-                        } else {
-                            SMSSDK.submitVerificationCode("86", phone, code);
-                        }
-                    } else {
-                        Toast.makeText(a, "请正确填写以上信息", Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    Toast.makeText(a, "验证码不能为空", Toast.LENGTH_LONG).show();
+                close_keyboard(view);
+                if (code_true()) {
+                    SMSSDK.submitVerificationCode("86", phone, code);
                 }
             }
         });
@@ -312,42 +303,15 @@ public class Sign_up_activity extends AppCompatActivity {
         login_get_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 验证两次输入的密码是否相同
-                String paw = password_sign_up.getText().toString();
-                String paw_again = password_again_sign_up.getText().toString();
-                phone = phone_number_sign_up.getText().toString();
-                if(match_mobile(phone)) { //判断手机号是否合法
-                    if(paw.equals(paw_again)){  // 判断两次输入密码是否一致
-                        if(paw_again.equals("")){  // 判断密码是否为空
-                            password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                            password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                            Toast.makeText(a,"密码不能为空",Toast.LENGTH_SHORT).show();
-                        } else{
-                                String phone = phone_number_sign_up.getText().toString();
-                                if(paw_again.length()<=20 && paw_again.length()>=6) { // 判断密码长度 6-20
-                                    System.out.println("发送");
-                                    SMSSDK.getVerificationCode("86", phone);
-                                    Toast.makeText(a,"已发送验证码",Toast.LENGTH_SHORT).show();
-                                    sign = true;  // 将sign 设为true
-                                    // 将按钮置为不可用同时倒计时
-                                    time = 60;
-                                    new Thread(new button_get_code()).start();
-                                } else{
-                                    password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                                    password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                                    Toast.makeText(a,"密码长度应为6-20位",Toast.LENGTH_SHORT).show();
-                                }
-                        }
-                    } else{
-                        password_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                        password_again_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                        Toast.makeText(a,"两次密码输入不一致",Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    phone_number_sign_up.setBackgroundResource(R.drawable.edit_back_error);
-                    Toast.makeText(a,"请输入正确手机号码",Toast.LENGTH_SHORT).show();
+                close_keyboard(view);
+                if(phone_paw_true()) { // 判断用户输入手机号和密码是否合法
+                    System.out.println("发送");
+                    SMSSDK.getVerificationCode("86", phone);
+                    Toast.makeText(a,"已发送验证码",Toast.LENGTH_SHORT).show();
+                    // 将按钮置为不可用同时倒计时
+                    time = 60;
+                    new Thread(new button_get_code()).start();
                 }
-
             }
         });
 
@@ -463,5 +427,89 @@ public class Sign_up_activity extends AppCompatActivity {
         }
     }
 
+    public boolean phone_paw_true(){
+        phone = phone_number_sign_up.getText().toString();
+        paw = password_sign_up.getText().toString();
+        paw_again = password_again_sign_up.getText().toString();
+        if(!match_mobile(phone)){
+            edit_set_error(phone_number_sign_up);
+            edit_set_init_back(password_sign_up);
+            edit_set_init_back(password_again_sign_up);
+            edit_set_init_back(sign_up_code);
+            Toast.makeText(this, "请正确填写手机号", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(!paw.equals(paw_again)){
+            edit_set_error(password_sign_up);
+            edit_set_error(password_again_sign_up);
+            edit_set_init_back(phone_number_sign_up);
+            edit_set_init_back(sign_up_code);
+            Toast.makeText(this,"两次输入密码不一致",Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(paw_again.equals("")){
+            edit_set_error(password_sign_up);
+            edit_set_error(password_again_sign_up);
+            edit_set_init_back(phone_number_sign_up);
+            edit_set_init_back(sign_up_code);
+            Toast.makeText(this,"密码不能为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }else if((paw_again.length() < 6) || (paw_again.length() > 20)){
+            edit_set_error(password_sign_up);
+            edit_set_error(password_again_sign_up);
+            edit_set_init_back(phone_number_sign_up);
+            edit_set_init_back(sign_up_code);
+            Toast.makeText(this,"密码长度应在6~20位",Toast.LENGTH_SHORT).show();
+            return false;
+        }else {
+            edit_set_init_back(phone_number_sign_up);
+            edit_set_init_back(password_sign_up);
+            edit_set_init_back(password_again_sign_up);
+            edit_set_init_back(sign_up_code);
+            return true;
+        }
+    }
 
+    public boolean code_true(){
+        code = sign_up_code.getText().toString();
+        if(!phone_paw_true()){
+            return false;
+        }else if(code.equals("")){
+            edit_set_error(sign_up_code);
+            edit_set_init_back(phone_number_sign_up);
+            edit_set_init_back(password_sign_up);
+            edit_set_init_back(password_again_sign_up);
+            Toast.makeText(this,"验证码不能为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(flag.equals("")) {
+            edit_set_init_back(phone_number_sign_up);
+            edit_set_init_back(password_sign_up);
+            edit_set_init_back(password_again_sign_up);
+            edit_set_init_back(sign_up_code);
+            Toast.makeText(a, "请您选择身份", Toast.LENGTH_SHORT).show();
+            return false;
+        }else
+            edit_set_init_back(phone_number_sign_up);
+            edit_set_init_back(password_sign_up);
+            edit_set_init_back(password_again_sign_up);
+            edit_set_init_back(sign_up_code);
+            return true;
+    }
+
+
+    public void edit_set_error(EditText editText){
+        editText.clearFocus();
+        editText.setBackgroundResource(R.drawable.edit_back_error);
+    }
+
+    public void edit_set_init_back(EditText editText){
+        editText.clearFocus();
+        editText.setBackgroundResource(R.drawable.edit_back);
+    }
+
+    // 关闭软键盘
+    public void close_keyboard(View view){
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null){
+            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }
+    }
 }

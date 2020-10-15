@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,6 +56,7 @@ public class Forget_password_activity extends AppCompatActivity {
 
     private static final int BUTTON_TRUE = 1;
     private static final int BUTTON_FALSE = 2;
+    private String phone, paw, paw_again, code; //用户输入
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,44 +96,27 @@ public class Forget_password_activity extends AppCompatActivity {
         forget_confirm_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("验证");
-                String code = forget_verify_code.getText().toString();
-                String phone = edit_phone_number.getText().toString();
-                SMSSDK.submitVerificationCode("86", phone, code);
+                close_keyboard(view);
+                if(code_true()) {
+                    System.out.println("验证");
+                    String code = forget_verify_code.getText().toString();
+                    String phone = edit_phone_number.getText().toString();
+                    SMSSDK.submitVerificationCode("86", phone, code);
+                }
             }
         });
         forget_get_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String phone = edit_phone_number.getText().toString();
-                if(match_mobile(phone)){
-                    String paw = password_forget.getText().toString();
-                    String paw_again = password_again_forget.getText().toString();
-                    if(paw.equals(paw_again)){
-                        if(paw_again.length()==0){
-                            password_forget.setBackgroundResource(R.drawable.edit_back_error);
-                            password_again_forget.setBackgroundResource(R.drawable.edit_back_error);
-                            Toast.makeText(a,"密码不能为空",Toast.LENGTH_LONG).show();
-                        }else{
-                            password_forget.setBackgroundResource(R.drawable.edit_back);
-                            password_again_forget.setBackgroundResource(R.drawable.edit_back);
-                            System.out.println("发送");
-                            SMSSDK.getVerificationCode("86", phone);
-                            Toast.makeText(a,"已发送验证码",Toast.LENGTH_LONG).show();
-                            // 倒计时60s
-                            time = 60;
-                            new Thread(new button_get_code()).start();
-                        }
-                    }
-                    else{
-                        password_forget.setBackgroundResource(R.drawable.edit_back_error);
-                        password_again_forget.setBackgroundResource(R.drawable.edit_back_error);
-                        Toast.makeText(a,"两次输入的密码不一致",Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    Toast.makeText(a,"请输入正确手机号码",Toast.LENGTH_LONG).show();
+                close_keyboard(view);
+                if(phone_paw_true()){
+                    System.out.println("发送");
+                    SMSSDK.getVerificationCode("86", phone);
+                    Toast.makeText(a,"已发送验证码",Toast.LENGTH_LONG).show();
+                    // 倒计时60s
+                    time = 60;
+                    new Thread(new button_get_code()).start();
                 }
-
             }
         });
         // 倒计时
@@ -351,6 +337,86 @@ public class Forget_password_activity extends AppCompatActivity {
                 handler.sendMessage(message);
                 handler.postDelayed(this,1000);
             }
+        }
+    }
+
+
+    public boolean phone_paw_true(){
+        phone = edit_phone_number.getText().toString();
+        paw = password_forget.getText().toString();
+        paw_again = password_again_forget.getText().toString();
+        if(!match_mobile(phone)){
+            edit_set_error(edit_phone_number);
+            edit_set_init_back(password_forget);
+            edit_set_init_back(password_again_forget);
+            edit_set_init_back(forget_verify_code);
+            Toast.makeText(this, "请正确填写手机号", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(!paw.equals(paw_again)){
+            edit_set_error(password_forget);
+            edit_set_error(password_again_forget);
+            edit_set_init_back(edit_phone_number);
+            edit_set_init_back(forget_verify_code);
+            Toast.makeText(this,"两次输入密码不一致",Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(paw_again.equals("")){
+            edit_set_error(password_forget);
+            edit_set_error(password_again_forget);
+            edit_set_init_back(edit_phone_number);
+            edit_set_init_back(forget_verify_code);
+            Toast.makeText(this,"密码不能为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }else if((paw_again.length() < 6) || (paw_again.length() > 20)){
+            edit_set_error(password_forget);
+            edit_set_error(password_again_forget);
+            edit_set_init_back(edit_phone_number);
+            edit_set_init_back(forget_verify_code);
+            Toast.makeText(this,"密码长度应在6~20位",Toast.LENGTH_SHORT).show();
+            return false;
+        }else {
+            edit_set_init_back(edit_phone_number);
+            edit_set_init_back(password_forget);
+            edit_set_init_back(password_again_forget);
+            edit_set_init_back(forget_verify_code);
+            return true;
+        }
+    }
+
+    public boolean code_true(){
+        code = forget_verify_code.getText().toString();
+        if(!phone_paw_true()){
+            return false;
+        }else if(code.equals("")){
+            edit_set_error(forget_verify_code);
+            edit_set_init_back(edit_phone_number);
+            edit_set_init_back(password_forget);
+            edit_set_init_back(password_again_forget);
+            Toast.makeText(this,"验证码不能为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }else
+            edit_set_init_back(edit_phone_number);
+        edit_set_init_back(password_forget);
+        edit_set_init_back(password_again_forget);
+        edit_set_init_back(forget_verify_code);
+        return true;
+    }
+
+
+    public void edit_set_error(EditText editText){
+        editText.clearFocus();
+        editText.setBackgroundResource(R.drawable.edit_back_error);
+    }
+
+    public void edit_set_init_back(EditText editText){
+        editText.clearFocus();
+        editText.setBackgroundResource(R.drawable.edit_back);
+    }
+
+    // 关闭软键盘
+    public void close_keyboard(View view){
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null){
+            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
         }
     }
 }

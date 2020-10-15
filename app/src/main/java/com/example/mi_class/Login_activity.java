@@ -11,6 +11,7 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -138,17 +139,26 @@ public class Login_activity extends AppCompatActivity {
                 String pwd = password_login.getText().toString();
 //                System.err.println(phone);
 //                System.err.println(pwd);
+                close_keyboard(v);
                 if(phone.equals(""))
                 {
+                    edit_set_error(phone_number_login);
+                    edit_set_init_back(password_login);
                     Toast.makeText(Login_activity.this,"请输入手机号",Toast.LENGTH_LONG).show();
                 }
                 else if(!phone.equals("") && !Match.match_mobile(phone)){
+                    edit_set_error(phone_number_login);
+                    edit_set_init_back(password_login);
                     Toast.makeText(Login_activity.this,"请输入正确的手机号",Toast.LENGTH_LONG).show();
                 }
                 else if(pwd.equals(""))
                 {
+                    edit_set_error(password_login);
+                    edit_set_init_back(phone_number_login);
                     Toast.makeText(Login_activity.this,"请输入密码",Toast.LENGTH_LONG).show();
                 }else{
+                    edit_set_init_back(phone_number_login);
+                    edit_set_init_back(password_login);
                     params = new HashMap<String, String>();
                     params.put("user_pwd",md5(md5(pwd)));
                     HashMap t = AES.encode(phone);
@@ -246,5 +256,23 @@ public class Login_activity extends AppCompatActivity {
                 password_login.setSelection(index);
             }
         });
+    }
+
+    public void edit_set_error(EditText editText){
+        editText.clearFocus();
+        editText.setBackgroundResource(R.drawable.edit_back_error);
+    }
+
+    public void edit_set_init_back(EditText editText){
+        editText.clearFocus();
+        editText.setBackgroundResource(R.drawable.edit_back);
+    }
+
+    // 关闭软键盘
+    public void close_keyboard(View view){
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null){
+            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }
     }
 }
