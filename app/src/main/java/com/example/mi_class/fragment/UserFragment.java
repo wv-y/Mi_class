@@ -76,7 +76,6 @@ public class UserFragment extends Fragment {
                 editor.putString("phone","");
                 editor.putString("identity","");
                 editor.commit();
-
                 Intent intent = new Intent(getActivity(), Login_activity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();

@@ -105,6 +105,7 @@ public class Login_activity extends AppCompatActivity {
                             ed.commit();
                             System.out.println("S");
                             Intent intent = new Intent(Login_activity.this,MainActivity.class);
+                            intent.putExtra("phone",phone_number_login.getText().toString());
                             startActivity(intent);
                             Login_activity.this.finish();
                         }else if(info.equals("500")){
@@ -116,6 +117,7 @@ public class Login_activity extends AppCompatActivity {
                             ed.commit();
                             System.out.println("T");
                             Intent intent = new Intent(Login_activity.this,MainActivity.class);
+                            intent.putExtra("phone",phone_number_login.getText().toString());
                             startActivity(intent);
                             Login_activity.this.finish();
                         }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +31,8 @@ import com.example.mi_class.adapter.MessageAdapter;
 import com.example.mi_class.domain.Message;
 import com.example.mi_class.domain.message_temp;
 import com.example.mi_class.fragment.MessageFragment;
+import com.example.mi_class.tool.Base64Utils;
+import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.MyWebSocket;
 
 import org.java_websocket.enums.ReadyState;
@@ -52,23 +56,26 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     public static Handler handler = null;
     public static List<message_temp> mess1;
+    HashMap<String,String> p ;
     private final static int updateMessage = 100;
     RecyclerView recyclerView;
     EditText editText;
     Button button;
-    String phone;
-    String name;
+    public static String phone = "";
+    public static String name = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_view);
         // 状态栏文字自适应
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
+        Intent intent = getIntent();
+        name = intent.getStringExtra("chat_name");
+        setTitle(name);
         recyclerView = findViewById(R.id.chat_recycler_list);
         editText = findViewById(R.id.chat_edit_msg);
         button = findViewById(R.id.chat_send_button);
-
+        System.out.println("chatA onCreate");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
         handler = new Handler(){
@@ -89,21 +96,28 @@ public class ChatActivity extends AppCompatActivity {
             SharedPreferences pf = getSharedPreferences(phone+"_ms",MODE_PRIVATE);
             String data = pf.getString("message_list","");
             if(!data.equals("")){
+                System.out.println("chatA 1");
+                localToRead(new Date().getTime(),name,phone,data);
+                System.out.println("chatA 3");
                 mess1 = to_ms_data(data);
                 for(int i = 0 ; i < mess1.size() ; i++)
                 {
-                    Message msg1 = new Message();
-                    //发信人是我
-                    if(mess1.get(i).getFrom_user_id().equals(phone)){
-                        msg1.setType(Message.TYPE_SEND);
+                    if(name.equals(mess1.get(i).getFrom_user_id()) || name.equals(mess1.get(i).getTo_user_id()))
+                    {
+                        Message msg1 = new Message();
+                        //发信人是我
+                        if(mess1.get(i).getFrom_user_id().equals(phone)){
+                            msg1.setType(Message.TYPE_SEND);
+                        }
+                        //收件人是我
+                        if(mess1.get(i).getTo_user_id().equals(phone)){
+                            msg1.setType(Message.TYPE_RECEIVE);
+                        }
+                        msg1.setTime(mess1.get(i).getTime());
+                        msg1.setLast_message(mess1.get(i).getContent());
+                        chatList.add(msg1);
                     }
-                    //收件人是我
-                    if(mess1.get(i).getTo_user_id().equals(phone)){
-                        msg1.setType(Message.TYPE_RECEIVE);
-                    }
-                    msg1.setTime(mess1.get(i).getTime());
-                    msg1.setLast_message(mess1.get(i).getContent());
-                    chatList.add(msg1);
+
                 }
             }
         }else{
@@ -119,9 +133,7 @@ public class ChatActivity extends AppCompatActivity {
         //底部
         recyclerView.scrollToPosition(chatList.size()-1);
 
-        Intent intent = getIntent();
-        name = intent.getStringExtra("chat_name");
-        setTitle(name);
+
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setHomeButtonEnabled(true);
@@ -130,6 +142,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //发送消息
         button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if(!editText.getText().toString().equals(""))
@@ -137,11 +150,13 @@ public class ChatActivity extends AppCompatActivity {
                     if(MyWebSocket.myWebSocket.getReadyState().equals(ReadyState.OPEN))
                     {
                         Log.i("s",MyWebSocket.myWebSocket.getReadyState().toString());
+                        String content = editText.getText().toString();
+                        content = Base64Utils.encodeToString(content.getBytes());
                         long a = new Date().getTime();
                         HashMap<String,String> p = new HashMap<>();
                         p.put("to_user_id",name);
                         p.put("from_user_id",phone);
-                        p.put("content",editText.getText().toString());
+                        p.put("content",content);
                         p.put("time",String.valueOf(a));
                         p.put("state","0");
                         message_temp t = new message_temp();
@@ -149,7 +164,7 @@ public class ChatActivity extends AppCompatActivity {
                         t.setFrom_user_id(phone);
                         t.setTime(a);
                         t.setState(0);
-                        t.setContent(editText.getText().toString());
+                        t.setContent(content);
                         System.out.println(toJson(p));
                         MyWebSocket.myWebSocket.send(toJson(p));
                         editText.setText("");
@@ -171,6 +186,46 @@ public class ChatActivity extends AppCompatActivity {
         });
 //        Start_activity.myWebSocketClient.send("1");
     }
+    public void localToRead(long time,String from,String to,String res)
+    {
+        p = new HashMap<>();
+        p.put("to_user_id",to);
+        p.put("from_user_id",from);
+        p.put("time",String.valueOf(time));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpUtils.sendPostMessage(p,"utf-8","toRead");
+            }
+        }).start();
+        System.out.println("chatA 2");
+        if(!res.equals(""))
+        {
+            System.out.println("chatA 2-1");
+            List<message_temp> t = to_ms_data(res);
+            System.out.println("要检查的长度："+t.size());
+            boolean flag = false;
+            for(int i = 0 ; i < t.size() ; i++)
+            {
+                message_temp t1 = t.get(i);
+                if(t1.getFrom_user_id().equals(from) && t1.getTo_user_id().equals(to) && t1.getTime() <= time && t1.getState()==0)
+                {
+                    flag = true;
+                    t1.setState(1);
+                }
+            }
+            if(flag)
+            {
+                System.out.println("有变");
+                MessageFragment.temp_ms_data = t;
+                android.os.Message sm = new android.os.Message();
+                sm.what = MessageFragment.refresh;
+                MessageFragment.handler.sendMessage(sm);
+            }
+
+        }
+
+    }
     public void updateMessage()
     {
         chatList = new ArrayList<Message>();
@@ -182,18 +237,22 @@ public class ChatActivity extends AppCompatActivity {
         });
         for(int i = 0 ; i < mess1.size() ; i++)
         {
-            Message msg1 = new Message();
-            //发信人是我
-            if(mess1.get(i).getFrom_user_id().equals(phone)){
-                msg1.setType(Message.TYPE_SEND);
+            if(name.equals(mess1.get(i).getFrom_user_id()) || name.equals(mess1.get(i).getTo_user_id()))
+            {
+                Message msg1 = new Message();
+                //发信人是我
+                if(mess1.get(i).getFrom_user_id().equals(phone)){
+                    msg1.setType(Message.TYPE_SEND);
+                }
+                //收件人是我
+                if(mess1.get(i).getTo_user_id().equals(phone)){
+                    msg1.setType(Message.TYPE_RECEIVE);
+                }
+                msg1.setTime(mess1.get(i).getTime());
+                msg1.setLast_message(mess1.get(i).getContent());
+                chatList.add(msg1);
             }
-            //收件人是我
-            if(mess1.get(i).getTo_user_id().equals(phone)){
-                msg1.setType(Message.TYPE_RECEIVE);
-            }
-            msg1.setTime(mess1.get(i).getTime());
-            msg1.setLast_message(mess1.get(i).getContent());
-            chatList.add(msg1);
+
         }
         chatAdapter = new ChatAdapter(this,chatList);
         recyclerView.setAdapter(chatAdapter);
@@ -211,6 +270,8 @@ public class ChatActivity extends AppCompatActivity {
         res +="}";
         return res;
     }
+
+
     public List<message_temp> to_ms_data(String res){
         List<message_temp> result = new ArrayList<>();
         JSONArray array = null;
@@ -233,6 +294,14 @@ public class ChatActivity extends AppCompatActivity {
         return result;
 
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        System.out.println("finish");
+        name = "";
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){

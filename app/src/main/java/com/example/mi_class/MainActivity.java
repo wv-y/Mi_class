@@ -46,6 +46,7 @@ import com.example.mi_class.mainToolbar.TabContainerView;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.MyWebSocket;
 
+import org.java_websocket.enums.ReadyState;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     String ph;
     List<message_temp> temp_ms_data;
-    Handler handler;
+    public static Handler handler;
     private final int[][] icons = {
             {R.drawable.ic_courses,R.drawable.ic_courses_checked},
             {R.drawable.ic_message,R.drawable.ic_message_checked},
@@ -96,12 +97,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPager = findViewById(R.id.view_pager);
         //避免自动弹出软键盘
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+        System.out.println("开始：主活动创建");
         initToolbar();
         //开始连接ws
         MyWebSocket.OK = true;
         if(MyWebSocket.myWebSocket == null)
+        {
+            System.out.println("开始：准备连接ws");
             connServer();
+        }
+
         //加载历史记录
         handler = new Handler(){
             @Override
@@ -144,6 +149,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                                 Log.i("s", "run: 连接服务器成功");
                             } else {
                                 Log.i("s", "run: 连接服务器失败");
+//                                Thread.sleep(1000);
+//                                Message m = new Message();
+//                                m.what = MessageFragment.getMsData;
+//                                if(MessageFragment.handler != null && !MyWebSocket.myWebSocket.getReadyState().equals(ReadyState.OPEN))
+//                                {
+//                                    System.out.println("msgFragment");
+//                                    MessageFragment.handler.sendMessage(m);
+//                                }
+
+
+
                             }
                         }
                     }

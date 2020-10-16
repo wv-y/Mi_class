@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mi_class.activity.ChatActivity;
 import com.example.mi_class.domain.Message;
 import com.example.mi_class.domain.message_temp;
 import com.example.mi_class.fragment.MessageFragment;
@@ -17,6 +18,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,6 +28,7 @@ public class MyWebSocket extends WebSocketClient {
     private static String Url = "";
     static public MyWebSocket myWebSocket;
     static public boolean OK = false;
+    HashMap<String,String> p;
 //    static {
 //        try {
 //            myWebSocket = new MyWebSocket("s");
@@ -58,6 +61,10 @@ public class MyWebSocket extends WebSocketClient {
     public void onOpen(ServerHandshake serverHandshake) {
 
         Log.i(TAG, "onOpen: 打开webSocket连接");
+        android.os.Message m = new android.os.Message();
+        m.what = 104;
+        System.out.println("开始准备发送准备handler");
+        MessageFragment.handler.sendMessage(m);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -99,6 +106,22 @@ public class MyWebSocket extends WebSocketClient {
         ms.setState(0);
         ms.setTime(Long.parseLong((String)res.get("time")));
         ms.setTo_user_id((String)res.get("to_user_id"));
+        if(!ChatActivity.name.equals("") && !ChatActivity.phone.equals(""))
+        {
+            if(ms.getFrom_user_id().equals(ChatActivity.name)){
+                ms.setState(1);
+                p = new HashMap<>();
+                p.put("to_user_id",ms.getTo_user_id());
+                p.put("from_user_id",ms.getFrom_user_id());
+                p.put("time",String.valueOf(ms.getTime()));
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        HttpUtils.sendPostMessage(p,"utf-8","toRead");
+                    }
+                }).start();
+            }
+        }
         MessageFragment.temp_ms_data.add(ms);
         android.os.Message m = new android.os.Message();
         m.what = 102;

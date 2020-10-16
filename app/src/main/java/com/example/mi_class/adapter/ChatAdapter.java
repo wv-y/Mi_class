@@ -2,6 +2,7 @@ package com.example.mi_class.adapter;
 
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mi_class.R;
 import com.example.mi_class.domain.Message;
+import com.example.mi_class.tool.Base64Utils;
 
 import java.util.Date;
 import java.util.List;
@@ -45,6 +48,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = mDatas.get(position);
@@ -55,11 +59,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String t = simpleDateFormat.format(date);
         if(holder instanceof ChatLeftViewHolder){
             Log.d("GGGGGG","发生1");
-            ((ChatLeftViewHolder) holder).left_msg.setText(msg);
+            ((ChatLeftViewHolder) holder).left_msg.setText(new String(Base64Utils.decodeFromString(msg)));
             ((ChatLeftViewHolder) holder).left_time.setText(t);
         }else if(holder instanceof ChatRightViewHolder){
             Log.d("GGGGGG","发生2");
-            ((ChatRightViewHolder) holder).right_msg.setText(msg);
+            ((ChatRightViewHolder) holder).right_msg.setText(new String(Base64Utils.decodeFromString(msg)));
             ((ChatRightViewHolder) holder).right_time.setText(t);
         }
     }

@@ -68,14 +68,14 @@ public class MessageAdapter extends BaseAdapter {
             viewHolder =(ViewHolder) convertView.getTag();
         }
         //小红点存在
-        if(messageList.contains(position)){
+        if(messageList.get(position).getUnReadCnt()==0){
             viewHolder.mDragView.setVisibility(View.GONE);
         }
         else{
             viewHolder.mDragView.setVisibility(View.VISIBLE);
         }
 
-        viewHolder.mDragView.setText("1");
+        viewHolder.mDragView.setText(String.valueOf(messageList.get(position).getUnReadCnt()));
         StickyViewHelper stickyViewHelper = new StickyViewHelper(context, viewHolder.mDragView,R.layout.red_point_includeview);
 
         //给控件赋值

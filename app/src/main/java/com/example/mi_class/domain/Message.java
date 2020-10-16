@@ -10,6 +10,15 @@ public class Message {
     private long time;   //发送时间
     private Bitmap head_portrait;   //头像
     private int type;   //类型
+    private int unReadCnt;
+
+    public int getUnReadCnt() {
+        return unReadCnt;
+    }
+
+    public void setUnReadCnt(int unReadCnt) {
+        this.unReadCnt = unReadCnt;
+    }
 
     public int getType() {
         return type;
