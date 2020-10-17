@@ -83,12 +83,39 @@ public class MessageFragment extends Fragment {
                         {
                             String temp = preferences.getString("message_list","");
                             String temp1 = (String)msg.getData().getString("res");
+
                             if(!temp1.equals("[]"))
                             {
                                 //新增消息不是空
+
+                                //新增的消息数据做读取状态判断
+                                if(!ChatActivity.name.equals("") && !ChatActivity.phone.equals(""))
+                                {
+                                    p = new HashMap<>();
+                                    p.put("to_user_id",ChatActivity.phone);
+                                    p.put("from_user_id",ChatActivity.name);
+                                    p.put("time",String.valueOf(new Date().getTime()));
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            HttpUtils.sendPostMessage(p,"utf-8","toRead");
+                                        }
+                                    });
+                                    List<message_temp> t2 =  to_ms_data(temp1);
+                                    for(int i = 0 ; i < t2.size() ; i++)
+                                    {
+                                        message_temp t3 = t2.get(i);
+                                        if(t3.getTo_user_id().equals(ChatActivity.phone) && t3.getFrom_user_id().equals(ChatActivity.name))
+                                        {
+                                            t3.setState(1);
+                                        }
+                                    }
+                                    temp1 = ms_data_to_string(t2);
+                                }
                                 temp = temp.substring(0,temp.length()-1)+",";
                                 temp1 = temp1.substring(1);
                                 temp += temp1;
+
                                 System.out.println("now:"+temp1);
                                 System.out.println("history+now："+temp);
                                 ed.putString("message_list",temp);
@@ -184,7 +211,40 @@ public class MessageFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.setGroupVisible(R.menu.main_add_btn,false);
     }
+    public String ms_data_to_string(List<message_temp> temps)
+    {
+        String s = "[";
+        for(int i = 0 ; i < temps.size() ; i ++)
+        {
+            s += "{\"to_user_id\":\""+temps.get(i).getTo_user_id()+"\","+"\"time\":"+temps.get(i).getTime()+",\"state\":"+temps.get(i).getState()+",\"content\":\""+temps.get(i).getContent()+"\",\"from_user_id\":\""+temps.get(i).getFrom_user_id()+"\"},";
+        }
+        s = s.substring(0,s.length()-1);
+        s += "]";
+        return s;
+    }
 
+    public List<message_temp> to_ms_data(String res){
+        List<message_temp> result = new ArrayList<>();
+        JSONArray array = null;
+        try {
+            array = new JSONArray(res);
+            for(int i = 0 ; i < array.length(); i ++)
+            {
+                JSONObject j = (JSONObject) array.get(i);
+                message_temp temp = new message_temp();
+                temp.setContent((String)j.get("content"));
+                temp.setFrom_user_id((String)j.get("from_user_id"));
+                temp.setState((int)j.get("state"));
+                temp.setTime((long)j.get("time"));
+                temp.setTo_user_id((String)j.get("to_user_id"));
+                result.add(temp);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void reList()
     {

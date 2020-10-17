@@ -340,6 +340,11 @@ public class Forget_password_activity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        SMSSDK.unregisterEventHandler(eh);
+    }
 
     public boolean phone_paw_true(){
         phone = edit_phone_number.getText().toString();
