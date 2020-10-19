@@ -138,6 +138,6 @@ public class Start_activity extends AppCompatActivity {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(timerTask,1000);
+        timer.schedule(timerTask,2000);
     }
 }

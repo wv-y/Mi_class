@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:background="@drawable/edit_back"
             android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="12dp"
             android:elevation="8dip"
 
             android:textSize="15sp"/>

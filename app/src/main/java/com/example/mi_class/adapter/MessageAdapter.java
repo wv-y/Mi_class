@@ -75,6 +75,7 @@ public class MessageAdapter extends BaseAdapter {
             viewHolder.mDragView.setVisibility(View.VISIBLE);
         }
 
+
         viewHolder.mDragView.setText(String.valueOf(messageList.get(position).getUnReadCnt()));
         StickyViewHelper stickyViewHelper = new StickyViewHelper(context, viewHolder.mDragView,R.layout.red_point_includeview);
 
