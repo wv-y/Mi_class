@@ -36,7 +36,7 @@
                 android:background="@drawable/edit_back"
                 android:hint="课程名称"
                 android:inputType="text"
-                android:maxLength="6"
+                android:maxLength="20"
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"

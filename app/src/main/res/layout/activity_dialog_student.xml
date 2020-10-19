@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/edit_back"
-                android:hint="请输入课程码"
+                android:hint="请输入六位课程码"
                 android:inputType="textPersonName"
                 android:maxLength="6"
                 android:padding="10dp"

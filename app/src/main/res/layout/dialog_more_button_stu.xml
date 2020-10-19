@@ -6,20 +6,31 @@
     android:orientation="vertical"
     android:padding="15dp"
     android:background="@drawable/dialog_round_back">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/stu_dialog_course_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="课程名称"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+        <ImageView
+            android:id="@+id/dialog_close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/cha"
+            android:layout_alignParentEnd="true"
+            />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/stu_dialog_course_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="课程名称"
-        android:textSize="19sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"/>
     <RelativeLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="25dp">
         <TextView
             android:id="@+id/stu_dialog_course_code"
             android:layout_width="wrap_content"
@@ -39,6 +50,24 @@
             android:textSize="14sp"
             android:textColor="@color/blue"/>
     </RelativeLayout>
+
+    <View
+        android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/login_input_text"/>
+    <TextView
+        android:id="@+id/course_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="课程信息"
+        android:textSize="@dimen/sp_18"
+        android:textColor="@color/black"/>
+
     <View
         android:layout_height="1px"
         android:layout_width="match_parent"
