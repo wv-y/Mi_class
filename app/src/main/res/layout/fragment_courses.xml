@@ -3,8 +3,9 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-    <RelativeLayout
+        android:orientation="vertical"
+        android:background="@color/back">
+   <!-- <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp">
@@ -29,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:src="@drawable/vector_drawable_find_button" />
-    </RelativeLayout>
+    </RelativeLayout>-->
     <TextView
         android:id="@+id/is_null"
         android:layout_width="match_parent"
@@ -46,7 +47,9 @@
         android:layout_height="match_parent"
         android:divider="#00000000"
         android:dividerHeight="15dp"
-        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="15dp"
         android:scrollbars="none">
 
     </ListView>
