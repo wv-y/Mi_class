@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,7 +44,10 @@ import com.example.mi_class.fragment.CourseFragment;
 import com.example.mi_class.fragment.MessageFragment;
 import com.example.mi_class.fragment.UserFragment;
 import com.example.mi_class.mainToolbar.TabContainerView;
+import com.example.mi_class.tool.AES;
+import com.example.mi_class.tool.Base64Utils;
 import com.example.mi_class.tool.HttpUtils;
+import com.example.mi_class.tool.Match;
 import com.example.mi_class.tool.MyWebSocket;
 
 import org.java_websocket.enums.ReadyState;
@@ -56,13 +60,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import cn.smssdk.SMSSDK;
+
+import static com.example.mi_class.tool.MD5.md5;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
     private int fragmentIndex = 0;
     private String url = "ws://192.168.43.165:8080/ws/";
 
-    String ph;
+    //String ph;
     List<message_temp> temp_ms_data;
     public static Handler handler;
     private final int[][] icons = {
@@ -77,16 +86,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             new UserFragment()
     ));
     private static final int getMsData = 100;
+    private static final int teaAddCourse = 300;
+    private static final int stuAddCourse = 301;
     private int[] TAB_COLORS = {
             R.color.main_bottom_tab_textcolor_normal,
             R.color.main_bottom_tab_textcolor_selected};
 
 
     private ViewPager viewPager ;
-    private String identity;
+    private String identity,ph;
     private ImageView tea_dialog_cha,stu_dialog_cha;
     private View dialogView;
     private AlertDialog alterDialog;
+    private boolean connection_flag;
+    private boolean tea_add_course_flag = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         System.out.println("开始：主活动创建");
         initToolbar();
+        init_data(); // 从缓存获得手机号和身份
         //开始连接ws
         MyWebSocket.OK = true;
         if(MyWebSocket.myWebSocket == null)
@@ -111,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         handler = new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
+                String info;
                 switch (msg.what){
                     case getMsData:
                         SharedPreferences preferences = getSharedPreferences(ph+"_ms",MODE_PRIVATE);
@@ -118,15 +135,47 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         ed.putString("message_list",(String)msg.getData().getString("res"));
                         System.out.println("ook拿到数据:"+(String)msg.getData().getString("res"));
                         break;
+                    case teaAddCourse:
+                        info = msg.getData().getString("info");
+                        Log.d("insterCourse_info",info);
+                        if(info.equals("1")){
+                            // 关闭对话框
+                            alterDialog.cancel();
+                            // 向课程碎片发送消息重新加载布局
+                            Message message = new Message();
+                            message.what = 330;
+                            CourseFragment.course_hadler.sendMessage(message);
+                            Toast.makeText(MainActivity.this,"创建成功",Toast.LENGTH_LONG).show();
+                        }else if(info.equals("0")){
+                            Toast.makeText(MainActivity.this,"创建失败",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(MainActivity.this,"网络错误",Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    case stuAddCourse:
+                        info = msg.getData().getString("info");
+                        Log.d("studentadd",info);
+                        if(info.equals("11")){
+                            alterDialog.cancel();
+                            Message message = new Message();
+                            message.what = 330;
+                            CourseFragment.course_hadler.sendMessage(message);
+                            Toast.makeText(MainActivity.this,"添加成功",Toast.LENGTH_LONG).show();
+                        }else if(info.equals("0")) {
+                            Toast.makeText(MainActivity.this,"添加失败",Toast.LENGTH_LONG).show();
+                        }else if(info.equals("10")) {
+                            Toast.makeText(MainActivity.this,"无该门课程",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(MainActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                 }
             }
         };
 
 
 
-        Intent intent =  getIntent();
-        //identity = intent.getStringExtra("identity");
-        identity = "S";
+
     }
 
 
@@ -136,7 +185,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             @Override
             public void run() {
                 try {
-                    String ph = getSharedPreferences("user_login_info",MODE_PRIVATE).getString("phone","");
+                    //ph = getSharedPreferences("user_login_info",MODE_PRIVATE).getString("phone","");
+                    init_data();
                     if(ph.equals("")){
                         //无登陆态
                     }else{
@@ -146,8 +196,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         if(MyWebSocket.myWebSocket == null){
                             MyWebSocket.myWebSocket = new MyWebSocket(u);
                             if (MyWebSocket.myWebSocket.connectBlocking()) {
+                                connection_flag = true;
                                 Log.i("s", "run: 连接服务器成功");
                             } else {
+                                connection_flag = false;
                                 Log.i("s", "run: 连接服务器失败");
 //                                Thread.sleep(1000);
 //                                Message m = new Message();
@@ -256,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             window.setContentView(dialogView);
             stu_dialog_cha = dialogView.findViewById(R.id.stu_dialog_cha);
             final EditText insert_course_code = dialogView.findViewById(R.id.insert_course_code);
+            final Button stu_btn_submit = (Button) dialogView.findViewById(R.id.stu_btn_submit);
             stu_dialog_cha.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -266,6 +319,29 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 @Override
                 public void onFocusChange(View view, boolean b) {
                     change_edit_style(b,insert_course_code);
+                }
+            });
+            // 学生点击确定按钮
+            stu_btn_submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println("shiihisihi");
+                    String code = insert_course_code.getText().toString();
+                    Log.d("studentque","stu"+code+ph);
+                    if(code.equals("")){
+                        insert_course_code.setBackgroundResource(R.drawable.edit_back_error);
+                        Toast.makeText(MainActivity.this,"请输入课程码",Toast.LENGTH_SHORT).show();
+                    }else if(code.length()!=6){
+                        insert_course_code.setBackgroundResource(R.drawable.edit_back_error);
+                        Toast.makeText(MainActivity.this,"请输入六位课程码",Toast.LENGTH_SHORT).show();
+                    }else if(Match.char_mobile(code)){
+                        //添加课程
+                        Log.d("studentque","stu"+code+ph);
+                        stu_add_course(code ,ph);
+                    }else {
+                        insert_course_code.setBackgroundResource(R.drawable.edit_back_error);
+                        Toast.makeText(MainActivity.this,"不能输入特殊字符",Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }else{
@@ -283,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             final EditText insert_course_introduce = dialogView.findViewById(R.id.insert_course_introduce);
             final EditText insert_course_name = dialogView.findViewById(R.id.insert_course_name);
             final TextView course_introduce_num = dialogView.findViewById(R.id.course_introduce_num);
-
+            final Button tea_btn_submit = (Button) dialogView.findViewById(R.id.tea_btn_submit);
             tea_dialog_cha.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -339,13 +415,86 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     }
                 }
             });
+
+            // 老师点击确定按钮
+            tea_btn_submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String course_name,course_introduce;
+                    course_name = insert_course_name.getText().toString();
+                    course_introduce = insert_course_introduce.getText().toString();
+                    if(course_name.equals("")){
+                        Toast.makeText(MainActivity.this,"课程名称不能为空",Toast.LENGTH_SHORT).show();
+                        insert_course_name.setBackgroundResource(R.drawable.edit_back_error);
+                    }else if(Match.char_mobile(course_name) && Match.char_mobile(course_introduce)){  //防止特殊字符
+                        //System.out.println("res"+(Match.char_mobile(course_name) && Match.char_mobile(course_introduce)));
+                        // 创建课程
+                        tea_add_course(course_name,course_introduce,ph);
+                    }else{
+                        Toast.makeText(MainActivity.this,"不能输入特殊字符",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
+    // 编辑框获得焦点的样式
     public void change_edit_style(boolean b,EditText editText){
         if(b)
             editText.setBackgroundResource(R.drawable.edit_back_onfocus);
         else
             editText.setBackgroundResource(R.drawable.edit_back);
     }
+
+    // 从本地缓存初始化手机号和身份
+    public void init_data(){
+        SharedPreferences sp = getSharedPreferences("user_login_info",MODE_PRIVATE);
+        ph = sp.getString("phone","");
+        identity = sp.getString("identity","");
+    }
+
+    // 老师创建课程
+    public void tea_add_course(String name,String introduce,String phone_number){
+        final Map<String,String> params = new HashMap<String,String>();
+
+        //Base64Utils.encodeToString("a".getBytes());
+        //new String(Base64Utils.decodeFromString("s"));
+        params.put("teacher_phone",phone_number);
+        params.put("course_name",name);
+        params.put("course_introduce",introduce);
+        Log.d("insterCourse",name);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String res = HttpUtils.sendPostMessage(params,"utf-8","insertCourse");
+                Log.d("inster",res);
+                Message message = new Message();
+                Bundle b = new Bundle();
+                b.putString("info",res);
+                message.setData(b);
+                message.what = 300;
+                handler.sendMessage(message);
+            }
+        }).start();
+    }
+
+    public void stu_add_course(String code ,String phone){
+        Log.d("studentque","stu2"+code+phone);
+        final Map<String,String> params = new HashMap<>();
+        params.put("course_id",code);
+        params.put("stu_phone",phone);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String res = HttpUtils.sendPostMessage(params,"utf-8","insertCourseLog");
+                Message message = new Message();
+                Bundle b = new Bundle();
+                b.putString("info",res);
+                message.setData(b);
+                message.what = 301;
+                handler.sendMessage(message);
+            }
+        }).start();
+    }
+
 }

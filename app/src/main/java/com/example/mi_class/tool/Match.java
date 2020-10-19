@@ -1,5 +1,6 @@
 package com.example.mi_class.tool;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Match {
@@ -9,4 +10,15 @@ public class Match {
         return Pattern.matches(p,mobile);
     }
 
+    // 判断是否有特殊字符
+    public static boolean char_mobile(String input){
+        String regEx = "[\"_`~!@#$%^&*\\\\/￥¥]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(input);
+ //       System.out.println("input:"+input);
+//        System.out.println("input-flag:"+!m.find());
+        boolean y = !m.find();
+     //   System.out.println("input-flag:"+y);
+        return y;
+    }
 }
