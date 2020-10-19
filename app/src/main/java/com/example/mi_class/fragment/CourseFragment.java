@@ -62,7 +62,7 @@ public class CourseFragment extends Fragment {
         is_null = (TextView) view.findViewById(R.id.is_null);
         init_data(); // 初始化数据
 
-        sp = getActivity().getSharedPreferences("course_list",MODE_PRIVATE);
+        /*sp = getActivity().getSharedPreferences("course_list",MODE_PRIVATE);
         String local_course_list = sp.getString("local_course_list","");
         Log.d("local1",local_course_list);
         if(local_course_list.equals("-999") ||local_course_list.equals("") ) {
@@ -78,7 +78,7 @@ public class CourseFragment extends Fragment {
             } else if(identity.equals("S")){
                 stu_course_list();
             }
-        }
+        }*/
 
         course_hadler = new Handler(){
             @Override
@@ -132,13 +132,30 @@ public class CourseFragment extends Fragment {
 
     @Override
     public void onStart() {
-        super.onStart();
+        super.onStart();/*
         if (identity.equals("T")) {
             Log.d("inster", identity);
             tea_course_list();
         } else if (identity.equals("S")) {
             stu_course_list();
+        }*/
+        sp = getActivity().getSharedPreferences("course_list",MODE_PRIVATE);
+        String local_course_list = sp.getString("local_course_list","");
+        if(local_course_list.equals("-999") ||local_course_list.equals("") ) {
+            is_null.setVisibility(View.VISIBLE);
         }
+        else {
+            course_list = get_course_list(local_course_list);
+            course_adapter = new CourseAdapter(getActivity(), R.layout.fragment_courses_list, course_list);
+            course_list_view.setAdapter(course_adapter); //设置适配器，显示查询结果
+            if(identity.equals("T")){
+                Log.d("inster",identity);
+                tea_course_list();
+            } else if(identity.equals("S")){
+                stu_course_list();
+            }
+        }
+
     }
 
     // 老师向服务器查询course_list
