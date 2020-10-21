@@ -191,17 +191,21 @@
             android:textSize="18sp"
             android:textColor="@color/black"/>
         <TextView
+            android:id="@+id/new_ann"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:text="最新公告（内容）"
             android:lineSpacingMultiplier="1.2"
+            android:scrollbars="vertical"
+            android:maxHeight="200dp"
             android:textSize="16sp"
             android:textColor="@color/black"/>
         <TextView
+            android:id="@+id/new_ann_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:gravity="right"
             android:text="2020/10/6  12:35"
             android:textSize="13sp"

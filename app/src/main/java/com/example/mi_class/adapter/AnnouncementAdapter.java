@@ -44,7 +44,7 @@ public class AnnouncementAdapter extends ArrayAdapter {
         assert announcement != null;
         announcement_name.setText(announcement.getAnnouncement_name()); //为文本视图设置文本内容
         announcement_content.setText(announcement.getAnnouncement_content());
-        announcement_time.setText(announcement.getAnnouncement_time());
+        announcement_time.setText(announcement.getAnnouncement_time().substring(0,16));
         return view;
     }
 

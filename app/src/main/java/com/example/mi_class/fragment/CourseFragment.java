@@ -148,12 +148,12 @@ public class CourseFragment extends Fragment {
             course_list = get_course_list(local_course_list);
             course_adapter = new CourseAdapter(getActivity(), R.layout.fragment_courses_list, course_list);
             course_list_view.setAdapter(course_adapter); //设置适配器，显示查询结果
-            if(identity.equals("T")){
-                Log.d("inster",identity);
-                tea_course_list();
-            } else if(identity.equals("S")){
-                stu_course_list();
-            }
+        }
+        if(identity.equals("T")){
+            Log.d("inster",identity);
+            tea_course_list();
+        } else if(identity.equals("S")){
+            stu_course_list();
         }
 
     }

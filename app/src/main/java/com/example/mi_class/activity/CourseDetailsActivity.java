@@ -35,6 +35,7 @@ import com.alibaba.fastjson.JSON;
 import com.example.mi_class.MainActivity;
 import com.example.mi_class.R;
 import com.example.mi_class.Start_activity;
+import com.example.mi_class.domain.Announcement;
 import com.example.mi_class.domain.Course;
 import com.example.mi_class.domain.CourseMessage;
 import com.example.mi_class.fragment.CourseFragment;
@@ -54,17 +55,21 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
 
     private String course_code,course_name,course_introduce;
     private ImageView announcement_button,sign_in_button,member_button,homework_button,file_button,more_button;
+    private TextView new_ann,new_ann_time;
     private String identity,phone_number;
     private Handler handler;
     private final static int DELETE_COURSE = 304;
     private final static int CHANGE_COURSE = 305;
     private final static int EXIT_COURSE = 306;
     private final static int MESSAGE_COURSE = 307;
+    private final static int GET_ANN_LIST = 308;
+    private final static int NEW_ANN = 309;
     private Map<String,String> params;
     private CourseMessage courseMessage = new CourseMessage();
     private String info;
     private AlertDialog dialog;
     private String change_name,change_introduce;
+    private String ann_list;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -78,8 +83,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         course_code = intent.getStringExtra("course_code");
         course_name = intent.getStringExtra("course_name");
         course_introduce = intent.getStringExtra("course_introduce");
-        // 初始化数据
-        init_data();
+
         // 设置标题
         setTitle(course_name);
         // 使用系统返回键
@@ -96,6 +100,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         homework_button = findViewById(R.id.homework_button);
         file_button = findViewById(R.id.file_button);
         more_button = findViewById(R.id.more_button);
+        new_ann = findViewById(R.id.new_ann);
+        new_ann_time = findViewById(R.id.new_ann_time);
+
+        new_ann.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         announcement_button.setOnClickListener(this);
         sign_in_button.setOnClickListener(this);
@@ -164,11 +172,46 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                                 course_message_dialog();
                             }
                             break;
+                        case GET_ANN_LIST:
+                            // 获取公告列表 跳转到公告列表
+                            info = msg.getData().getString("info");
+                            System.out.println("annlist"+info);
+                            if(info.equals("-999")){
+                                Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent intent = new Intent(CourseDetailsActivity.this, AnnouncementActivity.class);
+                                intent.putExtra("ann_list",info);
+                                intent.putExtra("course_code",course_code);
+                                startActivity(intent);
+                            }
+                            break;
+                        case NEW_ANN:
+                            info = msg.getData().getString("info");
+                            if(info.equals("[]")){
+                                new_ann.setText("暂时没有最新公告");
+                                new_ann_time.setText("");
+                                save_ann(info);
+                            } else if(info.equals("-999")){
+                                Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                                read_ann_local();
+                            } else {
+                                Announcement ann = get_new_ann(info);
+                                new_ann.setText(ann.getAnnouncement_name()+"："+ann.getAnnouncement_content());
+                                new_ann_time.setText(ann.getAnnouncement_time());
+                                save_ann(info);
+                            }
+                            break;
                 }
             }
         };
     }
 
+    @Override
+    public void onStart() {
+        // 初始化数据
+        init_data();
+        super.onStart();
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -185,8 +228,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         Intent intent;
         switch (view.getId()){
             case R.id.announcement_button:
-                intent = new Intent(CourseDetailsActivity.this, AnnouncementActivity.class);
-                startActivity(intent);
+                get_ann_list(course_code);
                 break;
             case R.id.sign_in_button:
                 intent = new Intent(CourseDetailsActivity.this, SignInActivity.class);
@@ -552,6 +594,8 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         SharedPreferences sp = getSharedPreferences("user_login_info",MODE_PRIVATE);
         phone_number = sp.getString("phone","");
         identity = sp.getString("identity","");
+        read_ann_local();
+        get_new_ann_list(course_code);
     }
 
     // 老师删除课程
@@ -631,7 +675,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         }).start();
     }
 
-    // 解析返回的数据
+    // 解析返回的课程信息
     public CourseMessage get_course_message(String str){
         CourseMessage message = new CourseMessage();
         try {
@@ -642,5 +686,84 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
         return message;
+    }
+
+    // 获取公告列表
+    public void get_ann_list(String code){
+        params = new HashMap<>();
+        params.put("course_id",code);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString("info",HttpUtils.sendPostMessage(params,"utf-8","notice/get"));
+                message.setData(bundle);
+                message.what = GET_ANN_LIST;
+                handler.sendMessage(message);
+            }
+        }).start();
+
+    }
+
+    // 获取最新公告
+    public void get_new_ann_list(String code){
+        params = new HashMap<>();
+        params.put("course_id",code);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString("info",HttpUtils.sendPostMessage(params,"utf-8","notice/get"));
+                message.setData(bundle);
+                message.what = NEW_ANN;
+                handler.sendMessage(message);
+            }
+        }).start();
+
+    }
+
+    // 解析公告列表，拿取最新公告
+    public Announcement get_new_ann(String str){
+        Announcement ann = new Announcement();
+        try {
+            JSONArray array = new JSONArray(str);
+            /*for(int i=0; i<array.length();i++){
+                JSONObject object = array.getJSONObject(i);
+            }*/
+            JSONObject object = array.getJSONObject(0);
+            ann.setAnnouncement_name(object.getString("title"));
+            ann.setAnnouncement_content(object.getString("value"));
+            ann.setAnnouncement_time(object.getString("fb_time").substring(0,16));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return ann;
+    }
+
+    // 最新公告本地缓存
+    public void save_ann(String str){
+        SharedPreferences sp = CourseDetailsActivity.this.getSharedPreferences("ann",MODE_PRIVATE);
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor edit = sp.edit();
+        edit.clear();
+        edit.putString("new_ann",str);
+        edit.apply();
+        edit.commit();
+    }
+
+    // 读取最新公告本地缓存
+    @SuppressLint("SetTextI18n")
+    public void read_ann_local(){
+        SharedPreferences sp = CourseDetailsActivity.this.getSharedPreferences("ann",MODE_PRIVATE);
+        String ann_local = sp.getString("new_ann","");
+        if(ann_local.equals("[]") || ann_local.equals("")){
+            new_ann.setText("暂时没有最新公告");
+            new_ann_time.setText("");
+        } else {
+            Announcement announcement = get_new_ann(ann_local);
+            new_ann.setText(announcement.getAnnouncement_name()+"："+announcement.getAnnouncement_content());
+            new_ann_time.setText(announcement.getAnnouncement_time());
+        }
     }
 }

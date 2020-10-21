@@ -1,0 +1,12 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/edit_ann"
+        android:icon="@drawable/ic_edit_ann"
+        app:showAsAction="withText"
+        android:title="编辑"/>
+    <item android:id="@+id/delete_ann"
+        android:icon="@drawable/ic_delete_ann"
+        app:showAsAction="withText"
+        android:title="删除"/>
+</menu>
