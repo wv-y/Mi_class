@@ -1,7 +1,6 @@
 package com.example.mi_class.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -52,12 +51,10 @@ public class CourseFragment extends Fragment {
     private Map<String,String> params;
     private SharedPreferences sp;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_courses, container, false);
-
         course_list_view = (ListView) view.findViewById(R.id.course_list);
         is_null = (TextView) view.findViewById(R.id.is_null);
         init_data(); // 初始化数据

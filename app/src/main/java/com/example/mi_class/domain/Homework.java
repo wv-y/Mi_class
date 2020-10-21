@@ -1,53 +1,49 @@
 package com.example.mi_class.domain;
 
 public class Homework {
-    private String name;
-    private String content;
-    private String time;
-    private String style;
+    private String title;
+    private String detail;
+    private long pubtime;
+    private long subtime;
 
-    public  Homework(String name,String time,String style){
-        this.name = name;
-        this.time = time;
-        this.style = style;
+    public Homework(String title,String detail, long pubtime,long subtime){
+        this.title = title;
+        this.detail = detail;
+        this.pubtime = pubtime;
+        this.subtime = subtime;
+
     }
 
-    public  Homework(String name,String content,String time,String style){
-        this.name = name;
-        this.content =content;
-        this.time = time;
-        this.style = style;
+
+    public String getTitle() {
+        return title;
     }
 
-    public String getName() {
-        return name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getDetail() {
+        return detail;
     }
 
-    public String getTime() {
-        return time;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
-    public String getStyle() {
-        return style;
+    public long getPubtime() {
+        return pubtime;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPubtime(long pubtime) {
+        this.pubtime = pubtime;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public long getSubtime() {
+        return subtime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public void setStyle(String style) {
-        this.style = style;
+    public void setSubtime(long subtime) {
+        this.subtime = subtime;
     }
 }

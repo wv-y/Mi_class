@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/back"
-    tools:context=".activity.HomeworkActivity">
-
-    <ListView
-        android:id="@+id/homework_list_view"
+    tools:context=".activity.HomeworkActivity"
+    >
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/homework_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:scrollbarSize="6dp"
+        android:scrollbarThumbVertical="@color/gray"
+        />
+</RelativeLayout>

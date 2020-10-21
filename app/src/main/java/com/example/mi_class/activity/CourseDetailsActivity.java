@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -16,17 +17,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +78,9 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     private AlertDialog dialog;
     private String change_name,change_introduce;
     private String ann_list;
+    private ProgressDialog progressDialog = null;
+    //private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -465,6 +476,8 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 dialog = alterDialog;
                 change_name = change_course_name.getText().toString();
                 change_introduce = change_course_introduce.getText().toString();
+                progressDialog = ProgressDialog.show(view.getContext(), "请稍等", "更新课程信息中，请稍候。。。",true);
+                //progressBar.setVisibility(View.VISIBLE);
                 change_course(course_code,change_course_name.getText().toString(),change_course_introduce.getText().toString());
             }
         });
@@ -634,6 +647,11 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 message.setData(b);
                 message.what = CHANGE_COURSE;
                 handler.sendMessage(message);
+              //  progressBar.setProgress(100);
+               // progressBar.setVisibility(View.VISIBLE);
+
+
+               progressDialog.dismiss();
             }
         }).start();
     }
