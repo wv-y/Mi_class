@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mi_class.R;
@@ -37,21 +38,17 @@ public class FileAdapter extends ArrayAdapter {
         @SuppressLint("ViewHolder") View view = LayoutInflater.from(getContext()).inflate(resourceId, null);//实例化一个对象
 
         TextView file_name = (TextView) view.findViewById(R.id.file_name);
-        TextView file_style = (TextView) view.findViewById(R.id.file_style);
         TextView file_size = (TextView) view.findViewById(R.id.file_size);
+        TextView file_time = (TextView) view.findViewById(R.id.file_time);
+        TextView file_id = (TextView) view.findViewById(R.id.file_id);
+        ImageView file_type = (ImageView) view.findViewById(R.id.file_image);
 
         assert file!= null;
         file_name.setText(file.getName()); //为文本视图设置文本内容
         file_size.setText(file.getSize());
-
-        //判断身份
-        if(file.getStyle().equals("未下载")){
-            file_style.setText("未下载");
-        }
-        else if(file.getStyle().equals("已下载")){
-            file_style.setText("已下载");
-        }
-
+        file_time.setText(file.getTime());
+        file_id.setTag(file.getId());
+        file_type.setImageLevel(file.getImage_level());
         return view;
     }
 

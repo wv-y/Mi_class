@@ -238,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         int height = getResources().getDimensionPixelSize(R.dimen.tab_icon_height);
         tabContainerView.setContainerLayout(R.layout.tab_container_view, R.id.iv_tab_icon, R.id.tv_tab_text, width, height);
         tabContainerView.setViewPager(viewPager);
-
         viewPager.setCurrentItem(getIntent().getIntExtra("tab", 0));
     }
 
