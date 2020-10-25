@@ -4,5 +4,6 @@
             android:icon="@drawable/ic_add"
             android:orderInCategory="100"
             app:showAsAction="always"
-            android:title="add"/>
+            android:title="add">
+    </item>
 </menu>

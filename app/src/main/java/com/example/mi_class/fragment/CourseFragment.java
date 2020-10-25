@@ -1,7 +1,6 @@
 package com.example.mi_class.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -47,7 +46,7 @@ public class CourseFragment extends Fragment {
     private CourseAdapter course_adapter;
     private TextView is_null;
     private boolean is_show = false;
-    public static Handler course_hadler;
+    public static Handler course_handler;
     private String ph,identity;
     private Map<String,String> params;
     private SharedPreferences sp;
@@ -80,7 +79,7 @@ public class CourseFragment extends Fragment {
             }
         }*/
 
-        course_hadler = new Handler(){
+        course_handler = new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
@@ -173,7 +172,7 @@ public class CourseFragment extends Fragment {
                 b.putString("info",res);
                 message.setData(b);
                 message.what = 331;
-                course_hadler.sendMessage(message);
+                course_handler.sendMessage(message);
             }
         }).start();
     }
@@ -192,7 +191,7 @@ public class CourseFragment extends Fragment {
                 b.putString("info",res);
                 message.setData(b);
                 message.what = 331;
-                course_hadler.sendMessage(message);
+                course_handler.sendMessage(message);
             }
         }).start();
     }

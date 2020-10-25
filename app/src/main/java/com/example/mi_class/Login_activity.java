@@ -96,7 +96,32 @@ public class Login_activity extends AppCompatActivity {
                 switch (msg.what){
                     case 200:
                         String info = msg.getData().getString("info");
-                        if(info.equals("400")){
+                        if(info.equals("801")){
+                            // 学生 没有完善
+                            SharedPreferences pf = getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor ed = pf.edit();
+                            ed.putString("phone",phone_number_login.getText().toString());
+                            ed.putString("identity","S");
+                            ed.commit();
+                            System.out.println("S");
+                            Intent intent = new Intent(Login_activity.this,UserInfoActivity.class);
+                            intent.putExtra("FirstLogin",true);
+                            intent.putExtra("identity",'S');
+                            startActivity(intent);
+                        } else if(info.equals("802")){
+                            // 老师 没有完善
+                            SharedPreferences pf = getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor ed = pf.edit();
+                            ed.putString("phone",phone_number_login.getText().toString());
+                            ed.putString("identity","T");
+                            ed.commit();
+                            System.out.println("T");
+                            Intent intent = new Intent(Login_activity.this,UserInfoActivity.class);
+                            intent.putExtra("FirstLogin",true);
+                            intent.putExtra("identity",'T');
+                            startActivity(intent);
+                        }
+                        else if(info.equals("400")){
                             //学生
                             SharedPreferences pf = getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
                             SharedPreferences.Editor ed = pf.edit();
