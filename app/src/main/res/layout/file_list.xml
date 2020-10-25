@@ -5,12 +5,23 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:padding="15dp">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src = "@drawable/file_type"
+        android:paddingTop="5dp"
+        android:id="@+id/file_image"
+        />
     <TextView
         android:id="@+id/file_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:text="文件标题"
         android:textSize="18sp"
+        android:layout_toRightOf="@+id/file_image"
+        android:layout_alignTop="@id/file_image"
         android:textColor="@color/black" />
     <TextView
         android:id="@+id/file_style"
@@ -18,7 +29,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:text="是否下载"
+        android:textSize="13sp"
+        android:textColor="@color/login_input_text"/>
+    <TextView
+        android:id="@+id/file_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/file_style"
+        android:layout_alignRight="@id/file_style"
+        android:layout_alignBottom="@id/file_size"
+        android:gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:text="创建时间"
         android:textSize="13sp"
         android:textColor="@color/login_input_text"/>
     <TextView
@@ -26,10 +48,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/file_name"
+        android:layout_alignLeft="@id/file_name"
         android:gravity="bottom"
         android:layout_marginTop="20dp"
         android:text="文件大小"
         android:textSize="13sp"
         android:textColor="@color/login_input_text"/>
+    <TextView
+        android:id="@+id/file_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
 
 </RelativeLayout>

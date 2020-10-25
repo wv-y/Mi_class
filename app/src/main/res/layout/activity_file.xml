@@ -7,9 +7,18 @@
     android:orientation="vertical"
     android:background="@color/back"
     tools:context=".activity.FileActivity">
-
+    <TextView
+        android:id="@+id/file_null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="暂无文件"
+        android:gravity="center"
+        android:textColor="@color/login_input_text"
+        android:textSize="20sp"
+        android:visibility="gone"/>
     <ListView
         android:id="@+id/file_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </LinearLayout>
