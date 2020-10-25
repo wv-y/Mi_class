@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -17,24 +16,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +38,7 @@ import com.example.mi_class.Start_activity;
 import com.example.mi_class.domain.Announcement;
 import com.example.mi_class.domain.Course;
 import com.example.mi_class.domain.CourseMessage;
+import com.example.mi_class.domain.File;
 import com.example.mi_class.fragment.CourseFragment;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.Match;
@@ -72,12 +65,15 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     private final static int MESSAGE_COURSE = 307;
     private final static int GET_ANN_LIST = 308;
     private final static int NEW_ANN = 309;
+    private final static int get_filelist = 310;
     private Map<String,String> params;
     private CourseMessage courseMessage = new CourseMessage();
     private String info;
     private AlertDialog dialog;
     private String change_name,change_introduce;
     private String ann_list;
+    //存放本地文件绝对路径
+    String path;
     private ProgressDialog progressDialog = null;
     //private ProgressBar progressBar;
 
@@ -196,6 +192,19 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                                 startActivity(intent);
                             }
                             break;
+                        case get_filelist:
+                            //获取文件列表，跳转到文件列表
+                            info = msg.getData().getString("info");
+                            if(info.equals("-999")){
+                                Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent intent = new Intent(CourseDetailsActivity.this, FileActivity.class);
+                                intent.putExtra("file_list",info);
+                                intent.putExtra("course_code",course_code);
+                                intent.putExtra("identity",identity);
+                                startActivity(intent);
+                            }
+                            break;
                         case NEW_ANN:
                             info = msg.getData().getString("info");
                             if(info.equals("[]")){
@@ -212,6 +221,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                                 save_ann(info);
                             }
                             break;
+
                 }
             }
         };
@@ -254,8 +264,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.file_button:
-                intent = new Intent(CourseDetailsActivity.this,FileActivity.class);
-                startActivity(intent);
+                /*intent = new Intent(CourseDetailsActivity.this,FileActivity.class);
+                intent.putExtra("course_code",course_code);
+                startActivity(intent);*/
+                get_file_list(course_code);
                 break;
             case R.id.more_button:
                 showMoreDialog();
@@ -783,5 +795,81 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
             new_ann.setText(announcement.getAnnouncement_name()+"："+announcement.getAnnouncement_content());
             new_ann_time.setText(announcement.getAnnouncement_time());
         }
+    }
+    //获取文件列表
+    public void get_file_list(String code){
+        params = new HashMap<>();
+        params.put("course_id",code);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString("info", HttpUtils.sendPostMessage(params,"utf-8","sharedfile/getList"));
+                message.setData(bundle);
+                message.what = get_filelist;
+                handler.sendMessage(message);
+            }
+        }).start();
+    }
+    //解析文件列表
+    public List<File> get_new_file_list(String str){
+        List<File> list = new ArrayList<>();
+        FileActivity activity = new FileActivity();
+        String name,type;
+        int typeLevel;
+        try{
+            JSONArray array = new JSONArray(str);
+            for(int i=0;i<array.length();i++){
+                File file = new File();
+                JSONObject jsonObject = array.getJSONObject(i);
+                file.setName(jsonObject.getString("file_name"));
+                name = jsonObject.getString("file_name");
+                file.setTime(jsonObject.getString("fb_time"));
+
+                file.setSize(jsonObject.getString("file_size"));
+
+                file.setId(jsonObject.getString("file_id"));
+                //设置文件类型
+                type=activity.getFileType(name);
+                switch (type){
+                    case "png": typeLevel=0;
+                        break;
+                    case "jpg": typeLevel=0;
+                        break;
+                    case "gif": typeLevel=0;
+                        break;
+                    case "webp": typeLevel=0;
+                        break;
+                    case "mp3": typeLevel=1;
+                        break;
+                    case "wav": typeLevel=1;
+                        break;
+                    case "mp4": typeLevel=3;
+                        break;
+                    case "avi": typeLevel=3;
+                        break;
+                    case "pdf": typeLevel=2;
+                        break;
+                    case "ppt": typeLevel=2;
+                        break;
+                    case "doc": typeLevel=2;
+                        break;
+                    case "docx": typeLevel=2;
+                        break;
+                    case "html": typeLevel=2;
+                        break;
+                    default: typeLevel = 4;
+                        break;
+                }
+
+                file.setImage_level(typeLevel);
+                list.add(file);
+
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return list;
     }
 }

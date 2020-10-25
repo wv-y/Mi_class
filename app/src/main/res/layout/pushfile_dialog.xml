@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_round_back"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/dialog_round_back">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/dialog_round_back">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:text="请上传文件"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/search_file"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/search_file"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:hint="path:"
+                android:id="@+id/file_path"/>
+            <Button
+                android:id="@+id/file_commit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/but_bg"
+                android:text="提交"
+                android:textColor="@color/white"
+                android:layout_margin="10dp"
+                />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/file_cha"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/cha"
+            android:layout_marginStart="-30dp"
+            android:layout_marginTop="10dp"
+            />
+    </LinearLayout>
+</LinearLayout>
