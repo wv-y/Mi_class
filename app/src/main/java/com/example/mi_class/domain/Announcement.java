@@ -4,7 +4,7 @@ public class Announcement {
     private String announcement_name;
     private String announcement_time;
     private String announcement_content;
-
+    public Announcement(){}
     public Announcement(String announcement_name,String announcement_content,String announcement_time){
         this.announcement_name = announcement_name;
         this.announcement_time = announcement_time;

@@ -67,4 +67,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.7.2'
 
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+    implementation 'com.github.devlight.shadowlayout:library:1.0.2'
 }

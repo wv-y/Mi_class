@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:scrollbars="vertical"
-            android:maxHeight="190dp"
+            android:maxHeight="200dp"
             android:text="是课程描述、有些人对美的理解只是对于外表，而不注重心灵。
             其实那是不对的，心灵才是人"
             android:textColor="@color/black"
