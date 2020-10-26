@@ -36,15 +36,13 @@ public class UserInfoActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private Button eSchool;
     private int school_id;
-    private char identity;
+    private String identity;
     private String gender;
     private EditText name;
     private RadioGroup rGender;
     private EditText id;
     private EditText department;
     private Button save;
-    private final static int STU_ADD = 450;
-    private final static int TEACHER_ADD = 550;
     private User user;
     private Handler handler;
     private final int[] portraits = {
@@ -56,7 +54,6 @@ public class UserInfoActivity extends AppCompatActivity {
             R.drawable.portrait_6,
             R.drawable.portrait_7
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +67,7 @@ public class UserInfoActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra("FirstLogin", false)) {
             setTitle("完善信息");
         }
-        identity = getIntent().getCharExtra("identity", 'S');
-        if(identity == 'T') findViewById(R.id.l_department).setVisibility(View.VISIBLE);
-        else findViewById(R.id.l_department).setVisibility(View.GONE);
-        save = findViewById(R.id.save);
-
+        identity = pf.getString("identity","S");
         // 使用系统返回键
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -89,6 +82,13 @@ public class UserInfoActivity extends AppCompatActivity {
         rGender = findViewById(R.id.gender);
         department = findViewById(R.id.edit_department);
         rGender.setOnCheckedChangeListener(new MyRadioButtonListener());
+        save = findViewById(R.id.save);
+
+        if(identity.equals("T")){
+            department.setVisibility(View.VISIBLE);
+            TextView textView_id = findViewById(R.id.tv_id);
+            textView_id.setText("工号");
+        }
 
         initEdit();
         chooseImage();
@@ -96,7 +96,7 @@ public class UserInfoActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (identity == 'S') {
+                if (identity.equals("S")) {
                     StudentData studentData = new StudentData();
                     studentData.setStu_phone(pf.getString("phone",""));
                     studentData.setStu_name(name.getText().toString());
@@ -104,8 +104,15 @@ public class UserInfoActivity extends AppCompatActivity {
                     studentData.setSchool_id(school_id);
                     studentData.setStu_id(id.getText().toString());
                     studentData.setPic_id(portraits[viewPager.getCurrentItem()]);
-                    user = studentData;
-                    postMessage(studentData);
+                    if(studentData.getStu_id().equals("")||studentData.getStu_name().equals("")
+                            ||studentData.getSex().equals("")|| (studentData.getSchool_id() + "").equals("")
+                            || (studentData.getPic_id() + "").equals("")){
+                        Toast.makeText(UserInfoActivity.this, "请完整信息", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        user = studentData;
+                        postMessage(studentData);
+                    }
                 }
                 else{
                     TeacherData teacherData = new TeacherData();
@@ -116,8 +123,15 @@ public class UserInfoActivity extends AppCompatActivity {
                     teacherData.setTeacher_id(id.getText().toString());
                     teacherData.setPic_id(portraits[viewPager.getCurrentItem()]);
                     teacherData.setDepartment(department.getText().toString());
-                    user = teacherData;
-                    postMessage(teacherData);
+                    if(teacherData.getTeacher_id().equals("")||teacherData.getTeacher_name().equals("")
+                            ||teacherData.getSex().equals("")|| (teacherData.getSchool_id() + "").equals("")
+                            || (teacherData.getPic_id() + "").equals("")){
+                        Toast.makeText(UserInfoActivity.this, "请完整信息", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        user = teacherData;
+                        postMessage(teacherData);
+                    }
                 }
             }
         });
@@ -132,6 +146,8 @@ public class UserInfoActivity extends AppCompatActivity {
                             MainActivity.user = user;
                             user.SetUser(UserInfoActivity.this);
                             startActivity(new Intent(UserInfoActivity.this,MainActivity.class));
+                            onDestroy();
+                            finish();
                         }
                         else if(info.equals("199")) {
                             Toast.makeText(UserInfoActivity.this, "异常错误", Toast.LENGTH_LONG).show();
@@ -177,7 +193,7 @@ public class UserInfoActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String res = HttpUtils.sendPostMessage(map, "utf-8", "insertTeacher");
+                String res = HttpUtils.sendPostMessage(map, "utf-8", "insertTea");
                 Message m = new Message();
                 Bundle b = new Bundle();
                 b.putString("info", res);

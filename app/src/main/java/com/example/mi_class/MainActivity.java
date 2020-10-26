@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private int fragmentIndex = 0;
     private String url = "ws://192.168.43.165:8080/ws/";
     public static User user;
+//    private String url = "ws://192.168.43.165:8080/zb/";
 
     //String ph;
     List<message_temp> temp_ms_data;
