@@ -13,34 +13,78 @@
         android:gravity="center"
         android:text="实验签到（标题）"
         android:textStyle="bold"
-        android:textSize="17sp"
+        android:textSize="19sp"
         android:textColor="@color/black"/>
 
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/sign_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2020-12-10"
+            android:lineSpacingMultiplier="1.2"
+            android:textSize="17sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/start_and_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below ="@+id/sign_date"
+            android:text="12:00-12:30"
+            android:lineSpacingMultiplier="1.2"
+            android:textSize="15sp"
+            android:textColor="@color/black"/>
+    </RelativeLayout>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/sign_time"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="2020.10.6 20:43(发布)"
-            android:lineSpacingMultiplier="1.2"
-            android:textSize="16sp"
-            android:textColor="@color/black"/>
-        <TextView
-            android:id="@+id/sign_style"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/sign_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="2020.10.6"
+                android:lineSpacingMultiplier="1.2"
+                android:textSize="17sp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/start_and_end_time"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="12:00-12:30"
+                android:lineSpacingMultiplier="1.1"
+                android:textSize="15sp"
+                android:textColor="#7B7B7B"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="已签到"
-            android:lineSpacingMultiplier="1.2"
-            android:textSize="16sp"
-            android:textColor="#39BC3E"/>
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/sign_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="已签到"
+                android:lineSpacingMultiplier="1.2"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#0099ff"/>
+        </LinearLayout>
     </LinearLayout>
 
 

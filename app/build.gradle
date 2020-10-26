@@ -68,4 +68,5 @@ dependencies {
 
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     implementation 'com.github.devlight.shadowlayout:library:1.0.2'
+    implementation 'com.google.zxing:core:3.3.3'
 }

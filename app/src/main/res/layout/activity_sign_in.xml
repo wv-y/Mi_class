@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,6 +13,38 @@
         android:id="@+id/sign_in_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp"/>
+        android:layout_margin="15dp"
+        android:scrollbars="none"/>
 
-</LinearLayout>
+    <com.gigamole.library.ShadowLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:sl_shadow_angle="45"
+        app:sl_shadow_color="@color/login_input_text"
+        app:sl_shadow_distance="3dp"
+        app:sl_shadow_radius="2dp"
+        app:sl_shadowed="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="30dp">
+
+        <ImageView
+            android:id="@+id/add_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/vector_drawable_add"
+            tools:ignore="ContentDescription" />
+
+    </com.gigamole.library.ShadowLayout>
+    <TextView
+        android:id="@+id/sign_in_null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:text="暂无签到"
+        android:textSize="20sp"
+        android:textColor="@color/login_input_text"
+        android:gravity="center"/>
+
+</RelativeLayout>
