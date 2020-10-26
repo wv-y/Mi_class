@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.mi_class.activity.UserInfoActivity;
 import com.example.mi_class.tool.MyWebSocket;
 
 import java.net.URISyntaxException;
@@ -127,11 +128,15 @@ public class Start_activity extends AppCompatActivity {
                     startActivity(intent);
                 }else{
                     //有登录态
-                    System.out.println(pf.getString("phone","没有手机号"));
-                    System.out.println(pf.getString("identity","没有身份"));
-                    Intent intent = new Intent(Start_activity.this,MainActivity.class);
-                    startActivity(intent);
-
+                    if(pf.getBoolean("FirstLogin",false)){
+                        startActivity(new Intent(Start_activity.this, UserInfoActivity.class));
+                    }
+                    else{
+                        System.out.println(pf.getString("phone","没有手机号"));
+                        System.out.println(pf.getString("identity","没有身份"));
+                        Intent intent = new Intent(Start_activity.this,MainActivity.class);
+                        startActivity(intent);
+                    }
                 }
                 Start_activity.this.finish();
 

@@ -106,7 +106,6 @@ public class Login_activity extends AppCompatActivity {
                             System.out.println("S");
                             Intent intent = new Intent(Login_activity.this,UserInfoActivity.class);
                             intent.putExtra("FirstLogin",true);
-                            intent.putExtra("identity",'S');
                             startActivity(intent);
                         } else if(info.equals("802")){
                             // 老师 没有完善
@@ -118,7 +117,6 @@ public class Login_activity extends AppCompatActivity {
                             System.out.println("T");
                             Intent intent = new Intent(Login_activity.this,UserInfoActivity.class);
                             intent.putExtra("FirstLogin",true);
-                            intent.putExtra("identity",'T');
                             startActivity(intent);
                         }
                         else if(info.equals("400")){
