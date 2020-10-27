@@ -31,6 +31,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mi_class.adapter.MainPagerAdapter;
+import com.example.mi_class.domain.StudentData;
+import com.example.mi_class.domain.TeacherData;
 import com.example.mi_class.domain.User;
 import com.example.mi_class.domain.message_temp;
 import com.example.mi_class.fragment.CourseFragment;
@@ -40,6 +42,8 @@ import com.example.mi_class.mainToolbar.TabContainerView;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.Match;
 import com.example.mi_class.tool.MyWebSocket;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     //String ph;
     List<message_temp> temp_ms_data;
     public static Handler handler;
+    private SharedPreferences sp;
     private final int[][] icons = {
             {R.drawable.ic_courses,R.drawable.ic_courses_checked},
             {R.drawable.ic_message,R.drawable.ic_message_checked},
@@ -69,9 +74,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             new MessageFragment(),
             new UserFragment()
     ));
+
+    public static final int[] portraits = {
+            R.drawable.portrait_1,
+            R.drawable.portrait_2,
+            R.drawable.portrait_3,
+            R.drawable.portrait_4,
+            R.drawable.portrait_5,
+            R.drawable.portrait_6,
+            R.drawable.portrait_7
+    };
+
     private static final int getMsData = 100;
     private static final int teaAddCourse = 300;
     private static final int stuAddCourse = 301;
+    private static final int getData = 250;
     private int[] TAB_COLORS = {
             R.color.main_bottom_tab_textcolor_normal,
             R.color.main_bottom_tab_textcolor_selected};
@@ -106,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             System.out.println("开始：准备连接ws");
             connServer();
         }
-
+        initData();
         //加载历史记录
         handler = new Handler(){
             @Override
@@ -162,6 +179,42 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     }
 
+    private void initData(){
+        sp = getSharedPreferences("user_login_info",MODE_PRIVATE);
+        final Map<String, String> map = new HashMap<>();
+        map.put("user_phone", sp.getString("phone",""));
+        identity = sp.getString("identity","S");
+        if(identity.equals("S")){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String res = HttpUtils.sendPostMessage(map, "utf-8", "showUserInfo");
+                    StudentData student =  new StudentData();
+                    try {
+                        student.getStudent(new JSONObject(res));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    user = student;
+                }
+            }).start();
+        }
+        else{
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String res = HttpUtils.sendPostMessage(map, "utf-8", "showUserInfo");
+                    TeacherData teacher =  new TeacherData();
+                    try {
+                        teacher.getTeacher(new JSONObject(res));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    user = teacher;
+                }
+            }).start();
+        }
+    }
 
     //websocket 连接
     public void connServer(){

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.Handler;
 import android.os.Message;
 import android.view.MenuItem;
@@ -43,6 +44,10 @@ public class UserInfoActivity extends AppCompatActivity {
     private Button save;
     private User user;
     private Handler handler;
+    private Boolean isFirstLogin;
+    private String tag;
+    private ImageAdapter imageAdapter;
+
     private final int[] portraits = {
             R.drawable.portrait_1,
             R.drawable.portrait_2,
@@ -53,6 +58,8 @@ public class UserInfoActivity extends AppCompatActivity {
             R.drawable.portrait_7
     };
 
+    final String[] list = {"北京信息科技大学", "北京大学", "清华大学"};//要填充的数据
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +67,10 @@ public class UserInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_info);
 
         final SharedPreferences pf = getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+        isFirstLogin = pf.getBoolean("FirstLogin", false);
 
         setTitle("修改信息");
-        if (getIntent().getBooleanExtra("FirstLogin", false)) {
+        if (isFirstLogin) {
             setTitle("完善信息");
         }
         identity = pf.getString("identity", "S");
@@ -82,14 +90,30 @@ public class UserInfoActivity extends AppCompatActivity {
         rGender.setOnCheckedChangeListener(new MyRadioButtonListener());
         save = findViewById(R.id.save);
 
+        initEdit();
+        chooseImage();
+
         if (identity.equals("T")) {
             findViewById(R.id.l_department).setVisibility(View.VISIBLE);
             TextView textView_id = findViewById(R.id.tv_id);
             textView_id.setText("工号");
+            TeacherData teacherData = (TeacherData) MainActivity.user;
+            name.setText(teacherData.getTeacher_name());
+            setGender(teacherData.getSex());
+            eSchool.setText(list[teacherData.getSchool_id()]);
+            id.setText(teacherData.getTeacher_id());
+            department.setText(teacherData.getDepartment());
+            imageAdapter.notifyDataSetChanged();
+            viewPager.setCurrentItem(teacherData.getPic_id());
+        } else {
+            StudentData studentData = (StudentData) MainActivity.user;
+            name.setText(studentData.getStu_name());
+            setGender(studentData.getSex());
+            eSchool.setText(list[studentData.getSchool_id()]);
+            id.setText(studentData.getStu_id());
+            imageAdapter.notifyDataSetChanged();
+            viewPager.setCurrentItem(studentData.getPic_id());
         }
-
-        initEdit();
-        chooseImage();
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +125,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     studentData.setSex(gender);
                     studentData.setSchool_id(school_id);
                     studentData.setStu_id(id.getText().toString());
-                    studentData.setPic_id(portraits[viewPager.getCurrentItem()]);
+                    studentData.setPic_id(viewPager.getCurrentItem());
                     if (studentData.getStu_id().equals("") || studentData.getStu_name().equals("")
                             || studentData.getSex().equals("") || (studentData.getSchool_id() + "").equals("")
                             || (studentData.getPic_id() + "").equals("")) {
@@ -109,9 +133,6 @@ public class UserInfoActivity extends AppCompatActivity {
                     } else {
                         user = studentData;
                         postMessage(studentData);
-                        SharedPreferences.Editor editor = pf.edit();
-                        editor.putBoolean("FirstLogin", false);
-                        editor.commit();
                     }
                 } else {
                     TeacherData teacherData = new TeacherData();
@@ -120,18 +141,15 @@ public class UserInfoActivity extends AppCompatActivity {
                     teacherData.setSex(gender);
                     teacherData.setSchool_id(school_id);
                     teacherData.setTeacher_id(id.getText().toString());
-                    teacherData.setPic_id(portraits[viewPager.getCurrentItem()]);
+                    teacherData.setPic_id(viewPager.getCurrentItem());
                     teacherData.setDepartment(department.getText().toString());
                     if (teacherData.getTeacher_id().equals("") || teacherData.getTeacher_name().equals("")
                             || teacherData.getSex().equals("") || (teacherData.getSchool_id() + "").equals("")
-                            || (teacherData.getPic_id() + "").equals("")) {
+                            || (teacherData.getPic_id() + "").equals("") || teacherData.getSex() == null) {
                         Toast.makeText(UserInfoActivity.this, "请完整信息", Toast.LENGTH_SHORT).show();
                     } else {
                         user = teacherData;
                         postMessage(teacherData);
-                        SharedPreferences.Editor editor = pf.edit();
-                        editor.putBoolean("FirstLogin", false);
-                        editor.commit();
                     }
                 }
             }
@@ -146,11 +164,17 @@ public class UserInfoActivity extends AppCompatActivity {
                         if (info.equals("200")) {
                             MainActivity.user = user;
                             user.SetUser(UserInfoActivity.this);
+                            if (isFirstLogin) {
+                                SharedPreferences.Editor editor = pf.edit();
+                                editor.putBoolean("FirstLogin", false);
+                                editor.commit();
+                            }
                             startActivity(new Intent(UserInfoActivity.this, MainActivity.class));
-                            onDestroy();
                             finish();
                         } else if (info.equals("199")) {
                             Toast.makeText(UserInfoActivity.this, "异常错误", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(UserInfoActivity.this, "网络错误", Toast.LENGTH_LONG).show();
                         }
                         break;
                     default:
@@ -171,7 +195,9 @@ public class UserInfoActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String res = HttpUtils.sendPostMessage(map, "utf-8", "insertStu");
+                if (isFirstLogin) tag = "insertStu";
+                else tag = "updateStuInfo";
+                String res = HttpUtils.sendPostMessage(map, "utf-8", tag);
                 Message m = new Message();
                 Bundle b = new Bundle();
                 b.putString("info", res);
@@ -185,15 +211,18 @@ public class UserInfoActivity extends AppCompatActivity {
     public void postMessage(TeacherData teacher) {
         final Map<String, String> map = new HashMap<>();
         map.put("teacher_name", teacher.getTeacher_name());
-        map.put("stu_phone", teacher.getTeacher_phone());
+        map.put("teacher_phone", teacher.getTeacher_phone());
         map.put("sex", teacher.getSex());
+        map.put("department", teacher.getDepartment());
         map.put("school_id", teacher.getSchool_id() + "");
         map.put("teacher_id", teacher.getTeacher_id());
         map.put("pic_id", teacher.getPic_id() + "");
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String res = HttpUtils.sendPostMessage(map, "utf-8", "insertTea");
+                if (isFirstLogin) tag = "insertTea";
+                else tag = "updateTeaInfo";
+                String res = HttpUtils.sendPostMessage(map, "utf-8", tag);
                 Message m = new Message();
                 Bundle b = new Bundle();
                 b.putString("info", res);
@@ -214,7 +243,7 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void chooseImage() {
-        ImageAdapter imageAdapter = new ImageAdapter(this);
+        imageAdapter = new ImageAdapter(this);
         for (int i = 0; i < 7; i++) {
             imageAdapter.addCardItem(new Image(portraits[i]));
         }
@@ -250,7 +279,7 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void showListPopupWindow() {
-        final String[] list = {"北京信息科技大学", "北京大学", "清华大学"};//要填充的数据
+
         final ListPopupWindow listPopupWindow;
         listPopupWindow = new ListPopupWindow(this);
         listPopupWindow.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list));//用android内置布局，或设计自己的样式
@@ -277,17 +306,35 @@ public class UserInfoActivity extends AppCompatActivity {
             switch (checkedId) {
                 case R.id.boy:
                     // 当用户选择女性时
-                    gender = "man";
+                    gender = "B";
                     radio2.setTextColor(Color.parseColor("#0099ff"));
                     radio1.setTextColor(Color.WHITE);
                     break;
                 case R.id.girl:
                     // 当用户选择男性时
-                    gender = "woman";
+                    gender = "G";
                     radio1.setTextColor(Color.parseColor("#0099ff"));
                     radio2.setTextColor(Color.WHITE);
                     break;
             }
+        }
+    }
+
+    public void setGender(String sex) {
+        RadioButton radio1 = findViewById(R.id.boy);
+        RadioButton radio2 = findViewById(R.id.girl);
+        switch (sex) {
+            case "B":
+                gender = "B";
+                radio2.setTextColor(Color.parseColor("#0099ff"));
+                radio1.setTextColor(Color.WHITE);
+                radio1.setChecked(true);
+                break;
+            case "G":
+                gender = "G";
+                radio1.setTextColor(Color.parseColor("#0099ff"));
+                radio2.setTextColor(Color.WHITE);
+                radio2.setChecked(true);
         }
     }
 }

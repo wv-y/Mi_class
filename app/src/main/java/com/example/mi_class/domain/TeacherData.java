@@ -2,6 +2,8 @@ package com.example.mi_class.domain;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class TeacherData implements User {
     private String teacher_name;
@@ -37,6 +39,20 @@ public class TeacherData implements User {
         teacherData.setPic_id(pf.getInt("portrait",0));
         teacherData.setDepartment(pf.getString("department",""));
         return teacherData;
+    }
+
+    public void getTeacher(JSONObject json) {
+        try {
+            this.teacher_name = json.getString("teacher_name");
+            this.sex = json.getString("sex");
+            this.department = json.getString("department");
+            this.teacher_phone = json.getString("teacher_phone");
+            this.teacher_id = json.getString("teacher_id");
+            this.school_id = json.getInt("school_id");
+            this.pic_id = json.getInt("pic_id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getTeacher_name() {

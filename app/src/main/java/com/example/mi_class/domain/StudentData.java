@@ -2,15 +2,25 @@ package com.example.mi_class.domain;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class StudentData implements User {
     private String stu_name;
     private String sex;
-    private String year;
     private String stu_phone;
     private String stu_id;
     private int school_id;
     private int pic_id;
+
+    public StudentData(){
+
+    }
+    public StudentData(String name,String id,int portrait){
+        this.stu_name = name;
+        this.stu_id = id;
+        this.pic_id = portrait;
+    }
 
     @Override
     public void SetUser(Context context) {
@@ -37,6 +47,19 @@ public class StudentData implements User {
         return studentData;
     }
 
+    public void getStudent(JSONObject json) {
+        try {
+            this.stu_name = json.getString("stu_name");
+            this.sex = json.getString("sex");
+            this.stu_phone = json.getString("stu_phone");
+            this.stu_id = json.getString("stu_id");
+            this.school_id = json.getInt("school_id");
+            this.pic_id = json.getInt("pic_id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public String getStu_name() {
         return stu_name;
@@ -52,14 +75,6 @@ public class StudentData implements User {
 
     public void setSex(String sex) {
         this.sex = sex;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
     }
 
     public int getSchool_id() {

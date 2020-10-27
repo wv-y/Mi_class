@@ -12,28 +12,35 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.fragment.app.Fragment;
 
 import com.example.mi_class.Login_activity;
 import com.example.mi_class.MainActivity;
 import com.example.mi_class.R;
 import com.example.mi_class.activity.UserInfoActivity;
+import com.example.mi_class.domain.StudentData;
+import com.example.mi_class.domain.TeacherData;
 import com.example.mi_class.tool.MyWebSocket;
 
+import com.minminaya.widget.GeneralRoundFrameLayout;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 public class UserFragment extends Fragment {
 
     private ImageView feedback_cha;
+    private SharedPreferences sp;
+    private TextView name;
+    private TextView ide;
+    private GeneralRoundFrameLayout portrait;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
+        view = inflater.inflate(R.layout.fragment_user, container, false);
+        sp = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
         initView(view);
         setHasOptionsMenu(true);
         return view;
@@ -43,16 +50,42 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.setGroupVisible(R.menu.main_add_btn,false);
+        menu.setGroupVisible(R.menu.main_add_btn, false);
     }
 
-    private void initView(View view){
+    private void initView(View view) {
         view.findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), UserInfoActivity.class));
             }
         });
+
+        name = view.findViewById(R.id.user_name);
+        ide = view.findViewById(R.id.user_character);
+        portrait = view.findViewById(R.id.portrait);
+
+
+        if (sp.getString("identity", "").equals("S")) {
+            StudentData student = (StudentData) MainActivity.user;
+            if (student == null) {
+                Toast.makeText(getContext(), "网络异常", Toast.LENGTH_LONG).show();
+            } else {
+                name.setText(student.getStu_name());
+                ide.setText("学生");
+                portrait.setBackground(getResources().getDrawable(MainActivity.portraits[student.getPic_id()]));
+            }
+        } else {
+            TeacherData teacher = (TeacherData) MainActivity.user;
+            if (teacher == null) {
+                Toast.makeText(getContext(), "网络异常", Toast.LENGTH_LONG).show();
+            } else {
+                name.setText(teacher.getTeacher_name());
+                ide.setText("老师");
+                portrait.setBackground(getResources().getDrawable(MainActivity.portraits[teacher.getPic_id()]));
+            }
+        }
+
         view.findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,12 +102,13 @@ public class UserFragment extends Fragment {
         view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences pf = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                sp = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
                 MyWebSocket.OK = false;
                 MyWebSocket.myWebSocket = null;
-                SharedPreferences.Editor editor = pf.edit();
-                editor.putString("phone","");
-                editor.putString("identity","");
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("phone", "");
+                editor.putString("identity", "");
+                editor.clear();
                 editor.commit();
                 Intent intent = new Intent(getActivity(), Login_activity.class);
                 getActivity().startActivity(intent);
@@ -83,8 +117,8 @@ public class UserFragment extends Fragment {
         });
     }
 
-    public void showFeedbackDialog(){
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_feedback,null,false);
+    public void showFeedbackDialog() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_feedback, null, false);
         final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).create();
         Window window = dialog.getWindow();
         //去掉背景白色实现对话框四个角完全曲化
@@ -103,13 +137,11 @@ public class UserFragment extends Fragment {
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(email.getText().toString().equals("")){
-                    Toast.makeText(getContext(),"请填写邮箱地址",Toast.LENGTH_SHORT).show();
-                }
-                else if(feedback.getText().toString().equals("")){
-                    Toast.makeText(getContext(),"请填写反馈内容",Toast.LENGTH_SHORT).show();
-                }
-                else{
+                if (email.getText().toString().equals("")) {
+                    Toast.makeText(getContext(), "请填写邮箱地址", Toast.LENGTH_SHORT).show();
+                } else if (feedback.getText().toString().equals("")) {
+                    Toast.makeText(getContext(), "请填写反馈内容", Toast.LENGTH_SHORT).show();
+                } else {
                     //保存数据
                 }
             }
@@ -117,11 +149,16 @@ public class UserFragment extends Fragment {
         dialog.show();
     }
 
-    public void showInfoDialog(){
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_info,null,false);
+    public void showInfoDialog() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_info, null, false);
         final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).create();
 
         dialog.show();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView(view);
+    }
 }
