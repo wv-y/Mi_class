@@ -8,7 +8,15 @@
     android:background="@color/back"
     tools:context=".activity.HomeworkActivity"
     >
-    
+    <TextView
+        android:id="@+id/homework_null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="暂无作业"
+        android:gravity="center"
+        android:textColor="@color/login_input_text"
+        android:textSize="20sp"
+        android:visibility="gone"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/homework_recycler_view"
         android:layout_width="match_parent"

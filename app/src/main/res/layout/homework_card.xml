@@ -110,6 +110,7 @@
                 android:layout_height="18dp"
                 android:background="@drawable/ic_fujian"/>
             <TextView
+                android:id="@+id/homework_file_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1个附件"

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -133,7 +134,6 @@ public class MessageFragment extends Fragment {
                             }
                         }else{
                             //本地缓存聊天信息为空
-
                             ed.putString("message_list",(String)msg.getData().getString("res"));
                             ed.commit();
                             System.out.println("ook拿到数据我后端数据:"+(String)msg.getData().getString("res"));
@@ -293,6 +293,7 @@ public class MessageFragment extends Fragment {
         System.out.println("会话个数："+list.size());
         messageAdapter = new MessageAdapter(MessageFragment.this,list);
         listView.setAdapter(messageAdapter);
+
 
     }
 
