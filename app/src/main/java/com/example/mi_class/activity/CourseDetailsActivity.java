@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -66,6 +67,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     private final static int GET_SIGN_LIST = 310;
     //private final static int STU_GET_SIGN_LIST = 311;
     private final static int get_filelist = 311;
+    private final static int GET_HOMEWORK_LIST = 312;
     private final static int get_memberList = 320;
     private Map<String,String> params;
     private CourseMessage courseMessage = new CourseMessage();
@@ -76,6 +78,9 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     //存放本地文件绝对路径
     String path;
     private ArrayList<Member> memberList = new ArrayList<>();
+    private ProgressDialog progressDialog = null;
+    //private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -235,6 +240,23 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                                 startActivity(intent);
                             }
                             break;
+                        case GET_HOMEWORK_LIST:
+                            String info1 = msg.getData().getString("info1");
+//                            String info2 = msg.getData().getString("info2");
+                            System.out.println("homeworklist"+info1);
+//                            System.out.println("homeworklist_file"+info2);
+                            if(info1.equals("-999")){
+                                Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent intent = new Intent(CourseDetailsActivity.this, HomeworkActivity.class);
+                                intent.putExtra("homework_list",info1);
+//                                intent.putExtra("homework_file_list",info2);
+                                intent.putExtra("course_code",course_code);
+                                intent.putExtra("identity",identity);
+                                startActivity(intent);
+                            }
+                            break;
+
                         case get_memberList:
                             info = msg.getData().getString("info");
                             Log.d("member",info);
@@ -302,8 +324,8 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 toMemberActivity();
                 break;
             case R.id.homework_button:
-                intent = new Intent(CourseDetailsActivity.this,HomeworkActivity.class);
-                startActivity(intent);
+                System.out.println("course_code"+course_code);
+                get_homework_list(course_code);
                 break;
             case R.id.file_button:
                 /*intent = new Intent(CourseDetailsActivity.this,FileActivity.class);
@@ -530,6 +552,8 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 dialog = alterDialog;
                 change_name = change_course_name.getText().toString();
                 change_introduce = change_course_introduce.getText().toString();
+                progressDialog = ProgressDialog.show(view.getContext(), "请稍等", "更新课程信息中，请稍候。。。",true);
+                //progressBar.setVisibility(View.VISIBLE);
                 change_course(course_code,change_course_name.getText().toString(),change_course_introduce.getText().toString());
             }
         });
@@ -699,6 +723,11 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 message.setData(b);
                 message.what = CHANGE_COURSE;
                 handler.sendMessage(message);
+              //  progressBar.setProgress(100);
+               // progressBar.setVisibility(View.VISIBLE);
+
+
+               progressDialog.dismiss();
             }
         }).start();
     }
@@ -943,6 +972,26 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
         return list;
+    }
+
+    //获取作业列表
+    public void get_homework_list(String code){
+        params = new HashMap<>();
+        System.out.println("course_code"+code);
+        params.put("course_id",code);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                System.out.println("course_code params"+params.get("course_id"));
+                bundle.putString("info1", HttpUtils.sendPostMessage(params,"utf-8","homework/getList"));
+//                bundle.putString("info2", HttpUtils.sendPostMessage(params,"utf-8","homework/getInfoFileList"));
+                message.setData(bundle);
+                message.what = GET_HOMEWORK_LIST;
+                handler.sendMessage(message);
+            }
+        }).start();
     }
 
     //跳到成员列表

@@ -11,7 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="true">
-
+        <activity android:name=".activity.HworkAddActivity"></activity>
+        <activity android:name=".activity.HworkDetailActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"  />
         <activity
             android:name=".activity.SignInDetailActivity"></activity>
         <activity android:name=".tool.QrcodeTool"

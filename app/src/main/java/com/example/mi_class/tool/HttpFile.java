@@ -23,24 +23,27 @@ public class HttpFile implements Runnable{
     private String urlStr;
     private Map<String, String> params;
     private Map<String, java.io.File> files;
-    public HttpFile(String urlStr, Map<String, String> params, Map<String, java.io.File> files){
+    private Handler hd;
+    public HttpFile(String urlStr, Map<String, String> params, Map<String, java.io.File> files,Handler handler){
         this.files=files;
         this.params=params;
         this.urlStr=urlStr;
+        this.hd = handler;
     }
 
     @Override
     public void run() {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(post(urlStr,params,files), "UTF-8"));
-           // System.out.println(in.readLine());
+            //System.out.println(in.readLine());
             String res = in.readLine();
             Message ms = new Message();
             ms.what = 200;
             Bundle b = new Bundle();
             b.putString("info",res);
             ms.setData(b);
-            FileActivity.fileHandler.sendMessage(ms);
+            System.out.println("ressss"+res);
+            hd.sendMessage(ms);
 
         } catch (Exception e) {
             e.printStackTrace();

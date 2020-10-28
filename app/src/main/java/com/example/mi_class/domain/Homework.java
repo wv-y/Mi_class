@@ -1,53 +1,69 @@
 package com.example.mi_class.domain;
 
 public class Homework {
-    private String name;
-    private String content;
-    private String time;
-    private String style;
+    private String title;
+    private String detail;
+    private String pubtime;
+    private String subtime;
+    private int filenumber;
+    private int state; //截止和提交，    t未截止0，已截止1, s未截止-未提交2，s未截止-已提交3，s已截止-未提交4, s已截止-已提交4
 
-    public  Homework(String name,String time,String style){
-        this.name = name;
-        this.time = time;
-        this.style = style;
+    public int getState() {
+        return state;
     }
 
-    public  Homework(String name,String content,String time,String style){
-        this.name = name;
-        this.content =content;
-        this.time = time;
-        this.style = style;
+    public void setState(int state) {
+        this.state = state;
     }
 
-    public String getName() {
-        return name;
+    public int getFilenumber() {
+        return filenumber;
     }
 
-    public String getContent() {
-        return content;
+    public void setFilenumber(int filenumber) {
+        this.filenumber = filenumber;
     }
 
-    public String getTime() {
-        return time;
+    public Homework(){}
+    public Homework(String title,String detail, String pubtime,String subtime,int filenumber){
+        this.title = title;
+        this.detail = detail;
+        this.pubtime = pubtime;
+        this.subtime = subtime;
+        this.filenumber = filenumber;
+
     }
 
-    public String getStyle() {
-        return style;
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
-    public void setStyle(String style) {
-        this.style = style;
+    public String getPubtime() {
+        return pubtime;
+    }
+
+    public void setPubtime(String pubtime) {
+        this.pubtime = pubtime;
+    }
+
+    public String getSubtime() {
+        return subtime;
+    }
+
+    public void setSubtime(String subtime) {
+        this.subtime = subtime;
     }
 }

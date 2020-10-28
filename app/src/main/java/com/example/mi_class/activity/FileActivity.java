@@ -243,7 +243,7 @@ public class FileActivity extends AppCompatActivity {
                 Map<String,java.io.File> b = new HashMap<String, java.io.File>();
                 a.put("course_id",course_code);
                 b.put("file",file);
-                new Thread(new HttpFile(posturl,a,b)).start();
+                new Thread(new HttpFile(posturl,a,b,fileHandler)).start();
                 dialog = alertDialog;
 
 
@@ -460,7 +460,6 @@ public class FileActivity extends AppCompatActivity {
 
                 file.setImage_level(typeLevel);
                 list.add(file);
-
             }
         }catch (JSONException e){
             e.printStackTrace();

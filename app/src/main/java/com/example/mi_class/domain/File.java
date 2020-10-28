@@ -6,6 +6,16 @@ public class File {
     private String size;
     private String time;
     private String id;
+    private String path;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public File(){}
     public File(String name, String size,String time,String id){
         this.name = name;

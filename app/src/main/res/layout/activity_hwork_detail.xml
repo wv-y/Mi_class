@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.HworkDetailActivity">
+    <TextView
+        android:id="@+id/homework_pubdate_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="12sp"
+        android:textColor="@color/login_input_text"
+        android:textStyle="normal"
+        android:text="发布时间：2020/10/21 16：50"
+        />
+    <EditText
+        android:id="@+id/homework_title_detail"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/homework_pubdate_detail"
+        android:text="这是作业标题"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:enabled="false"
+        />
+    <View
+        android:id="@+id/detail_line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/homework_title_detail"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/login_input_text"
+        >
+    </View>
+    <EditText
+        android:id="@+id/homework_detail_detail"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@+id/homework_title_detail"
+        android:text="作业详情"
+        android:textStyle="normal"
+        android:gravity="start|top"
+        android:layout_margin="20dp"
+        android:textSize="15sp"
+        android:textColor="@color/login_input_text"
+        android:enabled="false"/>
+
+    <TextView
+        android:id="@+id/file_list_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/homework_detail_detail"
+        android:text="附件列表："
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="30dp"/>
+    <ListView
+        android:id="@+id/homework_file_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/file_list_text"
+        android:layout_marginStart="30dp"/>
+    <View
+        android:id="@+id/detail_line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/homework_file_list"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/login_input_text">
+    </View>
+    <TextView
+        android:id="@+id/homework_subdate_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="12sp"
+        android:layout_below="@id/detail_line2"
+        android:textColor="@color/login_input_text"
+        android:textStyle="normal"
+        android:text="截止时间：2020/10/21 16：50"
+        />
+
+    <TextView
+        android:id="@+id/homework_stu_sub_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/homework_subdate_detail"
+        android:layout_marginStart="30dp"
+        android:text="已提交学生："/>
+
+
+
+</RelativeLayout>
