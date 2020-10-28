@@ -19,10 +19,6 @@ import java.util.List;
 
 public class MemberActivity extends AppCompatActivity {
 
-    private List<Member> member_list;
-    private MemberAdapter member_adapter;
-    private ListView member_list_view;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,18 +34,9 @@ public class MemberActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        member_list_view = (ListView) findViewById(R.id.member_list_view);
-
-        // 默认数据显示用
-        Member member = new Member("张三","T","2010231010");
-        Member member1 = new Member("王玉华","S","2019011340");
-
-        member_list = new ArrayList<Member>();
-        member_list.add(member);
-        member_list.add(member1);
-
-        member_adapter = new MemberAdapter(MemberActivity.this, R.layout.member_list, member_list);     //初始化适配器
+        ListView member_list_view = findViewById(R.id.member_list_view);
+        ArrayList<Member> member_list = this.getIntent().getParcelableArrayListExtra("memberList");
+        MemberAdapter member_adapter = new MemberAdapter(MemberActivity.this, R.layout.member_list, member_list);     //初始化适配器
         member_list_view.setAdapter(member_adapter);
 
     }
@@ -63,4 +50,5 @@ public class MemberActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
