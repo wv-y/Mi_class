@@ -35,10 +35,7 @@ import com.alibaba.fastjson.JSON;
 import com.example.mi_class.MainActivity;
 import com.example.mi_class.R;
 import com.example.mi_class.Start_activity;
-import com.example.mi_class.domain.Announcement;
-import com.example.mi_class.domain.Course;
-import com.example.mi_class.domain.CourseMessage;
-import com.example.mi_class.domain.File;
+import com.example.mi_class.domain.*;
 import com.example.mi_class.fragment.CourseFragment;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.Match;
@@ -77,6 +74,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     private String ann_list;
     //存放本地文件绝对路径
     String path;
+    private ArrayList<Member> memberList = new ArrayList<>();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -273,8 +271,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                     stu_get_sign_list();
                 break;
             case R.id.member_button:
-                intent = new Intent(CourseDetailsActivity.this, MemberActivity.class);
-                startActivity(intent);
+                toMemberActivity();
                 break;
             case R.id.homework_button:
                 intent = new Intent(CourseDetailsActivity.this,HomeworkActivity.class);
@@ -918,5 +915,35 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
         return list;
+    }
+
+    //跳到成员列表
+    public void toMemberActivity(){
+        final Map<String,String> map = new HashMap<>();
+        map.put("course_id",course_code);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String res = HttpUtils.sendPostMessage(map, "utf-8", "showClassMember");
+                try {
+                    memberList = new ArrayList<>();
+                    JSONArray jsonArray = new JSONArray(res);
+                    System.out.println(res);
+                    Member member = new Member(jsonArray.getJSONObject(0),true);
+                    memberList.add(member);
+                    for(int i = 1 ; i < jsonArray.length() ; i++){
+                        memberList.add(new Member(jsonArray.getJSONObject(i)));
+                    }
+                    if(memberList.get(0) == null) Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT);
+                    else {
+                        Intent intent = new Intent(CourseDetailsActivity.this, MemberActivity.class);
+                        intent.putParcelableArrayListExtra("memberList",memberList);
+                        startActivity(intent);
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(CourseDetailsActivity.this,"异常错误",Toast.LENGTH_SHORT);
+                }
+            }
+        }).start();
     }
 }

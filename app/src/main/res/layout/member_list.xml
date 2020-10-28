@@ -9,19 +9,32 @@
 
     <ImageView
         android:id="@+id/member_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/vector_drawable_teacher"/>
-    <TextView
-        android:id="@+id/member_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/member_image"
-        android:layout_marginStart="20dp"
-        android:layout_centerVertical="true"
-        android:text="name"
-        android:textSize="18sp"
-        android:textColor="@color/black"/>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/vector_drawable_teacher"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_toEndOf="@+id/member_image"
+            android:layout_marginStart="20dp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp">
+        <TextView
+                android:id="@+id/member_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="name"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
+        <TextView
+                android:id="@+id/member_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="name"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/member_style"
