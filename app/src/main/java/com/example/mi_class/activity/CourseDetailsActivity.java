@@ -66,6 +66,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     private final static int GET_SIGN_LIST = 310;
     //private final static int STU_GET_SIGN_LIST = 311;
     private final static int get_filelist = 311;
+    private final static int get_memberList = 320;
     private Map<String,String> params;
     private CourseMessage courseMessage = new CourseMessage();
     private String info;
@@ -234,7 +235,34 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                                 startActivity(intent);
                             }
                             break;
-
+                        case get_memberList:
+                            info = msg.getData().getString("info");
+                            Log.d("member",info);
+                            if(info == "-999") {
+                                Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                try {
+                                    memberList = new ArrayList<>();
+                                    JSONArray jsonArray = new JSONArray(info);
+                                    System.out.println(info);
+                                    Member member = new Member(jsonArray.getJSONObject(0),true);
+                                    memberList.add(member);
+                                    if(jsonArray.length() != 1){
+                                        for(int i = 1 ; i < jsonArray.length() ; i++){
+                                            memberList.add(new Member(jsonArray.getJSONObject(i)));
+                                        }
+                                    }
+                                    if(memberList.get(0) == null) Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT);
+                                    else {
+                                        Intent intent = new Intent(CourseDetailsActivity.this, MemberActivity.class);
+                                        intent.putParcelableArrayListExtra("memberList",memberList);
+                                        startActivity(intent);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                 }
             }
         };
@@ -925,24 +953,12 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
             @Override
             public void run() {
                 String res = HttpUtils.sendPostMessage(map, "utf-8", "showClassMember");
-                try {
-                    memberList = new ArrayList<>();
-                    JSONArray jsonArray = new JSONArray(res);
-                    System.out.println(res);
-                    Member member = new Member(jsonArray.getJSONObject(0),true);
-                    memberList.add(member);
-                    for(int i = 1 ; i < jsonArray.length() ; i++){
-                        memberList.add(new Member(jsonArray.getJSONObject(i)));
-                    }
-                    if(memberList.get(0) == null) Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT);
-                    else {
-                        Intent intent = new Intent(CourseDetailsActivity.this, MemberActivity.class);
-                        intent.putParcelableArrayListExtra("memberList",memberList);
-                        startActivity(intent);
-                    }
-                } catch (JSONException e) {
-                    Toast.makeText(CourseDetailsActivity.this,"异常错误",Toast.LENGTH_SHORT);
-                }
+                Message m = new Message();
+                Bundle b = new Bundle();
+                b.putString("info", res);
+                m.setData(b);
+                m.what = get_memberList;
+                handler.sendMessage(m);
             }
         }).start();
     }
