@@ -24,11 +24,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
-                android:text="请左右滑动切换头像"
-                android:visibility="gone"/>
+                android:text="请左右滑动切换头像"/>
 
     </LinearLayout>
-    
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,7 +56,6 @@
                     android:background="@null"
                     android:layout_height="50dp"/>
         </LinearLayout>
-
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -79,19 +77,25 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical">
 
-                <CheckBox
-                        android:layout_marginStart="20dp"
-                        android:id="@+id/checkbox1"
-                        style="@style/select_style"
-                        android:tag="chb1"
-                        android:text="男" />
+                <RadioGroup
+                    android:id="@+id/gender"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent">
+                    <RadioButton
+                            android:layout_marginStart="20dp"
+                            android:background="@drawable/radio_button_selector"
+                            android:id="@+id/boy"
+                            style="@style/select_style"
+                            android:text="男" />
 
-                <CheckBox
-                        android:layout_marginStart="20dp"
-                        android:id="@+id/checkbox2"
-                        style="@style/select_style"
-                        android:tag="chb2"
-                        android:text="女" />
+                    <RadioButton
+                            android:layout_marginStart="20dp"
+                            android:id="@+id/girl"
+                            android:background="@drawable/radio_button_selector"
+                            style="@style/select_style"
+                            android:text="女" />
+                </RadioGroup>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -110,10 +114,13 @@
                     android:text="学校:"
                     android:gravity="center"/>
 
-            <EditText
+            <Button
+                    android:textAlignment="viewStart"
+                    android:paddingEnd="10dp"
                     android:layout_marginEnd="5dp"
                     android:id="@+id/edit_school"
                     android:layout_width="match_parent"
+                    android:text="北京信息科技大学"
                     android:background="@null"
                     android:drawableEnd="@drawable/ic_down"
                     android:layout_height="50dp"/>
@@ -127,6 +134,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp">
             <TextView
+                    android:id="@+id/tv_id"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_18"
                     android:layout_width="70dp"
@@ -135,8 +143,34 @@
                     android:gravity="center"/>
 
             <EditText
+                    android:inputType="number"
                     android:layout_marginEnd="5dp"
                     android:id="@+id/edit_id"
+                    android:layout_width="match_parent"
+                    android:background="@null"
+                    android:layout_height="50dp"/>
+        </LinearLayout>
+        <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/l_department"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_back"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp">
+            <TextView
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_18"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:text="部门:"
+                    android:gravity="center"/>
+
+            <EditText
+                    android:layout_marginEnd="5dp"
+                    android:id="@+id/edit_department"
                     android:layout_width="match_parent"
                     android:background="@null"
                     android:layout_height="50dp"/>
@@ -149,9 +183,10 @@
         android:layout_marginEnd="20dp"
         app:corner_radius="10dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/save">
-    <Button android:layout_width="match_parent"
+        android:layout_height="50dp">
+    <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#0099ff"
             android:text="保存"

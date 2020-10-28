@@ -313,18 +313,6 @@ public class AnnouncementActivity extends AppCompatActivity implements View.OnCl
        }).start();
     }
 
-    // 老师删除公告
-    public void delete_ann(String code,String time){
-        params = new HashMap<>();
-        params.put("",code);
-        params.put("",time);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }).start();
-    }
 
     // 获取公告列表
     public void get_ann_list(String code){

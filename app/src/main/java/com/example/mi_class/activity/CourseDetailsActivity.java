@@ -49,6 +49,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,9 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     private final static int MESSAGE_COURSE = 307;
     private final static int GET_ANN_LIST = 308;
     private final static int NEW_ANN = 309;
-    private final static int get_filelist = 310;
+    private final static int GET_SIGN_LIST = 310;
+    //private final static int STU_GET_SIGN_LIST = 311;
+    private final static int get_filelist = 311;
     private Map<String,String> params;
     private CourseMessage courseMessage = new CourseMessage();
     private String info;
@@ -206,6 +209,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                             }
                             break;
                         case NEW_ANN:
+                            // 获取最新公告
                             info = msg.getData().getString("info");
                             if(info.equals("[]")){
                                 new_ann.setText("暂时没有最新公告");
@@ -219,6 +223,20 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                                 new_ann.setText(ann.getAnnouncement_name()+"："+ann.getAnnouncement_content());
                                 new_ann_time.setText(ann.getAnnouncement_time());
                                 save_ann(info);
+                            }
+                            break;
+                        case GET_SIGN_LIST:
+                            info = msg.getData().getString("info");
+                            Log.d("sign",info);
+                            if(info.equals("-999")){
+                                Toast.makeText(CourseDetailsActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent intent = new Intent(CourseDetailsActivity.this, SignInActivity.class);
+                                intent.putExtra("course_code",course_code);
+                                intent.putExtra("identity",identity);
+                                intent.putExtra("sign_list",info);
+                                intent.putExtra("phone_number",phone_number);
+                                startActivity(intent);
                             }
                             break;
 
@@ -252,8 +270,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 get_ann_list(course_code);
                 break;
             case R.id.sign_in_button:
-                intent = new Intent(CourseDetailsActivity.this, SignInActivity.class);
-                startActivity(intent);
+                if(identity.equals("T"))
+                    tea_get_sign_list();
+                else if(identity.equals("S"))
+                    stu_get_sign_list();
                 break;
             case R.id.member_button:
                 intent = new Intent(CourseDetailsActivity.this, MemberActivity.class);
@@ -796,6 +816,43 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
             new_ann_time.setText(announcement.getAnnouncement_time());
         }
     }
+    // 老师获取签到列表
+    public void tea_get_sign_list(){
+        params = new HashMap<>();
+        params.put("course_id",course_code);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String res = HttpUtils.sendPostMessage(params,"utf-8","qiandao/getListT");
+                Message message = new Message();
+                Bundle b = new Bundle();
+                b.putString("info",res);
+                message.setData(b);
+                message.what = GET_SIGN_LIST;
+                handler.sendMessage(message);
+            }
+        }).start();
+    }
+
+    // 学生获取签到列表
+    public void stu_get_sign_list(){
+        params = new HashMap<>();
+        params.put("student_phone",phone_number);
+        params.put("course_id",course_code);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String res = HttpUtils.sendPostMessage(params,"utf-8","qiandao/getListS");
+                Message m = new Message();
+                Bundle b = new Bundle();
+                b.putString("info",res);
+                m.setData(b);
+                m.what = GET_SIGN_LIST;
+                handler.sendMessage(m);
+            }
+        }).start();
+    }
+
     //获取文件列表
     public void get_file_list(String code){
         params = new HashMap<>();

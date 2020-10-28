@@ -13,7 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpUtils {
-    private static String PATH = "http://192.168.137.1:8080/";
+    private static String PATH = "http://192.168.43.165:8080/";
+//    private static String PATH = "http://192.168.137.1:8080/";
     private static URL url;
     public HttpUtils() {}
 
@@ -51,7 +52,7 @@ public class HttpUtils {
             buffer.deleteCharAt(buffer.length()-1);
             buffer.append("}");
             System.out.println(new String(buffer).toString());
-            byte[] mydata = buffer.toString().getBytes();
+            byte[] myData = buffer.toString().getBytes();
             url = new URL(PATH+TAG);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(3000);
@@ -64,12 +65,12 @@ public class HttpUtils {
             //表示设置请求体的类型是文本类型
             connection.setRequestProperty("Content-Type", "application/json");
 
-            connection.setRequestProperty("Content-Length", String.valueOf(mydata.length));
+            connection.setRequestProperty("Content-Length", String.valueOf(myData.length));
             connection.connect();   //连接，不写也可以。。？？有待了解
 
             //获得输出流，向服务器输出数据
             OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(mydata,0,mydata.length);
+            outputStream.write(myData,0,myData.length);
             //获得服务器响应的结果和状态码
             int responseCode = connection.getResponseCode();
             if(responseCode == HttpURLConnection.HTTP_OK){

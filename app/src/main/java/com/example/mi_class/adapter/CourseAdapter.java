@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,12 +62,20 @@ public class CourseAdapter extends  ArrayAdapter{
         TextView course_code = (TextView) view.findViewById(R.id.course_code);
         TextView course_semester = (TextView) view.findViewById(R.id.course_semester);
         TextView course_member_number = (TextView) view.findViewById(R.id.course_member_number);
+        RelativeLayout course_layout = (RelativeLayout) view.findViewById(R.id.course_layout);
 
         assert course != null;
         course_name.setText(course.getCourse_name()); //为文本视图设置文本内容
         course_code.setText("课程码："+course.getCourse_code());
         course_semester.setText(course.getCourse_semester());
         course_member_number.setText(course.getCouse_member_number());
+       /*if((position+1)%3 == 1)
+            course_layout.setBackgroundResource(R.drawable.back);
+        if((position+1)%3 == 2)
+            course_layout.setBackgroundResource(R.drawable.back02);
+        if((position+1)%3 == 0)
+            course_layout.setBackgroundResource(R.drawable.back05);*/
+
         return view;
     }
 }

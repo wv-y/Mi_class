@@ -37,12 +37,10 @@ import java.util.List;
         @SuppressLint("ViewHolder") View view = LayoutInflater.from(getContext()).inflate(resourceId, null);//实例化一个对象
 
         TextView member_name = (TextView) view.findViewById(R.id.member_name);
-        TextView member_code = (TextView) view.findViewById(R.id.member_code);
         TextView member_style = (TextView) view.findViewById(R.id.member_style);
 
         assert member != null;
         member_name.setText(member.getName()); //为文本视图设置文本内容
-        member_code.setText(member.getCode());
 
         //判断身份
         if(member.getStyle().equals("T")){

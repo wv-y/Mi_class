@@ -1,6 +1,5 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android" >
-
     <item android:id="@+id/edit_ann"
         android:icon="@drawable/ic_edit_ann"
         app:showAsAction="withText"

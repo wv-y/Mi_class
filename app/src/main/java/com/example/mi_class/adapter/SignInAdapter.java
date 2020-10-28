@@ -29,6 +29,7 @@ public class SignInAdapter extends ArrayAdapter {
         this.SignInList = items;
     }
 
+    @SuppressLint("SetTextI18n")
     @NotNull
     @Override
     public View getView(int position, View convertView, @NotNull ViewGroup parent) {
@@ -37,28 +38,38 @@ public class SignInAdapter extends ArrayAdapter {
         @SuppressLint("ViewHolder") View view = LayoutInflater.from(getContext()).inflate(resourceId, null);//实例化一个对象
 
         TextView sign_name = (TextView) view.findViewById(R.id.sign_name);
-        TextView sign_time = (TextView) view.findViewById(R.id.sign_time);
+        TextView sign_time = (TextView) view.findViewById(R.id.start_and_end_time);
         TextView sign_style = (TextView) view.findViewById(R.id.sign_style);
+        TextView sign_date = (TextView) view.findViewById(R.id.sign_date);
 
         assert signIn != null;
-        sign_name.setText(signIn.getSign_in_name()); //为文本视图设置文本内容
-        sign_time.setText(signIn.getSign_in_time());
+        sign_name.setText(signIn.getSign_name()); //为文本视图设置文本内容
+        sign_date.setText(signIn.getStart_time().substring(0,10));
+        sign_time.setText(signIn.getStart_time().substring(11,16)+" - "+signIn.getEnd_time().substring(11,16));
         //判断签到状态
-        if(signIn.getSign_in_style().equals("已签到")){
-            sign_style.setText("已签到");
-            sign_style.setTextColor(Color.parseColor("#39BC3E"));
+        if(signIn.getSize().equals("") || signIn.getSize() == null){
+            switch (signIn.getSign_style()) {
+                case "已签到":
+                    sign_style.setText("已签到");
+                    sign_style.setTextColor(Color.parseColor("#39BC3E"));
+                    break;
+                case "未签到":
+                    sign_style.setText("未签到");
+                    sign_style.setTextColor(Color.parseColor("#9D9D9D"));
+                    break;
+                case "迟到":
+                    sign_style.setText("迟到");
+                    sign_style.setTextColor(Color.parseColor("#FFDF0D0D"));
+                    break;
+                case "请假":
+                    sign_style.setText("请假");
+                    sign_style.setTextColor(Color.parseColor("#FFDF0D0D"));
+                    break;
+            }
+        } else {
+            sign_style.setText(signIn.getSize());
+            sign_style.setTextColor(Color.parseColor("#0099ff"));
         }
-        else if(signIn.getSign_in_style().equals("未签到")){
-            sign_style.setText("未签到");
-            sign_style.setTextColor(Color.parseColor("#17404348"));
-        }else if(signIn.getSign_in_style().equals("迟到")){
-            sign_style.setText("迟到");
-            sign_style.setTextColor(Color.parseColor("#FFDF0D0D"));
-        }else  if(signIn.getSign_in_style().equals("早退")){
-            sign_style.setText("旷课");
-            sign_style.setTextColor(Color.parseColor("#FFDF0D0D"));
-        }
-
         return view;
     }
 
