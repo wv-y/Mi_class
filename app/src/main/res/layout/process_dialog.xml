@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/process_dialog_background"
+    android:paddingBottom="20dp"
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp"
+    android:paddingTop="20dp" >
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/blue"
+        />
+
+    <TextView
+        android:id="@+id/tv_dialogmsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/sp_12"
+        android:textSize="18dp"
+        android:text="加载中..."
+        android:textColor="#ffa0a0a0"
+
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>
