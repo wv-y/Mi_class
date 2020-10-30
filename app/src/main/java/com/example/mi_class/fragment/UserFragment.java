@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.mi_class.Login_activity;
 import com.example.mi_class.MainActivity;
 import com.example.mi_class.R;
@@ -33,7 +34,7 @@ public class UserFragment extends Fragment {
     private SharedPreferences sp;
     private TextView name;
     private TextView ide;
-    private GeneralRoundFrameLayout portrait;
+    private ImageView portrait;
     private View view;
 
     @Override
@@ -54,13 +55,6 @@ public class UserFragment extends Fragment {
     }
 
     private void initView(View view) {
-        view.findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), UserInfoActivity.class));
-            }
-        });
-
         name = view.findViewById(R.id.user_name);
         ide = view.findViewById(R.id.user_character);
         portrait = view.findViewById(R.id.portrait);
@@ -69,52 +63,88 @@ public class UserFragment extends Fragment {
         if (sp.getString("identity", "").equals("S")) {
             StudentData student = (StudentData) MainActivity.user;
             if (student == null) {
-                Toast.makeText(getContext(), "网络异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "网络异常", Toast.LENGTH_SHORT).show();
             } else {
                 name.setText(student.getStu_name());
                 ide.setText("学生");
                 portrait.setBackground(getResources().getDrawable(MainActivity.portraits[student.getPic_id()]));
+                Glide.with(this).load(MainActivity.portraits[student.getPic_id()]).into(portrait);
             }
         } else {
             TeacherData teacher = (TeacherData) MainActivity.user;
             if (teacher == null) {
-                Toast.makeText(getContext(), "网络异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "网络异常", Toast.LENGTH_SHORT).show();
             } else {
                 name.setText(teacher.getTeacher_name());
                 ide.setText("老师");
                 portrait.setBackground(getResources().getDrawable(MainActivity.portraits[teacher.getPic_id()]));
+                Glide.with(this).load(MainActivity.portraits[teacher.getPic_id()]).into(portrait);
             }
         }
 
-        view.findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFeedbackDialog();
-            }
-        });
-        view.findViewById(R.id.info).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showInfoDialog();
-            }
-        });
-        //退出登录
-        view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sp = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
-                MyWebSocket.OK = false;
-                MyWebSocket.myWebSocket = null;
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString("phone", "");
-                editor.putString("identity", "");
-                editor.clear();
-                editor.commit();
-                Intent intent = new Intent(getActivity(), Login_activity.class);
-                getActivity().startActivity(intent);
-                getActivity().finish();
-            }
-        });
+        if(MainActivity.user == null){
+            view.findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
+                }
+            });
+            view.findViewById(R.id.info).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
+                }
+            });
+            view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
+                }
+            });
+            view.findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else{
+            view.findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), UserInfoActivity.class));
+                }
+            });
+            view.findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showFeedbackDialog();
+                }
+            });
+            view.findViewById(R.id.info).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showInfoDialog();
+                }
+            });
+            //退出登录
+            view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sp = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                    MyWebSocket.OK = false;
+                    MyWebSocket.myWebSocket = null;
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("phone", "");
+                    editor.putString("identity", "");
+                    editor.clear();
+                    editor.commit();
+                    Intent intent = new Intent(getActivity(), Login_activity.class);
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                }
+            });
+        }
     }
 
     public void showFeedbackDialog() {

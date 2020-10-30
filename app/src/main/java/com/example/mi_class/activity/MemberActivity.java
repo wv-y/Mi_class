@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.mi_class.R;
 import com.example.mi_class.adapter.MemberAdapter;
@@ -15,9 +17,10 @@ import com.example.mi_class.domain.Member;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MemberActivity extends AppCompatActivity {
+
+    private ArrayList<Member> member_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +38,18 @@ public class MemberActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         ListView member_list_view = findViewById(R.id.member_list_view);
-        ArrayList<Member> member_list = this.getIntent().getParcelableArrayListExtra("memberList");
+        member_list = this.getIntent().getParcelableArrayListExtra("memberList");
         MemberAdapter member_adapter = new MemberAdapter(MemberActivity.this, R.layout.member_list, member_list);     //初始化适配器
         member_list_view.setAdapter(member_adapter);
 
+        // 列表点击事件
+        member_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Member member = member_list.get(i);
+                Toast.makeText(MemberActivity.this,"点击了第"+i+"个",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
