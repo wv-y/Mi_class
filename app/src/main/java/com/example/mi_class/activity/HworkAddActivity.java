@@ -73,10 +73,10 @@ public class HworkAddActivity extends AppCompatActivity {
 //    String downUrl = "http://192.168.137.1:8080/homework/download";
 
 //    断网大学
-    String posturl = "http://192.168.137.1:8080/homework/add";
+//    String posturl = "http://192.168.137.1:8080/homework/add";
 
 //    小米sj
-//    String posturl = "http://192.168.43.165:8080/homework/add";
+    String posturl = "http://192.168.43.165:8080/homework/add";
 
     // 进制位
     final static int JZ = 1024;

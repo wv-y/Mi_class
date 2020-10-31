@@ -61,6 +61,8 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     EditText editText;
     Button button;
+    String nickName;
+    int pic_id;
     public static String phone = "";
     public static String name = "";
     @Override
@@ -71,7 +73,11 @@ public class ChatActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         Intent intent = getIntent();
         name = intent.getStringExtra("chat_name");
-        setTitle(name);
+        nickName = intent.getStringExtra("nick_name");
+        pic_id = intent.getIntExtra("pic_id",0);
+        System.out.println("nick:"+nickName);
+        if(nickName != null)
+            setTitle(nickName);
         recyclerView = findViewById(R.id.chat_recycler_list);
         editText = findViewById(R.id.chat_edit_msg);
         button = findViewById(R.id.chat_send_button);
@@ -95,6 +101,8 @@ public class ChatActivity extends AppCompatActivity {
         if(!phone.equals("")){
             SharedPreferences pf = getSharedPreferences(phone+"_ms",MODE_PRIVATE);
             String data = pf.getString("message_list","");
+            SharedPreferences sp = getSharedPreferences("my_info",MODE_PRIVATE);
+            int my_pic_id = sp.getInt("pic_id",0);
             if(!data.equals("")){
                 System.out.println("chatA 1");
                 localToRead(new Date().getTime(),name,phone,data);
@@ -108,13 +116,16 @@ public class ChatActivity extends AppCompatActivity {
                         //发信人是我
                         if(mess1.get(i).getFrom_user_id().equals(phone)){
                             msg1.setType(Message.TYPE_SEND);
+                            msg1.setPic_id(my_pic_id);
                         }
                         //收件人是我
                         if(mess1.get(i).getTo_user_id().equals(phone)){
                             msg1.setType(Message.TYPE_RECEIVE);
+                            msg1.setPic_id(pic_id);
                         }
                         msg1.setTime(mess1.get(i).getTime());
                         msg1.setLast_message(mess1.get(i).getContent());
+
                         chatList.add(msg1);
                     }
 
@@ -235,6 +246,8 @@ public class ChatActivity extends AppCompatActivity {
                 return arg0.getTime() > arg1.getTime() ? 1 : -1;
             }
         });
+        SharedPreferences sp = getSharedPreferences("my_info",MODE_PRIVATE);
+        int my_pic_id = sp.getInt("pic_id",0);
         for(int i = 0 ; i < mess1.size() ; i++)
         {
             if(name.equals(mess1.get(i).getFrom_user_id()) || name.equals(mess1.get(i).getTo_user_id()))
@@ -243,10 +256,12 @@ public class ChatActivity extends AppCompatActivity {
                 //发信人是我
                 if(mess1.get(i).getFrom_user_id().equals(phone)){
                     msg1.setType(Message.TYPE_SEND);
+                    msg1.setPic_id(my_pic_id);
                 }
                 //收件人是我
                 if(mess1.get(i).getTo_user_id().equals(phone)){
                     msg1.setType(Message.TYPE_RECEIVE);
+                    msg1.setPic_id(pic_id);
                 }
                 msg1.setTime(mess1.get(i).getTime());
                 msg1.setLast_message(mess1.get(i).getContent());
