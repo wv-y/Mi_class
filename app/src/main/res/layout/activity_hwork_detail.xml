@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.HworkDetailActivity">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+>
     <TextView
         android:id="@+id/homework_pubdate_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:textSize="12sp"
@@ -22,7 +27,6 @@
         android:background="@null"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/homework_pubdate_detail"
         android:text="这是作业标题"
         android:layout_margin="20dp"
         android:gravity="center"
@@ -35,7 +39,6 @@
         android:id="@+id/detail_line1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/homework_title_detail"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:background="@color/login_input_text"
@@ -46,7 +49,6 @@
         android:background="@null"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_below="@+id/homework_title_detail"
         android:text="作业详情"
         android:textStyle="normal"
         android:gravity="start|top"
@@ -59,7 +61,6 @@
         android:id="@+id/file_list_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/homework_detail_detail"
         android:text="附件列表："
         android:layout_marginBottom="10dp"
         android:layout_marginStart="30dp"/>
@@ -67,39 +68,95 @@
         android:id="@+id/homework_file_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/file_list_text"
-        android:layout_marginStart="30dp"/>
+        />
     <View
         android:id="@+id/detail_line2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/homework_file_list"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:background="@color/login_input_text">
     </View>
-    <TextView
-        android:id="@+id/homework_subdate_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+<!--    -->
+
+
+<!--    <TextView-->
+<!--        android:id="@+id/homework_subdate_detail"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:textSize="12sp"-->
+<!--        android:layout_below="@id/detail_line2"-->
+<!--        android:textColor="@color/login_input_text"-->
+<!--        android:textStyle="normal"-->
+<!--        android:text="截止时间：2020/10/21 16：50"-->
+<!--        />-->
+    <LinearLayout
+        android:id="@+id/homework_detail_timelayout"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:textSize="12sp"
-        android:layout_below="@id/detail_line2"
-        android:textColor="@color/login_input_text"
-        android:textStyle="normal"
-        android:text="截止时间：2020/10/21 16：50"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/current_time_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="截止时间"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/homework_subdate_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="15dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="2020-10-29 18:19:20"
+            android:textColor="@color/selected_time_text"
+            android:textSize="15sp" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/homework_stu_sub_list"
+        android:id="@+id/commit_file_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/homework_subdate_detail"
-        android:layout_marginStart="30dp"
-        android:text="已提交学生："/>
+        android:text="提交文件："
+        android:layout_margin="10dp"
+        android:visibility="invisible"/>
+    <ListView
+        android:id="@+id/upload_homework_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
 
-
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        >
+        <TextView
+            android:background="@drawable/linearlayout_back"
+            android:id="@+id/homework_uplode_file"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:layout_height="50dp"
+            android:text="上传文件"
+            android:textSize="18sp"
+            android:textColor="@color/blue"
+            android:gravity="center"/>
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>

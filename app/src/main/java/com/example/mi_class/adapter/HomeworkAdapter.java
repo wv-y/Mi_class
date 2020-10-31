@@ -27,6 +27,8 @@ import com.example.mi_class.domain.Homework;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +51,10 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.Homewo
 //    绑定
     @Override
     public void onBindViewHolder(@NonNull final HomeworkViewHolder holder, int position) {
+//        倒序
+        Collections.reverse(homeworkList);
+
+
         Homework homework = homeworkList.get(position);
 //        时间格式设置
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy/MM/dd HH:mm");

@@ -140,7 +140,6 @@ public class HworkAddActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
 
@@ -194,7 +193,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //            System.out.println("哈哈哈4"+file_list.size());
             file_list.add(file1);
 //            System.out.println("哈哈哈5"+file_list.size());
-            file_adapter = new HworkFileAdapter(HworkAddActivity.this,R.layout.hwork_file_item,file_list);
+            file_adapter = new HworkFileAdapter(HworkAddActivity.this,R.layout.hwork_file_item,file_list,0,course_code,identity);
             file_list_view.setAdapter(file_adapter);
             // System.out.println("path" +path);
         }catch (java.lang.NullPointerException e){
@@ -221,7 +220,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     @SuppressLint("NewApi")
     public String getPath(final Context context, final Uri uri) {
-
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 

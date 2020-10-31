@@ -254,6 +254,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
 //                                intent.putExtra("homework_file_list",info2);
                                 intent.putExtra("course_code",course_code);
                                 intent.putExtra("identity",identity);
+                                intent.putExtra("phone_number",phone_number);
                                 startActivity(intent);
                             }
                             break;
@@ -980,6 +981,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         params = new HashMap<>();
         System.out.println("course_code"+code);
         params.put("course_id",code);
+        System.out.println("SSSSSS111"+identity);
+        if(identity.equals("S")){
+            params.put("stu_phone",phone_number);
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {

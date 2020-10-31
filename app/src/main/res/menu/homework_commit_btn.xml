@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/pub_homework"
+    <item android:id="@+id/commit_homework"
         app:showAsAction="always"
-        android:title="发布"
+        android:title="提交"
         />
 </menu>
