@@ -124,7 +124,7 @@
             android:layout_marginRight="10dp"
             android:text="忘记密码"
             android:textColor="@color/login_text"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:layout_weight="1"/>
         <TextView
             android:id="@+id/login_go_sign_up"
@@ -133,8 +133,8 @@
             android:gravity="center"
             android:layout_marginLeft="10dp"
             android:textColor="@color/login_text"
-            android:text="没有账户"
-            android:textSize="15sp"
+            android:text="没有账户，去注册"
+            android:textSize="16sp"
             android:layout_weight="1"/>
 
     </LinearLayout>

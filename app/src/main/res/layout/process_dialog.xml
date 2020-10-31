@@ -27,7 +27,7 @@
         android:layout_marginTop="@dimen/sp_12"
         android:textSize="18dp"
         android:text="加载中..."
-        android:textColor="#ffa0a0a0"
+        android:textColor="@color/login_input_text"
 
         android:textAppearance="?android:attr/textAppearanceSmall" />
 

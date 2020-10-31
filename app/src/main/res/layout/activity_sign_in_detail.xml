@@ -5,7 +5,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SignInDetailActivity">
+    android:orientation="vertical"
+    tools:context=".activity.SignInDetailActivity"
+    android:background="@color/back">
+    <RelativeLayout
+        android:id="@+id/sign_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="@dimen/dp_10">
+        <TextView
+            android:id="@+id/sign_code_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="签到码："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_18"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/sign_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_toEndOf="@+id/sign_code_text"/>
+        <ImageView
+            android:id="@+id/two_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:layout_centerInParent="true"
+            android:contentDescription="签到二维码" />
+    </RelativeLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sign_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:scrollbars="vertical"
+        android:scrollbarSize="6dp"
+        android:scrollbarThumbVertical="@color/gray"
+        />
 
 </LinearLayout>

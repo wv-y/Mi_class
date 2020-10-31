@@ -40,6 +40,7 @@ import com.example.mi_class.domain.*;
 import com.example.mi_class.fragment.CourseFragment;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.Match;
+import com.example.mi_class.tool.process_dialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,7 +79,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     //存放本地文件绝对路径
     String path;
     private ArrayList<Member> memberList = new ArrayList<>();
-    private ProgressDialog progressDialog = null;
+    private process_dialog progressDialog = null;
     //private ProgressBar progressBar;
 
 
@@ -552,7 +553,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 dialog = alterDialog;
                 change_name = change_course_name.getText().toString();
                 change_introduce = change_course_introduce.getText().toString();
-                progressDialog = ProgressDialog.show(view.getContext(), "请稍等", "更新课程信息中，请稍候。。。",true);
+                progressDialog = new process_dialog(CourseDetailsActivity.this,"更新课程信息中,请稍候...");
                 //progressBar.setVisibility(View.VISIBLE);
                 change_course(course_code,change_course_name.getText().toString(),change_course_introduce.getText().toString());
             }

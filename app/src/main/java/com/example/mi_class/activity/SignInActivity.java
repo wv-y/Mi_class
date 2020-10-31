@@ -51,6 +51,7 @@ import com.example.mi_class.adapter.SignInAdapter;
 import com.example.mi_class.domain.SignIn;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.QrcodeTool;
+import com.example.mi_class.tool.process_dialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,23 +73,23 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private ListView sign_list_view;
     private ImageView ann_sign_in;
     private TextView sign_in_null;
-    private String identity,course_code,phone_number,string_sign_list;
-    private String style,way_stu; // 签到方式
-    private String sign_name,sign_time;
+    private String identity, course_code, phone_number, string_sign_list;
+    private String style, way_stu, way_tea, sign_code; // 签到方式
+    private String sign_name, sign_time, start_time;
     private Map<String,String> params;
     private final static int ADD_SIGN = 360;
     private final static int TEA_GET_SIGN_LIST = 361;
     private final static int STU_GET_SIGN_LIST = 362;
     private final static int STU_QD = 363;
     private final static int GPS_TIME = 364;
-    private final static int NEW_GPS_SIGN = 365;
+    private final static int GO_SIGN_DETAIL = 365;
     private Handler handler;
     private AlertDialog dialog;
     private int index;
     private double longitude, latitude; // 经纬度
     private LocationManager locationManager;
-    private ProgressDialog progressDialog;
-    private int time = 3;
+    private process_dialog progressDialog;
+    private int time = 5;
     private String gps_address;
 
     @Override
@@ -148,6 +149,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }else {
                     // 老师端
+                    way_tea = sign_list.get(i).getWay();
+                    sign_code = sign_list.get(i).getValue();
+                    start_time = sign_list.get(i).getStart_time();
+                    get_sign_detail(course_code,sign_list.get(i).getStart_time());
 
                 }
             }
@@ -233,6 +238,22 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                             }
                         } else {
                             Toast.makeText(SignInActivity.this,info,Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case GO_SIGN_DETAIL:
+                        info = msg.getData().getString("info");
+                        if(info.equals("-999")){
+                            Toast.makeText(SignInActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                        } else if(info.equals("[]") || info == null){
+                            Toast.makeText(SignInActivity.this,"尚未有学生加入",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Intent intent = new Intent( SignInActivity.this,SignInDetailActivity.class);
+                            intent.putExtra("sign_code",sign_code);
+                            intent.putExtra("way_tea",way_tea);
+                            intent.putExtra("start_time",start_time);
+                            intent.putExtra("course_id",course_code);
+                            intent.putExtra("sign_list",info);
+                            startActivity(intent);
                         }
                         break;
                 }
@@ -378,7 +399,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         sign_time = "300000";
         final ImageView dialog_close,num_sign_in,two_code_sign_in,GPS_sign_in;
         Button submit;
-        final TextView cancel,sign_time_view;
+        final TextView cancel;
+        final Button sign_time_view;
         final AlertDialog alertDialog = new AlertDialog.Builder(SignInActivity.this).create();
         alertDialog.show();
         //alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
@@ -671,10 +693,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void run() {
                 String res = HttpUtils.sendPostMessage(params, "utf-8", "qiandao/getValue");
+                System.out.println("result :"+res);
                 Message m = new Message();
                 Bundle b = new Bundle();
                 b.putString("info", res);
                 m.setData(b);
+                m.what = GO_SIGN_DETAIL;
                 handler.sendMessage(m);
             }
         }).start();
@@ -692,8 +716,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }else { //判断是否打开GPS
             if (locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
                 if(isConnectNet(SignInActivity.this)){ //判断是否打开网络
-                    progressDialog = ProgressDialog.show(SignInActivity.this, "请稍等", "GPS定位中，请稍候...",true);
-                    time = 3;
+                   // progressDialog = ProgressDialog.show(SignInActivity.this, "请稍等", "GPS定位中，请稍候...",true);
+                    progressDialog = new process_dialog(SignInActivity.this,"GPS定位中，请稍后...");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                    time = 5;
                     getLocation(SignInActivity.this);
                     get_GPS(); //线程3s
 
@@ -839,6 +866,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 System.out.println("GPS"+tv1);
                 get_address(location);
             } else {
+                gps_address = "无法获得地理信息";
                 tv1 ="(无法获取地理信息)";
                 System.out.println(tv1);
             }
@@ -881,17 +909,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
             stringBuilder.append("当前位置：\n");
 
-
-            /*String locality = address.getLocality();//得到城市名称
-            if (!TextUtils.isEmpty(locality)) {
-                stringBuilder.append(locality);
-            }
-
-            String featureName = address.getFeatureName();//得到周边信息
-            if(!TextUtils.isEmpty(featureName)) {
-                stringBuilder.append(featureName).append("\n");
-            }*/
-            String countryName = address.getCountryName();//得到国家名称
+           /* String countryName = address.getCountryName();//得到国家名称
             if (!TextUtils.isEmpty(countryName)) {
                 stringBuilder.append(countryName);
             }
@@ -899,24 +917,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             String adminArea = address.getAdminArea();//省
             if (!TextUtils.isEmpty(adminArea)) {
                 stringBuilder.append(adminArea);
-            }
+            }*/
 
             String locality = address.getLocality();//得到城市名称
             if (!TextUtils.isEmpty(locality)) {
                 stringBuilder.append(locality);
             }
-
             for (int i = 0; address.getAddressLine(i) != null; i++) {
                 String addressLine = address.getAddressLine(i);
                 if(!TextUtils.isEmpty(addressLine)) {
-                    if(addressLine.contains(countryName)){
-                        addressLine = addressLine.replace(countryName,"");
-                    }
-                    if(addressLine.contains(adminArea)){
-                        addressLine = addressLine.replace(adminArea,"");
-                    }
-                    if(addressLine.contains(locality)){
-                        addressLine = addressLine.replace(locality,"");
+                    if(!TextUtils.isEmpty(locality)) {
+                        if (addressLine.contains(locality)) {
+                            addressLine = addressLine.replace(locality, "");
+                        }
                     }
                     if(!TextUtils.isEmpty(addressLine)) {
                         stringBuilder.append(addressLine);
@@ -952,6 +965,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         cancel = dialogView.findViewById(R.id.cancel);
         submit = (Button) dialogView.findViewById(R.id.confirm);
         title = dialogView.findViewById(R.id.text_title);
+        /*if(gps_address == null || gps_address.equals("")){
+            title.setText("当前无法获得地理位置...");
+        }else{
+            title.setText(gps_address);
+        }*/
         title.setText(gps_address);
         dialog_close.setOnClickListener(new View.OnClickListener() {
             @Override
