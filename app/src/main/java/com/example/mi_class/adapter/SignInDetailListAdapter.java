@@ -44,7 +44,6 @@ public class SignInDetailListAdapter extends  RecyclerView.Adapter<SignInDetailL
     @Override
     public void onClick(View view) {
         int position = (int) view.getTag();
-        System.out.println("homework_position"+position);
         if (onItemClickListener != null) {
             onItemClickListener.onItemClick(view, position);
         }

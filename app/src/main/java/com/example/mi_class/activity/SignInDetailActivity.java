@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.example.mi_class.R;
 import com.example.mi_class.adapter.SignInDetailListAdapter;
+import com.example.mi_class.domain.SignIn;
 import com.example.mi_class.domain.SignInDetailList;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.QrcodeTool;
@@ -119,9 +120,12 @@ public class SignInDetailActivity extends AppCompatActivity {
                         } else if(info.equals("[]") || info == null){
                             Toast.makeText(SignInDetailActivity.this,"尚未有学生加入",Toast.LENGTH_SHORT).show();
                         } else {
+                            detail_list = info;
                             sign_detail_list = get_detail_list(detail_list);
                             sign_detail_list_adapter = new SignInDetailListAdapter(SignInDetailActivity.this,sign_detail_list);
                             sign_recyclerview.setAdapter(sign_detail_list_adapter);
+                            sign_detail_list_adapter.setOnItemClickListener(onItemClickListener);
+                           // sign_detail_list_adapter.notifyDataSetChanged();
                         }
                         break;
                 }
@@ -139,12 +143,16 @@ public class SignInDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     private SignInDetailListAdapter.OnItemClickListener onItemClickListener = new SignInDetailListAdapter.OnItemClickListener(){
 
         @Override
         public void onItemClick(View v,int position) {
             if(v.getId() == R.id.set_sign) {
                 show_dialog(sign_detail_list.get(position).getName(),sign_detail_list.get(position).getStyle());
+                phone = sign_detail_list.get(position).getPhone();
+                System.out.println("phone_result"+phone);
+                System.out.println("position"+phone);
             }
         }
     };
@@ -204,7 +212,6 @@ public class SignInDetailActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String res = HttpUtils.sendPostMessage(params, "utf-8", "qiandao/getValue");
-                System.out.println("result :"+res);
                 Message m = new Message();
                 Bundle b = new Bundle();
                 b.putString("info", res);
@@ -313,8 +320,11 @@ public class SignInDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog = alertDialog;
+                alertDialog.cancel();
                 set_sign(course_id,start_time,phone,style_edit.getText().toString());
                 progressDialog = new process_dialog(SignInDetailActivity.this,"正在修改...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
             }
         });
     }
