@@ -5,8 +5,16 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:padding="10dp">
+    <ImageView
+        android:id="@+id/hwork_file_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src = "@drawable/file_type"
+        android:paddingTop="5dp"
+        />
     <LinearLayout
-        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@id/hwork_file_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -22,8 +30,8 @@
             android:layout_height="wrap_content"
             android:text="文件大小"
             android:layout_margin="5dp"/>
-
     </LinearLayout>
+
     <ImageView
         android:id="@+id/hwork_add_upload_file"
         android:layout_width="wrap_content"

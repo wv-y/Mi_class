@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             R.drawable.portrait_4,
             R.drawable.portrait_5,
             R.drawable.portrait_6,
-            R.drawable.portrait_7
+            R.drawable.portrait_7,
+            R.drawable.portrait_system
     };
 
     private static final int getMsData = 100;
@@ -193,6 +194,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     StudentData student =  new StudentData();
                     try {
                         student.getStudent(new JSONObject(res));
+                        SharedPreferences sharedPreferences = getSharedPreferences("my_info",MODE_PRIVATE);
+                        SharedPreferences.Editor ed = sharedPreferences.edit();
+                        ed.putInt("pic_id",student.getPic_id());
+                        ed.commit();
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -208,6 +214,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     TeacherData teacher =  new TeacherData();
                     try {
                         teacher.getTeacher(new JSONObject(res));
+                        SharedPreferences sharedPreferences = getSharedPreferences("my_info",MODE_PRIVATE);
+                        SharedPreferences.Editor ed = sharedPreferences.edit();
+                        ed.putInt("pic_id",teacher.getPic_id());
+                        ed.commit();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

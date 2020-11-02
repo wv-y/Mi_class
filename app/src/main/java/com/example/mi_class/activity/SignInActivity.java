@@ -862,7 +862,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onLocationChanged(Location location) {
             // 定位到结果
-            Log.d("GPS", "onLocationChanged()");
+            Log.d("GPS", "()");
             String tv1;
             if (location != null) {
                 longitude = location.getLongitude();

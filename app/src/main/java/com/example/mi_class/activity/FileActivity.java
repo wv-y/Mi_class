@@ -71,8 +71,8 @@ public class FileActivity extends AppCompatActivity {
     private Map<String,String> params;
     //存放本地文件绝对路径
     String path;
-    String downUrl = "http://192.168.137.1:8080/sharedfile/download";
-    String posturl = "http://192.168.137.1:8080/sharedfile/upload";
+    String downUrl = "http://192.168.43.165:8080/sharedfile/download";
+    String posturl = "http://192.168.43.165:8080/sharedfile/upload";
     process_dialog processDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,8 +137,10 @@ public class FileActivity extends AppCompatActivity {
                            path = null;
                            get_file_list(course_code);
                            dialog.cancel();
-                       } else
+                       } else{
+                           processDialog.dismiss();
                            Toast.makeText(FileActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                       }
                        break;
                    case get_filelist:
                        info = msg.getData().getString("info");

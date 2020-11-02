@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.mi_class.MainActivity;
 import com.example.mi_class.R;
 import com.example.mi_class.adapter.MemberAdapter;
 import com.example.mi_class.domain.Member;
@@ -47,7 +50,23 @@ public class MemberActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Member member = member_list.get(i);
-                Toast.makeText(MemberActivity.this,"点击了第"+i+"个",Toast.LENGTH_SHORT).show();
+                System.out.println("成员:"+member.getName()+"手机号："+member.getPhone()+"头像："+member.getPortrait());
+                SharedPreferences sp = getSharedPreferences("user_login_info",MODE_PRIVATE);
+                String ph = sp.getString("phone","");
+                if(!member.getPhone().equals(ph)){
+                    Intent intent = new Intent(MemberActivity.this,ChatActivity.class);
+                    intent.putExtra("chat_name",member.getPhone());
+                    intent.putExtra("nick_name",member.getName());
+                    intent.putExtra("pic_id",member.getPortrait());
+                    SharedPreferences sp1 = getSharedPreferences(member.getPhone()+"_info",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp1.edit();
+                    editor.putInt("pic_id",member.getPortrait());
+                    editor.putString("nick_name",member.getName());
+                    editor.commit();
+                    startActivity(intent);
+                }
+//                Toast.makeText(MemberActivity.this,"点击了第"+i+"个",Toast.LENGTH_SHORT).show();
+
             }
         });
     }

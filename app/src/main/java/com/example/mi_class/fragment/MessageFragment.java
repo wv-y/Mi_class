@@ -29,6 +29,8 @@ import com.example.mi_class.R;
 import com.example.mi_class.activity.ChatActivity;
 import com.example.mi_class.adapter.MessageAdapter;
 import com.example.mi_class.domain.Message;
+import com.example.mi_class.domain.StudentData;
+import com.example.mi_class.domain.TeacherData;
 import com.example.mi_class.domain.message_temp;
 import com.example.mi_class.tool.Base64Utils;
 import com.example.mi_class.tool.HttpUtils;
@@ -64,6 +66,7 @@ public class MessageFragment extends Fragment {
     public static final int getMsData = 100;
     public static final int refresh = 102;
     public static final int start_open = 104;
+    public static final int reList = 105;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,6 +79,9 @@ public class MessageFragment extends Fragment {
             @Override
             public void handleMessage(@NonNull android.os.Message msg) {
                 switch (msg.what){
+                    case reList:
+                        reList();
+                        break;
                     case getMsData:
                         SharedPreferences preferences = getActivity().getSharedPreferences(ph+"_ms",MODE_PRIVATE);
                         SharedPreferences.Editor ed = preferences.edit();
@@ -197,11 +203,11 @@ public class MessageFragment extends Fragment {
         getMessageData();
         System.out.println("碎片创建ook");
         //默认信息（展示用）
-        Message message = new Message();
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.vector_drawable_teacher);
-        message.setHead_portrait(bitmap);
-        messageAdapter = new MessageAdapter(MessageFragment.this,list);
-        listView.setAdapter(messageAdapter);
+//        Message message = new Message();
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.vector_drawable_teacher);
+//        message.setHead_portrait(bitmap);
+//        messageAdapter = new MessageAdapter(MessageFragment.this,list);
+//        listView.setAdapter(messageAdapter);
         setHasOptionsMenu(true);
         return view;
     }
@@ -263,7 +269,7 @@ public class MessageFragment extends Fragment {
         Iterator<String> iterator = session.iterator();
         while(iterator.hasNext()){
             int cnt = 0;
-            String name = iterator.next();
+            final String name = iterator.next();
             long max = 0;
             String lastContent = "";
             for(int i = 0; i < temp_ms_data.size() ; i ++)
@@ -281,10 +287,62 @@ public class MessageFragment extends Fragment {
                     }
                 }
             }
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(name+"_info",MODE_PRIVATE);
+            String nick = sharedPreferences.getString("nick_name","");
+            int pic_id = sharedPreferences.getInt("pic_id",0);
             Message message = new Message();
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.vector_drawable_teacher);
-            message.setHead_portrait(bitmap);
+            if(name.equals("系统消息")){
+                nick = "系统消息";
+                pic_id = 7;
+            }
+            if(nick.equals("") && !name.equals("系统消息")){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        p = new HashMap<>();
+                        p.put("user_phone",name);
+                        String res = HttpUtils.sendPostMessage(p,"utf-8","showUserInfo");
+                        System.out.println("res:"+res);
+                        if(!res.equals("-999"))
+                        {
+                            try {
+                                JSONObject jsonObject = new JSONObject(res);
+                                String id = jsonObject.getString("teacher_name");
+                                SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences(name+"_info",MODE_PRIVATE);
+                                SharedPreferences.Editor ed = sharedPreferences1.edit();
+                                if(id.equals("null"))
+                                {
+                                    System.out.println("学生");
+                                    StudentData temp = new StudentData();
+                                    temp.getStudent(jsonObject);
+                                    ed.putString("nick_name",temp.getStu_name());
+                                    ed.putInt("pic_id",temp.getPic_id());
+                                    ed.commit();
+                                }else{
+                                    System.out.println("不是学生");
+                                    TeacherData teacherData = new TeacherData();
+                                    teacherData.getTeacher(jsonObject);
+                                    ed.putString("nick_name",teacherData.getTeacher_name());
+                                    ed.putInt("pic_id",teacherData.getPic_id());
+                                    ed.commit();
+                                }
+                                android.os.Message m = new android.os.Message();
+                                m.what = reList;
+                                handler.sendMessage(m);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                }).start();
+            }
+//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.vector_drawable_teacher);
+//            message.setHead_portrait(bitmap);
             message.setName(name);
+            message.setPic_id(pic_id);
+            message.setNickName(nick);
             message.setLast_message(new String(Base64Utils.decodeFromString(lastContent)));
             message.setUnReadCnt(cnt);
             message.setTime(max);
@@ -340,7 +398,7 @@ public class MessageFragment extends Fragment {
                 }
                 Iterator<String> iterator = session.iterator();
                 while(iterator.hasNext()){
-                    String name = iterator.next();
+                    final String name = iterator.next();
                     long max = 0;
                     int cnt = 0;
                     String lastContent = "";
@@ -358,10 +416,62 @@ public class MessageFragment extends Fragment {
                             }
                         }
                     }
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences(name+"_info",MODE_PRIVATE);
+                    String nick = sharedPreferences.getString("nick_name","");
+                    int pic_id = sharedPreferences.getInt("pic_id",0);
+                    if(name.equals("系统消息")){
+                        nick = "系统消息";
+                        pic_id = 7;
+                    }
+                    if(nick.equals("") && !name.equals("系统消息")){
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                p = new HashMap<>();
+                                p.put("user_phone",name);
+                                String res = HttpUtils.sendPostMessage(p,"utf-8","showUserInfo");
+                                System.out.println("res:"+res);
+                                if(!res.equals("-999"))
+                                {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(res);
+                                        String id = jsonObject.getString("teacher_name");
+                                        SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences(name+"_info",MODE_PRIVATE);
+                                        SharedPreferences.Editor ed = sharedPreferences1.edit();
+                                        if(id.equals("null"))
+                                        {
+                                            System.out.println("学生");
+                                            StudentData temp = new StudentData();
+                                            temp.getStudent(jsonObject);
+                                            ed.putString("nick_name",temp.getStu_name());
+                                            ed.putInt("pic_id",temp.getPic_id());
+                                            ed.commit();
+                                        }else{
+                                            System.out.println("不是学生");
+                                            TeacherData teacherData = new TeacherData();
+                                            teacherData.getTeacher(jsonObject);
+                                            ed.putString("nick_name",teacherData.getTeacher_name());
+                                            ed.putInt("pic_id",teacherData.getPic_id());
+                                            ed.commit();
+                                        }
+                                        android.os.Message m = new android.os.Message();
+                                        m.what = reList;
+                                        handler.sendMessage(m);
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            }
+                        }).start();
+                    }
                     Message message = new Message();
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.vector_drawable_teacher);
                     message.setHead_portrait(bitmap);
                     message.setName(name);
+                    message.setPic_id(pic_id);
+                    message.setNickName(nick);
                     message.setLast_message(new String(Base64Utils.decodeFromString(lastContent)));
                     message.setUnReadCnt(cnt);
                     message.setTime(max);
@@ -452,8 +562,12 @@ public class MessageFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Message message = list.get(position);
                 String name = message.getName();
+                String nick = message.getNickName();
+                int t = message.getPic_id();
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("chat_name",name);
+                intent.putExtra("nick_name",nick);
+                intent.putExtra("pic_id",t);
                 startActivity(intent);
             }
         });

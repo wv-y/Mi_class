@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:background="@drawable/linearlayout_back"
+    android:layout_marginBottom="1dp"
+    >
+    <TextView
+        android:id="@+id/commit_stu_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:gravity="center"
+        android:text="学生姓名"/>
+    <TextView
+        android:id="@+id/commit_stu_id"
+        android:layout_toEndOf="@+id/commit_stu_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_toStartOf="@id/commit_stu_value"
+        android:text="2017000111"/>
+    <TextView
+        android:id="@+id/commit_stu_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:layout_marginEnd="20dp"
+        android:text="已提交"
+        android:textColor="@color/blue"/>
+</RelativeLayout>

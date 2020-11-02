@@ -25,7 +25,16 @@ import java.util.List;
 public class MessageAdapter extends BaseAdapter {
     private Context context;
     private List<Message> messageList;
-
+    private final int[] portraits = {
+            R.drawable.portrait_1,
+            R.drawable.portrait_2,
+            R.drawable.portrait_3,
+            R.drawable.portrait_4,
+            R.drawable.portrait_5,
+            R.drawable.portrait_6,
+            R.drawable.portrait_7,
+            R.drawable.portrait_system
+    };
     public MessageAdapter(MessageFragment messageFragment, List<Message> list){
         this.context = messageFragment.getActivity();
         this.messageList = list;
@@ -80,8 +89,9 @@ public class MessageAdapter extends BaseAdapter {
         StickyViewHelper stickyViewHelper = new StickyViewHelper(context, viewHolder.mDragView,R.layout.red_point_includeview);
 
         //给控件赋值
-        viewHolder.user.setText(messageList.get(position).getName().trim());
-        viewHolder.head_portrait.setImageResource(R.drawable.vector_drawable_teacher);
+        viewHolder.user.setText(messageList.get(position).getNickName().trim());
+        //portraits[messageList.get(position).getPic_id()]
+        viewHolder.head_portrait.setImageResource(portraits[messageList.get(position).getPic_id()]);
       //  viewHolder.head_portrait.setImageBitmap(messageList.get(position).getHead_portrait());
         viewHolder.last_message.setText(messageList.get(position).getLast_message().trim());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
