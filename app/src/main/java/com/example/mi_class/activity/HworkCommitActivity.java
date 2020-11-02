@@ -43,7 +43,7 @@ public class HworkCommitActivity extends AppCompatActivity {
     private RecyclerView stu_recyclerView;
     private List<Fragment> fragments = new ArrayList<>();
     private List<String>tabTitles = new ArrayList<>();
-    private String course_code;
+    private String course_code,fb_time;
     private List<StuLogInfo> stuLogInfos = new ArrayList<>();
     private int state;  // 0全部，1已提交，2未提交
 
@@ -74,6 +74,8 @@ public class HworkCommitActivity extends AppCompatActivity {
         stuLogInfos = get_stu_list(stu_info_list);
         course_code = intent.getStringExtra("course_code"); //课程id
 
+        fb_time = intent.getStringExtra("fb_time"); //发布时间
+
         tabTitles.add("全部");
         tabTitles.add("已提交");
         tabTitles.add("未提交");
@@ -94,9 +96,9 @@ public class HworkCommitActivity extends AppCompatActivity {
             }
         }
 
-        HomeworkFragement homeworkFragement1 = HomeworkFragement.newInstance(stuLogInfos);
-        HomeworkFragement homeworkFragement2 = HomeworkFragement.newInstance(stuLogInfos1);
-        HomeworkFragement homeworkFragement3 = HomeworkFragement.newInstance(stuLogInfos2);
+        HomeworkFragement homeworkFragement1 = HomeworkFragement.newInstance(stuLogInfos,course_code,fb_time);
+        HomeworkFragement homeworkFragement2 = HomeworkFragement.newInstance(stuLogInfos1,course_code,fb_time);
+        HomeworkFragement homeworkFragement3 = HomeworkFragement.newInstance(stuLogInfos2,course_code,fb_time);
 
         fragments.add(homeworkFragement1);
         fragments.add(homeworkFragement2);

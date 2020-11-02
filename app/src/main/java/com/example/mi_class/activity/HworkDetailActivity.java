@@ -69,13 +69,13 @@ public class HworkDetailActivity extends AppCompatActivity {
     private final static int get_studentlist = 206;
 
     String downUrl = "http://192.168.137.1:8080/homework/download";
-    String posturl = "http://192.168.43.165:8080/homework/put";
+//    String posturl = "http://192.168.43.165:8080/homework/put";
 
     //    断网大学
-//    String posturl = "http://192.168.137.1:8080/homework/add";
+    String posturl = "http://192.168.137.1:8080/homework/put";
 
     //    小米sj
-//    String posturl = "http://192.168.43.165:8080/homework/add";
+//    String posturl = "http://192.168.43.165:8080/homework/put";
 
 
     // 进制位
@@ -146,13 +146,23 @@ public class HworkDetailActivity extends AppCompatActivity {
             case R.id.check_stu:    //查看未交学生
                 getStuList(course_code,fb_time);
             case R.id.commit_homework://截止和提交，    t未截止0，已截止1, s未截止-未提交2，s未截止-已提交3，s已截止-未提交4, s已截止-已提交5
-                if(commit_file_list.size()>0&&state==2){
-                    commitHomework(course_code,fb_time,phone_number);
-                    this.finish();
+                System.out.println("State"+state);
+                if(state==2){
+                    if(commit_file_list.size()>0){
+                        commitHomework(course_code,fb_time,phone_number);
+                        this.finish();
+                    }
+                    else {
+                        Toast.makeText(HworkDetailActivity.this,"请选择文件提交",Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else if(state==4&&state==5){
-                    Toast.makeText(HworkDetailActivity.this,"已截止",Toast.LENGTH_SHORT).show();
-                    this.finish();
+                else if(state==3){
+                    Toast.makeText(HworkDetailActivity.this,"作业已提交",Toast.LENGTH_SHORT).show();
+//                    this.finish();
+                }
+                else if(state==4||state==5){
+                    Toast.makeText(HworkDetailActivity.this,"已截止，无法提交",Toast.LENGTH_SHORT).show();
+//                    this.finish();
                 }
                 else
                     this.finish();

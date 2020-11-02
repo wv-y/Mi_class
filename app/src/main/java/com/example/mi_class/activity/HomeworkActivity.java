@@ -3,11 +3,16 @@ package com.example.mi_class.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,7 +55,7 @@ import java.util.Map;
 public class HomeworkActivity extends AppCompatActivity {
 
     private List<Homework> homework_list;
-    private List<StuLogInfo> stu_homework_list;
+//    private List<StuLogInfo> stu_homework_list;
     private List<File> stu_hworkfile_list;
     private HomeworkAdapter homework_adapter;
     private RecyclerView homework_recyclerview;
@@ -58,9 +63,15 @@ public class HomeworkActivity extends AppCompatActivity {
     private TextView homework_null;
     private String course_code,identity,info,jz_time,fb_time,title,value,phone_number;
 
+
+    String downUrl = "http://192.168.137.1:8080/homework/download";
+//    String downUrl = "http://192.168.43.165:8080/homework/download";
+
+
     private int state; //截止和提交，    t未截止0，已截止1, s未截止-未提交2，s未截止-已提交3，s已截止-未提交4, s已截止-已提交4
 
     private Map<String,String> params;
+    private Map<String,String> params2;
 
     public static Handler homework_handler;
     private final static int file_upLod = 200;
@@ -70,6 +81,7 @@ public class HomeworkActivity extends AppCompatActivity {
     private final static int get_homeworkfilelist = 204;
     private final static int delete_homework = 205;
     private final static int get_studentlist = 206;
+    private final static int download_studentfile = 207;
 
 
 
@@ -83,6 +95,7 @@ public class HomeworkActivity extends AppCompatActivity {
         homework_recyclerview = (RecyclerView) findViewById(R.id.homework_recycler_view);
         homework_list = new ArrayList<>();
 
+        verifyStoragePermissions(this);
         homework_null = (TextView) findViewById(R.id.homework_null);
 
 //        RecyclerView 需要一个layoutManager，也就是布局管理器
@@ -181,7 +194,6 @@ public class HomeworkActivity extends AppCompatActivity {
                     case get_homeworkfilelist:
                         info = msg.getData().getString("info");
 
-
                         System.out.println("info"+info);
                         Intent intent = new Intent(HomeworkActivity.this,HworkDetailActivity.class);
 
@@ -222,9 +234,20 @@ public class HomeworkActivity extends AppCompatActivity {
                         intent = new Intent(HomeworkActivity.this,HworkCommitActivity.class);
                         intent.putExtra("stu_info_list",info); //学生列表
                         intent.putExtra("course_code",course_code); //课程id
+                        intent.putExtra("fb_time",fb_time);
                         startActivity(intent);
                         break;
-
+                    case download_studentfile:
+                        info = msg.getData().getString("info2");
+                        System.out.println("download_studentfile"+info);
+                        stu_hworkfile_list = get_file_list(info);
+                        File file = new File();
+                        for(int i=0;i<stu_hworkfile_list.size();i++){
+                            file =  stu_hworkfile_list.get(i);
+                        }
+                        Uri uri = Uri.parse(downUrl+"?course_id="+course_code+"&file_id="+file.getId());
+                        intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
                 }
 
             }
@@ -240,10 +263,10 @@ public class HomeworkActivity extends AppCompatActivity {
             state = homework_list.get(position).getState();
             jz_time = homework_list.get(position).getSubtime();
             fb_time = homework_list.get(position).getPubtime();
-            get_homework_file_list(course_code,fb_time);
-            if(identity.equals("S")){
-                get_stu_homework_file_list(course_code,fb_time,phone_number);
-            }
+            get_homework_file_list(course_code,fb_time,phone_number);
+//            if(identity.equals("S")){
+//                get_stu_homework_file_list(course_code,fb_time,phone_number);
+//            }
 //            switch (v.getId()){
 //                case R.id.homework_sub_button:
 //                    title = homework_list.get(position).getTitle();
@@ -321,11 +344,36 @@ public class HomeworkActivity extends AppCompatActivity {
         }).start();
     }
     //获取作业文件列表
-    public void get_homework_file_list(String code,String time){
+//    public void get_homework_file_list(String code,String time){
+//        params = new HashMap<>();
+//        System.out.println("course_code"+code);
+//        params.put("course_id",code);
+//        params.put("fb_time",time);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Message message = new Message();
+//                Bundle bundle = new Bundle();
+////                System.out.println("course_code params"+params.get("course_id"));
+//                bundle.putString("info", HttpUtils.sendPostMessage(params,"utf-8","homework/getInfoFileList"));
+//                message.setData(bundle);
+//                message.what = get_homeworkfilelist;
+//                homework_handler.sendMessage(message);
+//            }
+//        }).start();
+//    }
+
+    //获取作业文件列表
+    public void get_homework_file_list(String code,String time,String phone){
         params = new HashMap<>();
-        System.out.println("course_code"+code);
         params.put("course_id",code);
         params.put("fb_time",time);
+        params2 = new HashMap<>();
+        if(identity.equals("S")){
+            params2.put("course_id",code);
+            params2.put("fb_time",time);
+            params2.put("stu_phone",phone);
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -333,26 +381,7 @@ public class HomeworkActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
 //                System.out.println("course_code params"+params.get("course_id"));
                 bundle.putString("info", HttpUtils.sendPostMessage(params,"utf-8","homework/getInfoFileList"));
-                message.setData(bundle);
-                message.what = get_homeworkfilelist;
-                homework_handler.sendMessage(message);
-            }
-        }).start();
-    }
-
-    //获取作业文件列表
-    public void get_stu_homework_file_list(String code,String time,String phone){
-        params = new HashMap<>();
-        params.put("course_id",code);
-        params.put("fb_time",time);
-        params.put("stu_phone",phone);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message message = new Message();
-                Bundle bundle = new Bundle();
-//                System.out.println("course_code params"+params.get("course_id"));
-                bundle.putString("info2", HttpUtils.sendPostMessage(params,"utf-8","homework/getHomework"));
+                bundle.putString("info2", HttpUtils.sendPostMessage(params2,"utf-8","homework/getHomework"));
                 message.setData(bundle);
                 message.what = get_homeworkfilelist;
                 homework_handler.sendMessage(message);
@@ -392,36 +421,31 @@ public class HomeworkActivity extends AppCompatActivity {
                 String commit = jsonObject.getString("commit");
                 if(identity.equals("T")){   //老师
                     if (s_time>System.currentTimeMillis()){ //未截止
-                        state = 0;
-                        homework.setState(state);   //查看详情
+                        state = 0;  //查看详情
                     }
                     else{   //已截止
-                        state = 1;
-                        homework.setState(state);   //已截止
+                        state = 1;  //已截止
                     }
                 }
                 else{
                     if (s_time>System.currentTimeMillis()){ //未截止
                         if (commit.equals("未提交")){
-                            state = 2;
-                            homework.setState(state);   //提交作业
+                            state = 2;  //提交作业
                         }
                         else {
-                            state = 3;
-                            homework.setState(state);   //更新提交
+                            state = 3;  //更新提交
                         }
                     }
                     else{   //已截止
                         if (commit.equals("未提交")){
-                            state = 4;
-                            homework.setState(state);   //未提交
+                            state = 4;  //未提交
                         }
                         else {
-                            state = 5;
-                            homework.setState(state);   //已提交
+                            state = 5;  //已提交
                         }
                     }
                 }
+                homework.setState(state);
                 list.add(homework);
             }
         } catch (Exception e){
@@ -609,5 +633,21 @@ public class HomeworkActivity extends AppCompatActivity {
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
         layoutParams.alpha = bgAlaph;   //0.0-1.0
         getWindow().setAttributes(layoutParams);
+    }
+
+    //权限
+    private  final int REQUEST_EXTERNAL_STORAGE = 1;
+    private  String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    public  void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
+        }
     }
 }

@@ -73,10 +73,10 @@ public class HworkAddActivity extends AppCompatActivity {
 //    String downUrl = "http://192.168.137.1:8080/homework/download";
 
 //    断网大学
-//    String posturl = "http://192.168.137.1:8080/homework/add";
+    String posturl = "http://192.168.137.1:8080/homework/add";
 
 //    小米sj
-    String posturl = "http://192.168.43.165:8080/homework/add";
+//    String posturl = "http://192.168.43.165:8080/homework/add";
 
     // 进制位
     final static int JZ = 1024;
@@ -352,20 +352,28 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 this.finish();
                 return true;
             case R.id.pub_homework:
-                Map<String,String> a = new HashMap<String, String>();
-                Map<String,java.io.File> b = new HashMap<String, java.io.File>();
-                a.put("course_id",course_code);
-                a.put("title",eidt_title.getText().toString());
-                a.put("value",edit_value.getText().toString());
-                System.out.println("homework_choose_time"+choose_time);
-                System.out.println("homework_choose_time"+String.valueOf(choose_time));
-                a.put("jz_long",String.valueOf(choose_time));
-                for(int i=0;i<file_list.size();i++) {
-                    java.io.File file = new java.io.File(file_list.get(i).getPath());
-                    b.put("file",file);
+                System.out.println("EDIT"+eidt_title.getText().toString());
+                System.out.println("EDIT"+edit_value.getText().toString());
+                String title = eidt_title.getText().toString();
+                String value = edit_value.getText().toString();
+                if(title.equals("")||value.equals("")){
+                    Toast.makeText(HworkAddActivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
+                }else{
+                    Map<String,String> a = new HashMap<String, String>();
+                    Map<String,java.io.File> b = new HashMap<String, java.io.File>();
+                    a.put("course_id",course_code);
+                    a.put("title",eidt_title.getText().toString());
+                    a.put("value",edit_value.getText().toString());
+                    System.out.println("homework_choose_time"+choose_time);
+                    System.out.println("homework_choose_time"+String.valueOf(choose_time));
+                    a.put("jz_long",String.valueOf(choose_time));
+                    for(int i=0;i<file_list.size();i++) {
+                        java.io.File file = new java.io.File(file_list.get(i).getPath());
+                        b.put("file",file);
+                    }
+                    new Thread(new HttpFile(posturl,a,b,HomeworkActivity.homework_handler)).start();
+                    this.finish();
                 }
-                new Thread(new HttpFile(posturl,a,b,HomeworkActivity.homework_handler)).start();
-                this.finish();
 //                try{
 //                    file = new java.io.File(path);
 //                }catch (java.lang.NullPointerException e){

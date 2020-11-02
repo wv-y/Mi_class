@@ -52,7 +52,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.Homewo
     @Override
     public void onBindViewHolder(@NonNull final HomeworkViewHolder holder, int position) {
 //        倒序
-        Collections.reverse(homeworkList);
+//        Collections.reverse(homeworkList);
 
 
         Homework homework = homeworkList.get(position);
@@ -89,14 +89,14 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.Homewo
             holder.func_botton.setText("提交作业");
         }
         if (homework.getState()==3){
-            holder.func_botton.setText("更新提交");
+            holder.func_botton.setText("已提交");
         }
         if (homework.getState()==4){
-            holder.func_botton.setText("未提交");
+            holder.func_botton.setText("已截止(未交)");
             holder.func_botton.setClickable(false);
         }
         if (homework.getState()==5){
-            holder.func_botton.setText("已提交");
+            holder.func_botton.setText("已截止(已交)");
             holder.func_botton.setClickable(false);
         }
 //        View itemView = ((CardView) holder.itemView).getChildAt(0);

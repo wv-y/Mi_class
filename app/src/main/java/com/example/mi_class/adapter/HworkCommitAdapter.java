@@ -1,7 +1,9 @@
 package com.example.mi_class.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -26,9 +28,12 @@ public class HworkCommitAdapter extends RecyclerView.Adapter<HworkCommitAdapter.
     private Context context;
     private List<StuLogInfo> stuLogInfos;
     private Map<String,String> params;
-    public HworkCommitAdapter(Context context, List<StuLogInfo> stuLogInfoList){
+    private String course_id,fb_time;
+    public HworkCommitAdapter(Context context, List<StuLogInfo> stuLogInfoList,String code,String time){
         this.context = context;
         this.stuLogInfos = stuLogInfoList;
+        this.course_id = code;
+        this.fb_time = time;
     }
 
     @NonNull
@@ -69,6 +74,14 @@ public class HworkCommitAdapter extends RecyclerView.Adapter<HworkCommitAdapter.
                     Toast.makeText(context,"学生作业未提交",Toast.LENGTH_LONG).show();
                 }
             });
+        }else{
+            Toast.makeText(context,"下载学生作业",Toast.LENGTH_LONG).show();
+            get_homework_file_list(course_id,fb_time,stuLogInfo.getStu_name());
+//            get_homework_file_list();
+//            stuLogInfos.get(position).get
+//            Uri uri = Uri.parse(downUrl+"?course_id="+course_code+"&file_id="+file_id);
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//            context.startActivity(intent);
         }
 
 
@@ -79,27 +92,6 @@ public class HworkCommitAdapter extends RecyclerView.Adapter<HworkCommitAdapter.
         return stuLogInfos.size();
     }
 
-    //获取作业列表
-    public void get_homework_list(String code,String time,String phone){
-        params = new HashMap<>();
-        System.out.println("course_code"+code);
-        params.put("course_id",code);
-        params.put("fb_time",time);
-        params.put("stu_phone",phone);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message message = new Message();
-                Bundle bundle = new Bundle();
-                System.out.println("course_code params"+params.get("course_id"));
-                bundle.putString("info1", HttpUtils.sendPostMessage(params,"utf-8","homework/getHomework"));
-//                bundle.putString("info2", HttpUtils.sendPostMessage(params,"utf-8","homework/getInfoFileList"));
-                message.setData(bundle);
-                message.what = 207;
-                HomeworkActivity.homework_handler.sendMessage(message);
-            }
-        }).start();
-    }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private View mView;
@@ -115,6 +107,26 @@ public class HworkCommitAdapter extends RecyclerView.Adapter<HworkCommitAdapter.
             commit_stu_value = mView.findViewById(R.id.commit_stu_value);
 
         }
+    }
+
+    //获取作业文件列表
+    public void get_homework_file_list(String code,String time,String phone){
+        params = new HashMap<>();
+        params.put("course_id",code);
+        params.put("fb_time",time);
+        params.put("stu_phone",phone);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+//                System.out.println("course_code params"+params.get("course_id"));
+                bundle.putString("info2", HttpUtils.sendPostMessage(params,"utf-8","homework/getHomework"));
+                message.setData(bundle);
+                message.what = 207;
+                HomeworkActivity.homework_handler.sendMessage(message);
+            }
+        }).start();
     }
 }
 

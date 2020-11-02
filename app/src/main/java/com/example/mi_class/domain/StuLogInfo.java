@@ -9,6 +9,7 @@ public class StuLogInfo implements Parcelable {
     String stu_name;
     String value;
 
+
     public StuLogInfo(){}
 
     public String getStu_id() {

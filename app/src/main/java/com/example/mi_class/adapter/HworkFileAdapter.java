@@ -65,8 +65,8 @@ public class HworkFileAdapter extends ArrayAdapter {
         download_imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String downUrl = "http://192.168.137.1:8080/homework/download";
-                String downUrl = "http://192.168.43.165:8080/homework/download";
+                String downUrl = "http://192.168.137.1:8080/homework/download";
+//                String downUrl = "http://192.168.43.165:8080/homework/download";
                 String file_id = FileList.get(position).getId();
                 Uri uri;
                 if (identify.equals("T")) {
