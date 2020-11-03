@@ -68,6 +68,7 @@ public class HworkDetailActivity extends AppCompatActivity {
 
     private final static int delete_homework = 205;
     private final static int get_studentlist = 206;
+    private process_dialog process_dialog_cancel;
 
     String downUrl = "http://192.168.137.1:8080/homework/download";
 //    String posturl = "http://192.168.43.165:8080/homework/put";
@@ -191,6 +192,8 @@ public class HworkDetailActivity extends AppCompatActivity {
 
     //    初始化信息
     private void initInfo(){
+
+        process_dialog_cancel = new process_dialog(this,"删除作业中...");
 
 
 
@@ -628,6 +631,8 @@ public class HworkDetailActivity extends AppCompatActivity {
         params = new HashMap<>();
         params.put("course_id",code);
         params.put("fb_time",time);
+        HomeworkActivity.process_dialog2.setCancelable(false);
+        HomeworkActivity.process_dialog2.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -675,8 +680,8 @@ public class HworkDetailActivity extends AppCompatActivity {
             b.put("file",file);
         }
 
-        HomeworkActivity.process_dialog.setCancelable(false);
-        HomeworkActivity.process_dialog.show();
+        HomeworkActivity.process_dialog1.setCancelable(false);
+        HomeworkActivity.process_dialog1.show();
         new Thread(new HttpFile(posturl,a,b,HomeworkActivity.homework_handler)).start();
 
     }

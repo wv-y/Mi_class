@@ -63,7 +63,7 @@ public class HomeworkActivity extends AppCompatActivity {
     private PopupWindow popupWindow;
     private TextView homework_null;
     private String course_code,identity,info,jz_time,fb_time,title,value,phone_number;
-    public static process_dialog process_dialog;
+    public static process_dialog process_dialog1,process_dialog2;
 
 
     String downUrl = "http://192.168.137.1:8080/homework/download";
@@ -157,11 +157,11 @@ public class HomeworkActivity extends AppCompatActivity {
                             }
                         }else{
                             if("上传成功".equals(file_upBack)){
-                                process_dialog.cancel();
+                                process_dialog1.cancel();
                                 Toast.makeText(HomeworkActivity.this, "提交成功", Toast.LENGTH_SHORT).show();
                                 get_homework_data_list(course_code);
                             }else{
-                                process_dialog.cancel();
+                                process_dialog1.cancel();
                                 Toast.makeText(HomeworkActivity.this, "提交失败", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -175,9 +175,9 @@ public class HomeworkActivity extends AppCompatActivity {
                             Toast.makeText(HomeworkActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
                         }else if(info.equals("[]")){
                             homework_null.setVisibility(View.VISIBLE);
-//                            homework_list = get_homework_list(info);
-//                            homework_adapter = new HomeworkAdapter(HomeworkActivity.this,homework_list);
-//                            homework_recyclerview.setAdapter(homework_adapter);
+                            homework_list = get_homework_list(info);
+                            homework_adapter = new HomeworkAdapter(HomeworkActivity.this,homework_list);
+                            homework_recyclerview.setAdapter(homework_adapter);
                         }else {
                             homework_null.setVisibility(View.GONE);
                             homework_list = get_homework_list(info);
@@ -191,9 +191,9 @@ public class HomeworkActivity extends AppCompatActivity {
                         System.out.println("info是："+info);
                         if(info.equals("删除文件")){
                             Toast.makeText(HomeworkActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
-                            get_file_list(course_code);
                         }
                         else
+                            process_dialog2.cancel();
                             Toast.makeText(HomeworkActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
                         break;
                     case get_homeworkfilelist:
@@ -227,10 +227,12 @@ public class HomeworkActivity extends AppCompatActivity {
                         info = msg.getData().getString("info");
                         System.out.println("info是："+info);
                         if(info.equals("删除成功")){
+                            process_dialog2.cancel();
                             Toast.makeText(HomeworkActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
                             get_homework_data_list(course_code);
                         }
                         else
+                            process_dialog2.cancel();
                             Toast.makeText(HomeworkActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
                         break;
                     case get_studentlist:
@@ -250,7 +252,14 @@ public class HomeworkActivity extends AppCompatActivity {
                         for(int i=0;i<stu_hworkfile_list.size();i++){
                             file =  stu_hworkfile_list.get(i);
                         }
-                        Uri uri = Uri.parse(downUrl+"?course_id="+course_code+"&file_id="+file.getId());
+                        Uri uri;
+                        uri = Uri.parse(downUrl+"?course_id="+course_code+"&file_id="+file.getId()+"&mode=stu");
+//                        if (identity.equals("T")) {
+//                            uri = Uri.parse(downUrl+"?course_id="+course_code+"&file_id="+file.getId()+"&mode=tea");
+//                        }
+//                        else {
+//                            uri = Uri.parse(downUrl+"?course_id="+course_code+"&file_id="+file.getId()+"&mode=stu");
+//                        }
                         intent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(intent);
                 }
@@ -307,7 +316,8 @@ public class HomeworkActivity extends AppCompatActivity {
 //    初始化列表信息
     private void initInfo(){
 
-        HomeworkActivity.process_dialog = new process_dialog(this,"提交作业中...");
+        process_dialog1 = new process_dialog(this,"提交作业中...");
+        process_dialog2 = new process_dialog(this,"删除作业中...");
 
         Intent intent = getIntent();
         course_code = intent.getStringExtra("course_code");
