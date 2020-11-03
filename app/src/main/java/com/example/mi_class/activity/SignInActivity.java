@@ -202,7 +202,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         break;
                     case TEA_GET_SIGN_LIST:
                         info = msg.getData().getString("info");
-                        sign_in_null.setVisibility(View.GONE);
+                        if(info.equals("[]")){
+                            sign_in_null.setVisibility(View.VISIBLE);
+                        } else {
+                            sign_in_null.setVisibility(View.GONE);
+                        }
                         System.out.println("info"+info);
                         sign_list = tea_get_local_sign_list(info);
                         sign_adapter = new SignInAdapter(SignInActivity.this, R.layout.sign_in_list,sign_list);     //初始化适配器
@@ -301,7 +305,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onStart() {
-        tea_get_sign_list();
+        if(identity.equals("T"))
+            tea_get_sign_list();
         super.onStart();
 
     }

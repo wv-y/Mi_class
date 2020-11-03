@@ -1045,7 +1045,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
             Intent intent = new Intent();
             intent.setComponent(componentName);
             intent.putExtra("ip","192.168.137.1");
-            intent.putExtra("port","8080");
+            intent.putExtra("port","8180");
             intent.putExtra("course",course_code);
             intent.putExtra("id",phone_number);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

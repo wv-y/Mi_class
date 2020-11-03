@@ -55,7 +55,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
     private int fragmentIndex = 0;
-    private String url = "ws://192.168.43.165:8080/ws/";
+   // private String url = "ws://192.168.43.165:8080/ws/";
+    private String url = "ws://192.168.137.1:8080/ws/";
     public static User user;
 //    private String url = "ws://192.168.43.165:8080/zb/";
 

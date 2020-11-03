@@ -7,7 +7,7 @@
     tools:context=".activity.HworkDetailActivity">
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
 >
     <TextView
@@ -62,11 +62,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="附件列表："
+        android:textSize="15sp"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="30dp"/>
     <ListView
         android:id="@+id/homework_file_list"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
     <View
@@ -127,18 +128,27 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/commit_file_text"
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:background="@color/current_time_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="提交文件："
-        android:layout_margin="10dp"
-        android:visibility="invisible"/>
-    <ListView
-        android:id="@+id/upload_homework_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/commit_file_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提交文件："
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:visibility="invisible"/>
+        <ListView
+            android:id="@+id/upload_homework_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
 
 
     <LinearLayout

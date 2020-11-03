@@ -39,6 +39,7 @@ import com.example.mi_class.domain.File;
 import com.example.mi_class.domain.Homework;
 import com.example.mi_class.domain.StuLogInfo;
 import com.example.mi_class.tool.HttpUtils;
+import com.example.mi_class.tool.process_dialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +63,7 @@ public class HomeworkActivity extends AppCompatActivity {
     private PopupWindow popupWindow;
     private TextView homework_null;
     private String course_code,identity,info,jz_time,fb_time,title,value,phone_number;
+    public static process_dialog process_dialog;
 
 
     String downUrl = "http://192.168.137.1:8080/homework/download";
@@ -155,8 +157,11 @@ public class HomeworkActivity extends AppCompatActivity {
                             }
                         }else{
                             if("上传成功".equals(file_upBack)){
+                                process_dialog.cancel();
                                 Toast.makeText(HomeworkActivity.this, "提交成功", Toast.LENGTH_SHORT).show();
+                                get_homework_data_list(course_code);
                             }else{
+                                process_dialog.cancel();
                                 Toast.makeText(HomeworkActivity.this, "提交失败", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -194,11 +199,11 @@ public class HomeworkActivity extends AppCompatActivity {
                     case get_homeworkfilelist:
                         info = msg.getData().getString("info");
 
-                        System.out.println("info"+info);
+                        System.out.println("info get_homeworkfilelist"+info);
                         Intent intent = new Intent(HomeworkActivity.this,HworkDetailActivity.class);
 
                         if(identity.equals("S")){
-                            String info2 = info = msg.getData().getString("info2");
+                            String info2 = msg.getData().getString("info2");
                             System.out.println("infos11"+info);
                             intent.putExtra("homework_stu_file_list",info2); //文件列表
                         }
@@ -301,6 +306,8 @@ public class HomeworkActivity extends AppCompatActivity {
 
 //    初始化列表信息
     private void initInfo(){
+
+        HomeworkActivity.process_dialog = new process_dialog(this,"提交作业中...");
 
         Intent intent = getIntent();
         course_code = intent.getStringExtra("course_code");

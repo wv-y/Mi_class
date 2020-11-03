@@ -117,7 +117,7 @@ public class MessageAdapter extends BaseAdapter {
         stickyViewHelper.setViewOutRangeMoveRun(new Runnable() {
             @Override
             public void run() {
-                DisplayUtils.showToast(context, "ViewOutRangeMove");
+//                DisplayUtils.showToast(context, "ViewOutRangeMove");
             }
         });
     }
@@ -130,7 +130,7 @@ public class MessageAdapter extends BaseAdapter {
         stickyViewHelper.setViewInRangeMoveRun(new Runnable() {
             @Override
             public void run() {
-                DisplayUtils.showToast(context, "ViewInRangeMove");
+//                DisplayUtils.showToast(context, "ViewInRangeMove");
             }
         });
     }
@@ -143,7 +143,7 @@ public class MessageAdapter extends BaseAdapter {
         stickyViewHelper.setViewInRangeUpRun(new Runnable() {
             @Override
             public void run() {
-                DisplayUtils.showToast(context, "ViewInRangeUp");
+//                DisplayUtils.showToast(context, "ViewInRangeUp");
        //         myAdapter.notifyDataSetChanged();
             }
         });
@@ -158,7 +158,7 @@ public class MessageAdapter extends BaseAdapter {
         stickyViewHelper.setViewOutRangeUpRun(new Runnable() {
             @Override
             public void run() {
-                DisplayUtils.showToast(context, "ViewOutRangeUp");
+//                DisplayUtils.showToast(context, "ViewOutRangeUp");
         //        removeList.add(position);
 //                myAdapter.notifyDataSetChanged();
             }
@@ -173,7 +173,7 @@ public class MessageAdapter extends BaseAdapter {
         stickyViewHelper.setViewOut2InRangeUpRun(new Runnable() {
             @Override
             public void run() {
-                DisplayUtils.showToast(context, "ViewOut2InRangeUp");
+//                DisplayUtils.showToast(context, "ViewOut2InRangeUp");
     //            myAdapter.notifyDataSetChanged();
             }
         });

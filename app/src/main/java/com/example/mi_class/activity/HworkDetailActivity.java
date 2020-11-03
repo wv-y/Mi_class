@@ -33,6 +33,7 @@ import com.example.mi_class.adapter.HworkFileAdapter;
 import com.example.mi_class.domain.File;
 import com.example.mi_class.tool.HttpFile;
 import com.example.mi_class.tool.HttpUtils;
+import com.example.mi_class.tool.process_dialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,6 +77,8 @@ public class HworkDetailActivity extends AppCompatActivity {
 
     //    小米sj
 //    String posturl = "http://192.168.43.165:8080/homework/put";
+
+//    private com.example.mi_class.tool.process_dialog process_dialog;
 
 
     // 进制位
@@ -158,11 +161,11 @@ public class HworkDetailActivity extends AppCompatActivity {
                 }
                 else if(state==3){
                     Toast.makeText(HworkDetailActivity.this,"作业已提交",Toast.LENGTH_SHORT).show();
-//                    this.finish();
+                    this.finish();
                 }
                 else if(state==4||state==5){
                     Toast.makeText(HworkDetailActivity.this,"已截止，无法提交",Toast.LENGTH_SHORT).show();
-//                    this.finish();
+                    this.finish();
                 }
                 else
                     this.finish();
@@ -188,6 +191,8 @@ public class HworkDetailActivity extends AppCompatActivity {
 
     //    初始化信息
     private void initInfo(){
+
+
 
         Intent intent = getIntent();
         course_code = intent.getStringExtra("course_code");
@@ -226,16 +231,22 @@ public class HworkDetailActivity extends AppCompatActivity {
             file_adapter = new HworkFileAdapter(HworkDetailActivity.this,R.layout.hwork_file_item,commit_file_list,1,course_code,identity);
             upload_homework_list.setAdapter(file_adapter);
         }
-//截止和提交，    t未截止0，已截止1, s未截止-未提交2，s未截止-已提交3，s已截止-未提交4, s已截止-已提交4
+//截止和提交，    t未截止0，已截止1, s未截止-未提交2，s未截止-已提交3，s已截止-未提交4, s已截止-已提交5
 
 //        上传文件按钮
         if(identity.equals("T")){
             commit_homework.setVisibility(View.GONE);
             commit_file_text.setVisibility(View.GONE);
         }
-        else if(state == 4|| state==3){
+        else if(state == 3|| state==5){
+            commit_file_text.setVisibility(View.VISIBLE);
             commit_homework.setVisibility(View.GONE);
 
+        }
+        else if(state==4){
+            commit_file_text.setVisibility(View.VISIBLE);
+            commit_homework.setVisibility(View.GONE);
+            commit_file_text.setText("已截止");
         }
         else {
             //            commit_file_text.setVisibility(View.VISIBLE);
@@ -663,6 +674,9 @@ public class HworkDetailActivity extends AppCompatActivity {
             java.io.File file = new java.io.File(commit_file_list.get(i).getPath());
             b.put("file",file);
         }
+
+        HomeworkActivity.process_dialog.setCancelable(false);
+        HomeworkActivity.process_dialog.show();
         new Thread(new HttpFile(posturl,a,b,HomeworkActivity.homework_handler)).start();
 
     }

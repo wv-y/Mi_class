@@ -17,18 +17,21 @@
         android:layout_toEndOf="@id/hwork_file_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/hwork_add_upload_file"
         android:orientation="vertical">
         <TextView
             android:id="@+id/hwork_file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="文件名"
+            android:textSize="15sp"
             android:layout_margin="5dp"/>
         <TextView
             android:id="@+id/hwork_file_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="文件大小"
+            android:textSize="15sp"
             android:layout_margin="5dp"/>
     </LinearLayout>
 

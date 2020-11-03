@@ -71,8 +71,10 @@ public class FileActivity extends AppCompatActivity {
     private Map<String,String> params;
     //存放本地文件绝对路径
     String path;
-    String downUrl = "http://192.168.43.165:8080/sharedfile/download";
-    String posturl = "http://192.168.43.165:8080/sharedfile/upload";
+    //String downUrl = "http://192.168.43.165:8080/sharedfile/download";
+    String downUrl = "http://192.168.137.1:8080/sharedfile/download";
+     //String posturl = "http://192.168.43.165:8080/sharedfile/upload";
+    String posturl = "http://192.168.137.1:8080/sharedfile/upload";
     process_dialog processDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
