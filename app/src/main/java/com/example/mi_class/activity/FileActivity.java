@@ -41,6 +41,7 @@ import com.example.mi_class.adapter.FileAdapter;
 import com.example.mi_class.domain.File;
 import com.example.mi_class.tool.HttpFile;
 import com.example.mi_class.tool.HttpUtils;
+import com.example.mi_class.tool.process_dialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,9 +71,11 @@ public class FileActivity extends AppCompatActivity {
     private Map<String,String> params;
     //存放本地文件绝对路径
     String path;
+    //String downUrl = "http://192.168.43.165:8080/sharedfile/download";
     String downUrl = "http://192.168.137.1:8080/sharedfile/download";
+     //String posturl = "http://192.168.43.165:8080/sharedfile/upload";
     String posturl = "http://192.168.137.1:8080/sharedfile/upload";
-
+    process_dialog processDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,13 +133,16 @@ public class FileActivity extends AppCompatActivity {
                    case file_upLod:
                        String file_upBack = msg.getData().getString("info");
                        if("上传成功".equals(file_upBack)){
+                            processDialog.dismiss();
                            Toast.makeText(FileActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                            //关闭对话框前将路径清空
                            path = null;
                            get_file_list(course_code);
                            dialog.cancel();
-                       } else
+                       } else{
+                           processDialog.dismiss();
                            Toast.makeText(FileActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                       }
                        break;
                    case get_filelist:
                        info = msg.getData().getString("info");
@@ -244,6 +250,9 @@ public class FileActivity extends AppCompatActivity {
                 a.put("course_id",course_code);
                 b.put("file",file);
                 new Thread(new HttpFile(posturl,a,b,fileHandler)).start();
+                processDialog = new process_dialog(FileActivity.this,"文件正在上传，请稍后...");
+                processDialog.setCancelable(false);
+                processDialog.show();
                 dialog = alertDialog;
 
 

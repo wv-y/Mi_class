@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,6 +41,7 @@ import com.example.mi_class.domain.*;
 import com.example.mi_class.fragment.CourseFragment;
 import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.Match;
+import com.example.mi_class.tool.process_dialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +56,7 @@ import java.util.Map;
 public class CourseDetailsActivity extends AppCompatActivity implements View.OnClickListener{
 
     private String course_code,course_name,course_introduce;
-    private ImageView announcement_button,sign_in_button,member_button,homework_button,file_button,more_button;
+    private ImageView announcement_button,sign_in_button,member_button,homework_button,file_button,more_button,live_button;
     private TextView new_ann,new_ann_time;
     private String identity,phone_number;
     private Handler handler;
@@ -78,7 +80,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
     //存放本地文件绝对路径
     String path;
     private ArrayList<Member> memberList = new ArrayList<>();
-    private ProgressDialog progressDialog = null;
+    private process_dialog progressDialog = null;
     //private ProgressBar progressBar;
 
 
@@ -113,6 +115,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         more_button = findViewById(R.id.more_button);
         new_ann = findViewById(R.id.new_ann);
         new_ann_time = findViewById(R.id.new_ann_time);
+        live_button = findViewById(R.id.live_button);
 
         new_ann.setMovementMethod(ScrollingMovementMethod.getInstance());
 
@@ -122,6 +125,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         homework_button.setOnClickListener(this);
         file_button.setOnClickListener(this);
         more_button.setOnClickListener(this);
+        live_button.setOnClickListener(this);
 
         handler = new Handler(){
             @Override
@@ -253,6 +257,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
 //                                intent.putExtra("homework_file_list",info2);
                                 intent.putExtra("course_code",course_code);
                                 intent.putExtra("identity",identity);
+                                intent.putExtra("phone_number",phone_number);
                                 startActivity(intent);
                             }
                             break;
@@ -309,7 +314,6 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
-        Intent intent;
         switch (view.getId()){
             case R.id.announcement_button:
                 get_ann_list(course_code);
@@ -335,6 +339,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.more_button:
                 showMoreDialog();
+                break;
+            case R.id.live_button:
+                System.out.println("live1"+phone_number);
+                live();
                 break;
             default:
                 break;
@@ -552,7 +560,13 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 dialog = alterDialog;
                 change_name = change_course_name.getText().toString();
                 change_introduce = change_course_introduce.getText().toString();
-                progressDialog = ProgressDialog.show(view.getContext(), "请稍等", "更新课程信息中，请稍候。。。",true);
+                course_name = change_name;
+                course_introduce = change_introduce;
+                alterDialog.cancel();
+
+                progressDialog = new process_dialog(CourseDetailsActivity.this,"更新课程信息中,请稍候...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
                 //progressBar.setVisibility(View.VISIBLE);
                 change_course(course_code,change_course_name.getText().toString(),change_course_introduce.getText().toString());
             }
@@ -979,6 +993,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
         params = new HashMap<>();
         System.out.println("course_code"+code);
         params.put("course_id",code);
+        System.out.println("SSSSSS111"+identity);
+        if(identity.equals("S")){
+            params.put("stu_phone",phone_number);
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -1010,5 +1028,31 @@ public class CourseDetailsActivity extends AppCompatActivity implements View.OnC
                 handler.sendMessage(m);
             }
         }).start();
+    }
+
+    // 跳转到直播模块
+    public void live(){
+        try{
+            System.out.println("live1"+phone_number);
+            ComponentName componentName;
+            if(identity.equals("T")){
+                componentName = new ComponentName("com.example.mi_class_live", "com.example.mi_class_live.PusherActivity");
+            } else {
+                componentName = new ComponentName("com.example.mi_class_live", "com.example.mi_class_live.PlayerActivity");
+            }
+            //PlayerActivity
+            System.out.println("live"+phone_number);
+            Intent intent = new Intent();
+            intent.setComponent(componentName);
+            intent.putExtra("ip","192.168.137.1");
+            intent.putExtra("port","8180");
+            intent.putExtra("course",course_code);
+            intent.putExtra("id",phone_number);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }catch(Exception e){
+
+        }
+
     }
 }

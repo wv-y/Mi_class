@@ -140,7 +140,6 @@ public class HworkAddActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
 
@@ -194,7 +193,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //            System.out.println("哈哈哈4"+file_list.size());
             file_list.add(file1);
 //            System.out.println("哈哈哈5"+file_list.size());
-            file_adapter = new HworkFileAdapter(HworkAddActivity.this,R.layout.hwork_file_item,file_list);
+            file_adapter = new HworkFileAdapter(HworkAddActivity.this,R.layout.hwork_file_item,file_list,0,course_code,identity);
             file_list_view.setAdapter(file_adapter);
             // System.out.println("path" +path);
         }catch (java.lang.NullPointerException e){
@@ -221,7 +220,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     @SuppressLint("NewApi")
     public String getPath(final Context context, final Uri uri) {
-
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
@@ -354,20 +352,28 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 this.finish();
                 return true;
             case R.id.pub_homework:
-                Map<String,String> a = new HashMap<String, String>();
-                Map<String,java.io.File> b = new HashMap<String, java.io.File>();
-                a.put("course_id",course_code);
-                a.put("title",eidt_title.getText().toString());
-                a.put("value",edit_value.getText().toString());
-                System.out.println("homework_choose_time"+choose_time);
-                System.out.println("homework_choose_time"+String.valueOf(choose_time));
-                a.put("jz_long",String.valueOf(choose_time));
-                for(int i=0;i<file_list.size();i++) {
-                    java.io.File file = new java.io.File(file_list.get(i).getPath());
-                    b.put("file",file);
+                System.out.println("EDIT"+eidt_title.getText().toString());
+                System.out.println("EDIT"+edit_value.getText().toString());
+                String title = eidt_title.getText().toString();
+                String value = edit_value.getText().toString();
+                if(title.equals("")||value.equals("")){
+                    Toast.makeText(HworkAddActivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
+                }else{
+                    Map<String,String> a = new HashMap<String, String>();
+                    Map<String,java.io.File> b = new HashMap<String, java.io.File>();
+                    a.put("course_id",course_code);
+                    a.put("title",eidt_title.getText().toString());
+                    a.put("value",edit_value.getText().toString());
+                    System.out.println("homework_choose_time"+choose_time);
+                    System.out.println("homework_choose_time"+String.valueOf(choose_time));
+                    a.put("jz_long",String.valueOf(choose_time));
+                    for(int i=0;i<file_list.size();i++) {
+                        java.io.File file = new java.io.File(file_list.get(i).getPath());
+                        b.put("file",file);
+                    }
+                    new Thread(new HttpFile(posturl,a,b,HomeworkActivity.homework_handler)).start();
+                    this.finish();
                 }
-                new Thread(new HttpFile(posturl,a,b,HomeworkActivity.homework_handler)).start();
-                this.finish();
 //                try{
 //                    file = new java.io.File(path);
 //                }catch (java.lang.NullPointerException e){

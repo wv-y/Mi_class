@@ -68,12 +68,8 @@ public class UserInfoActivity extends AppCompatActivity {
 
         final SharedPreferences pf = getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
         isFirstLogin = pf.getBoolean("FirstLogin", false);
-
-        setTitle("修改信息");
-        if (isFirstLogin) {
-            setTitle("完善信息");
-        }
         identity = pf.getString("identity", "S");
+
         // 使用系统返回键
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -93,26 +89,32 @@ public class UserInfoActivity extends AppCompatActivity {
         initEdit();
         chooseImage();
 
-        if (identity.equals("T")) {
-            findViewById(R.id.l_department).setVisibility(View.VISIBLE);
-            TextView textView_id = findViewById(R.id.tv_id);
-            textView_id.setText("工号");
-            TeacherData teacherData = (TeacherData) MainActivity.user;
-            name.setText(teacherData.getTeacher_name());
-            setGender(teacherData.getSex());
-            eSchool.setText(list[teacherData.getSchool_id()]);
-            id.setText(teacherData.getTeacher_id());
-            department.setText(teacherData.getDepartment());
-            imageAdapter.notifyDataSetChanged();
-            viewPager.setCurrentItem(teacherData.getPic_id());
-        } else {
-            StudentData studentData = (StudentData) MainActivity.user;
-            name.setText(studentData.getStu_name());
-            setGender(studentData.getSex());
-            eSchool.setText(list[studentData.getSchool_id()]);
-            id.setText(studentData.getStu_id());
-            imageAdapter.notifyDataSetChanged();
-            viewPager.setCurrentItem(studentData.getPic_id());
+        setTitle("修改信息");
+        if (isFirstLogin) {
+            setTitle("完善信息");
+        }
+        else{
+            if (identity.equals("T")) {
+                findViewById(R.id.l_department).setVisibility(View.VISIBLE);
+                TextView textView_id = findViewById(R.id.tv_id);
+                textView_id.setText("工号");
+                TeacherData teacherData = (TeacherData) MainActivity.user;
+                name.setText(teacherData.getTeacher_name());
+                setGender(teacherData.getSex());
+                eSchool.setText(list[teacherData.getSchool_id()]);
+                id.setText(teacherData.getTeacher_id());
+                department.setText(teacherData.getDepartment());
+                imageAdapter.notifyDataSetChanged();
+                viewPager.setCurrentItem(teacherData.getPic_id());
+            } else {
+                StudentData studentData = (StudentData) MainActivity.user;
+                name.setText(studentData.getStu_name());
+                setGender(studentData.getSex());
+                eSchool.setText(list[studentData.getSchool_id()]);
+                id.setText(studentData.getStu_id());
+                imageAdapter.notifyDataSetChanged();
+                viewPager.setCurrentItem(studentData.getPic_id());
+            }
         }
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +133,10 @@ public class UserInfoActivity extends AppCompatActivity {
                             || (studentData.getPic_id() + "").equals("")) {
                         Toast.makeText(UserInfoActivity.this, "请完整信息", Toast.LENGTH_SHORT).show();
                     } else {
+                        SharedPreferences sp = getSharedPreferences("my_info",MODE_PRIVATE);
+                        SharedPreferences.Editor ed = sp.edit();
+                        ed.putInt("pic_id",studentData.getPic_id());
+                        ed.commit();
                         user = studentData;
                         postMessage(studentData);
                     }
@@ -149,6 +155,10 @@ public class UserInfoActivity extends AppCompatActivity {
                         Toast.makeText(UserInfoActivity.this, "请完整信息", Toast.LENGTH_SHORT).show();
                     } else {
                         user = teacherData;
+                        SharedPreferences sp = getSharedPreferences("my_info",MODE_PRIVATE);
+                        SharedPreferences.Editor ed = sp.edit();
+                        ed.putInt("pic_id",teacherData.getPic_id());
+                        ed.commit();
                         postMessage(teacherData);
                     }
                 }

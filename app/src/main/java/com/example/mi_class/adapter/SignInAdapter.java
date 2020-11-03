@@ -63,7 +63,7 @@ public class SignInAdapter extends ArrayAdapter {
                     break;
                 case "请假":
                     sign_style.setText("请假");
-                    sign_style.setTextColor(Color.parseColor("#FFDF0D0D"));
+                    sign_style.setTextColor(Color.parseColor("#ED930D"));
                     break;
             }
         } else {

@@ -27,6 +27,8 @@ import com.example.mi_class.domain.Homework;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +51,10 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.Homewo
 //    绑定
     @Override
     public void onBindViewHolder(@NonNull final HomeworkViewHolder holder, int position) {
+//        倒序
+//        Collections.reverse(homeworkList);
+
+
         Homework homework = homeworkList.get(position);
 //        时间格式设置
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy/MM/dd HH:mm");
@@ -83,14 +89,14 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.Homewo
             holder.func_botton.setText("提交作业");
         }
         if (homework.getState()==3){
-            holder.func_botton.setText("更新提交");
+            holder.func_botton.setText("已提交");
         }
         if (homework.getState()==4){
-            holder.func_botton.setText("未提交");
+            holder.func_botton.setText("已截止(未交)");
             holder.func_botton.setClickable(false);
         }
         if (homework.getState()==5){
-            holder.func_botton.setText("已提交");
+            holder.func_botton.setText("已截止(已交)");
             holder.func_botton.setClickable(false);
         }
 //        View itemView = ((CardView) holder.itemView).getChildAt(0);
