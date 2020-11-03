@@ -171,50 +171,52 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                             Toast.makeText(MainActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
                         }
                         break;
+                    case getData:
+                        info = msg.getData().getString("info");
+                        Log.d("getData",info);
+                        if(info.equals("-999")) user = null;
+                        else if(info.equals("[]")) {
+                            Toast.makeText(MainActivity.this, "用户获取失败", Toast.LENGTH_SHORT).show();
+                            user = null;
+                        }else{
+                            String ide =  sp.getString("identity","");
+                            try{
+                                if(ide == "S"){
+                                    StudentData student = new StudentData();
+                                    student.getStudent(new JSONObject(info));
+                                    user = student;
+                                }else {
+                                    TeacherData teacher = new TeacherData();
+                                    teacher.getTeacher(new JSONObject(info));
+                                    user = teacher;
+                                }
+                            }
+                            catch (JSONException e){
+                                Toast.makeText(MainActivity.this,"用户解析错误",Toast.LENGTH_SHORT).show();
+                            }
+                        }
                 }
             }
         };
-
-
-
-
     }
 
     private void initData(){
         sp = getSharedPreferences("user_login_info",MODE_PRIVATE);
         final Map<String, String> map = new HashMap<>();
         map.put("user_phone", sp.getString("phone",""));
-        identity = sp.getString("identity","S");
-        if(identity.equals("S")){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String res = HttpUtils.sendPostMessage(map, "utf-8", "showUserInfo");
-                    StudentData student =  new StudentData();
-                    try {
-                        student.getStudent(new JSONObject(res));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    user = student;
-                }
-            }).start();
-        }
-        else{
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String res = HttpUtils.sendPostMessage(map, "utf-8", "showUserInfo");
-                    TeacherData teacher =  new TeacherData();
-                    try {
-                        teacher.getTeacher(new JSONObject(res));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    user = teacher;
-                }
-            }).start();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String res = HttpUtils.sendPostMessage(map, "utf-8", "showUserInfo");
+                Log.d("getUser",res);
+                Message message = new Message();
+                Bundle b = new Bundle();
+                b.putString("info",res);
+                message.setData(b);
+                message.what = getData;
+                handler.sendMessage(message);
+            }
+        }).start();
     }
 
     //websocket 连接

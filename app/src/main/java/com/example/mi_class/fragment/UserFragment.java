@@ -23,10 +23,7 @@ import com.example.mi_class.activity.UserInfoActivity;
 import com.example.mi_class.domain.StudentData;
 import com.example.mi_class.domain.TeacherData;
 import com.example.mi_class.tool.MyWebSocket;
-
-import com.minminaya.widget.GeneralRoundFrameLayout;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 public class UserFragment extends Fragment {
 
@@ -36,6 +33,7 @@ public class UserFragment extends Fragment {
     private TextView ide;
     private ImageView portrait;
     private View view;
+    private Boolean isConnected;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +42,7 @@ public class UserFragment extends Fragment {
         sp = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
         initView(view);
         setHasOptionsMenu(true);
+        isConnected = MainActivity.user != null;
         return view;
     }
 
@@ -63,7 +62,9 @@ public class UserFragment extends Fragment {
         if (sp.getString("identity", "").equals("S")) {
             StudentData student = (StudentData) MainActivity.user;
             if (student == null) {
-                Toast.makeText(getContext(), "网络异常", Toast.LENGTH_SHORT).show();
+                name.setText(sp.getString("name",""));
+                ide.setText("学生");
+                Glide.with(this).load(MainActivity.portraits[sp.getInt("portrait",0)]).into(portrait);
             } else {
                 name.setText(student.getStu_name());
                 ide.setText("学生");
@@ -73,7 +74,9 @@ public class UserFragment extends Fragment {
         } else {
             TeacherData teacher = (TeacherData) MainActivity.user;
             if (teacher == null) {
-                Toast.makeText(getContext(), "网络异常", Toast.LENGTH_SHORT).show();
+                name.setText(sp.getString("name",""));
+                ide.setText("老师");
+                Glide.with(this).load(MainActivity.portraits[sp.getInt("portrait",0)]).into(portrait);
             } else {
                 name.setText(teacher.getTeacher_name());
                 ide.setText("老师");
@@ -82,55 +85,31 @@ public class UserFragment extends Fragment {
             }
         }
 
-        if(MainActivity.user == null){
-            view.findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
-                }
-            });
-            view.findViewById(R.id.info).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
-                }
-            });
-            view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
-                }
-            });
-            view.findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        else{
-            view.findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(getActivity(), UserInfoActivity.class));
-                }
-            });
-            view.findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showFeedbackDialog();
-                }
-            });
-            view.findViewById(R.id.info).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showInfoDialog();
-                }
-            });
-            //退出登录
-            view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        view.findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isConnected) startActivity(new Intent(getActivity(), UserInfoActivity.class));
+                else Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
+            }
+        });
+        view.findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFeedbackDialog();
+                Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
+            }
+        });
+        view.findViewById(R.id.info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInfoDialog();
+            }
+        });
+        //退出登录
+        view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isConnected){
                     sp = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
                     MyWebSocket.OK = false;
                     MyWebSocket.myWebSocket = null;
@@ -143,8 +122,9 @@ public class UserFragment extends Fragment {
                     getActivity().startActivity(intent);
                     getActivity().finish();
                 }
-            });
-        }
+                Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void showFeedbackDialog() {
@@ -171,8 +151,8 @@ public class UserFragment extends Fragment {
                     Toast.makeText(getContext(), "请填写邮箱地址", Toast.LENGTH_SHORT).show();
                 } else if (feedback.getText().toString().equals("")) {
                     Toast.makeText(getContext(), "请填写反馈内容", Toast.LENGTH_SHORT).show();
-                } else {
-                    //保存数据
+                } else if(!isConnected){
+                    Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -182,7 +162,6 @@ public class UserFragment extends Fragment {
     public void showInfoDialog() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_info, null, false);
         final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).create();
-
         dialog.show();
     }
 
