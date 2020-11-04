@@ -39,20 +39,23 @@
             android:background="@drawable/linearlayout_back"
             android:layout_margin="20dp"
             android:hint="请输入作业内容"/>
-        <ListView
-            android:id="@+id/file_item_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:dividerHeight="1dp"
-            android:divider="#B8B8B8" >
-        </ListView>
+
     </LinearLayout>
 
-
+    <LinearLayout
+        android:background="@drawable/linearlayout_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ListView
+        android:id="@+id/file_item_list"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:dividerHeight="1dp"
+        android:divider="#B8B8B8" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="10dp">
         <TextView
             android:background="@drawable/linearlayout_back"

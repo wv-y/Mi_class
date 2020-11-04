@@ -47,6 +47,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -360,7 +361,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     Toast.makeText(HworkAddActivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                 }else{
                     Map<String,String> a = new HashMap<String, String>();
-                    Map<String,java.io.File> b = new HashMap<String, java.io.File>();
+                    Map<String,java.io.File> b = new HashMap<String,java.io.File>();
                     a.put("course_id",course_code);
                     a.put("title",eidt_title.getText().toString());
                     a.put("value",edit_value.getText().toString());
@@ -369,8 +370,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     a.put("jz_long",String.valueOf(choose_time));
                     for(int i=0;i<file_list.size();i++) {
                         java.io.File file = new java.io.File(file_list.get(i).getPath());
-                        b.put("file",file);
+                        b.put("file"+i,file);
                     }
+
                     new Thread(new HttpFile(posturl,a,b,HomeworkActivity.homework_handler)).start();
                     this.finish();
                 }

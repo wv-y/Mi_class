@@ -1,6 +1,8 @@
 package com.example.mi_class.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mi_class.R;
 import com.example.mi_class.activity.HomeworkActivity;
+import com.example.mi_class.activity.HworkDetailActivity;
 import com.example.mi_class.domain.StuLogInfo;
 import com.example.mi_class.tool.HttpUtils;
 
@@ -63,11 +66,29 @@ public class HworkCommitAdapter extends RecyclerView.Adapter<HworkCommitAdapter.
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context,"点击事件",Toast.LENGTH_LONG).show();
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("提示");
+                    builder.setMessage("跳转到学生作业下载页面？");
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            get_homework_file_list(course_id,fb_time,stuLogInfo.getStu_phone());
+                            Toast.makeText(context,"下载学生作业",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             });
         }
-        if(stuLogInfo.getValue().equals("未提交")){
+        else if(stuLogInfo.getValue().equals("未提交")){
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -75,8 +96,7 @@ public class HworkCommitAdapter extends RecyclerView.Adapter<HworkCommitAdapter.
                 }
             });
         }else{
-            Toast.makeText(context,"下载学生作业",Toast.LENGTH_LONG).show();
-            get_homework_file_list(course_id,fb_time,stuLogInfo.getStu_name());
+
 //            get_homework_file_list();
 //            stuLogInfos.get(position).get
 //            Uri uri = Uri.parse(downUrl+"?course_id="+course_code+"&file_id="+file_id);
@@ -115,6 +135,7 @@ public class HworkCommitAdapter extends RecyclerView.Adapter<HworkCommitAdapter.
         params.put("course_id",code);
         params.put("fb_time",time);
         params.put("stu_phone",phone);
+        System.out.println("download_studentfile"+code+time+phone);
         new Thread(new Runnable() {
             @Override
             public void run() {
