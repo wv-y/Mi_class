@@ -977,12 +977,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         cancel = dialogView.findViewById(R.id.cancel);
         submit = (Button) dialogView.findViewById(R.id.confirm);
         title = dialogView.findViewById(R.id.text_title);
-        /*if(gps_address == null || gps_address.equals("")){
+        if(gps_address == null || gps_address.equals("")){
             title.setText("当前无法获得地理位置...");
         }else{
             title.setText(gps_address);
-        }*/
-        title.setText(gps_address);
+        }
+       
         dialog_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

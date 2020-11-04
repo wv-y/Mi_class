@@ -181,9 +181,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                             Toast.makeText(MainActivity.this, "用户获取失败", Toast.LENGTH_SHORT).show();
                             user = null;
                         }else{
-                            String ide =  sp.getString("identity","");
+                            String ide =  sp.getString("identity","S");
                             try{
-                                if(ide == "S"){
+                                if(ide.equals("S")){
                                     StudentData student = new StudentData();
                                     student.getStudent(new JSONObject(info));
                                     user = student;

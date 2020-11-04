@@ -69,10 +69,23 @@ public class CourseAdapter extends  ArrayAdapter{
         course_code.setText("课程码："+course.getCourse_code());
         course_semester.setText(course.getCourse_semester());
         course_member_number.setText(course.getCouse_member_number());
-       if((position+1)%2 == 1)
-            course_layout.setBackgroundResource(R.drawable.back);
-        if((position+1)%2 == 0)
-            course_layout.setBackgroundResource(R.drawable.back01);
+        switch ((position+1)%5){
+            case 0:
+                course_layout.setBackgroundResource(R.drawable.back);
+                break;
+            case 1:
+                course_layout.setBackgroundResource(R.drawable.back01);
+                break;
+            case 2:
+                course_layout.setBackgroundResource(R.drawable.back02);
+                break;
+            case 3:
+                course_layout.setBackgroundResource(R.drawable.back03);
+                break;
+            case 4:
+                course_layout.setBackgroundResource(R.drawable.back04);
+                break;
+        }
 
         return view;
     }

@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.*;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -22,8 +27,16 @@ import com.example.mi_class.R;
 import com.example.mi_class.activity.UserInfoActivity;
 import com.example.mi_class.domain.StudentData;
 import com.example.mi_class.domain.TeacherData;
+import com.example.mi_class.tool.HttpUtils;
 import com.example.mi_class.tool.MyWebSocket;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class UserFragment extends Fragment {
 
@@ -34,12 +47,14 @@ public class UserFragment extends Fragment {
     private ImageView portrait;
     private View view;
     private Boolean isConnected;
+    private static final int getData = 250;
+    public static Handler handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user, container, false);
-        sp = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+        sp = getActivity().getSharedPreferences("user_login_info", MODE_PRIVATE);
         initView(view);
         setHasOptionsMenu(true);
         isConnected = MainActivity.user != null;
@@ -59,7 +74,7 @@ public class UserFragment extends Fragment {
         portrait = view.findViewById(R.id.portrait);
 
 
-        if (sp.getString("identity", "").equals("S")) {
+        if (sp.getString("identity", "S").equals("S")) {
             StudentData student = (StudentData) MainActivity.user;
             if (student == null) {
                 name.setText(sp.getString("name",""));
@@ -110,7 +125,7 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(isConnected){
-                    sp = getActivity().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
+                    sp = getActivity().getSharedPreferences("user_login_info", MODE_PRIVATE);
                     MyWebSocket.OK = false;
                     MyWebSocket.myWebSocket = null;
                     SharedPreferences.Editor editor = sp.edit();
@@ -125,7 +140,65 @@ public class UserFragment extends Fragment {
                 Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
             }
         });
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage (@NonNull Message msg){
+                String info;
+                if(msg.what == getData){
+                    info = msg.getData().getString("info");
+                    Log.d("getData",info);
+                    if(info.equals("-999")) MainActivity.user = null;
+                    else if(info.equals("[]")) {
+                        Toast.makeText(getContext(), "用户获取失败", Toast.LENGTH_SHORT).show();
+                        MainActivity.user = null;
+                    }else{
+                        String ide =  sp.getString("identity","S");
+                        try{
+                            if(ide.equals("S")){
+                                StudentData student = new StudentData();
+                                student.getStudent(new JSONObject(info));
+                                MainActivity.user = student;
+                            }else {
+                                TeacherData teacher = new TeacherData();
+                                teacher.getTeacher(new JSONObject(info));
+                                MainActivity.user = teacher;
+                            }
+                        }
+                        catch (JSONException e){
+                            Toast.makeText(getContext(),"用户解析错误",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        };
     }
+
+    private void initData(){
+        sp = getContext().getSharedPreferences("user_login_info",MODE_PRIVATE);
+        final Map<String, String> map = new HashMap<>();
+        map.put("user_phone", sp.getString("phone",""));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String res = HttpUtils.sendPostMessage(map, "utf-8", "showUserInfo");
+                Log.d("getUser",res);
+                Message message = new Message();
+                Bundle b = new Bundle();
+                b.putString("info",res);
+                message.setData(b);
+                message.what = getData;
+                handler.sendMessage(message);
+            }
+        }).start();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initData();
+    }
+
 
     public void showFeedbackDialog() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_feedback, null, false);
