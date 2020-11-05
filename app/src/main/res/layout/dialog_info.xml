@@ -13,15 +13,17 @@
         <TextView
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_18"
-                android:layout_width="80dp" android:layout_height="match_parent"
-                android:text="项目名字:"
+                android:layout_width="100dp" android:layout_height="match_parent"
+                android:text="项目名字："
                 android:gravity="center"/>
         <TextView
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="****"/>
+                android:textSize="@dimen/sp_18"
+                android:textColor="@color/black"
+                android:text="米课堂"/>
     </LinearLayout>
 
     <LinearLayout
@@ -31,15 +33,17 @@
         <TextView
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_18"
-                android:layout_width="80dp" android:layout_height="match_parent"
-                android:text="项目时间:"
+                android:layout_width="100dp" android:layout_height="match_parent"
+                android:text="项目时间："
                 android:gravity="center"/>
         <TextView
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="****"/>
+                android:textSize="@dimen/sp_18"
+                android:textColor="@color/black"
+                android:text="2020年秋"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="match_parent"
@@ -48,15 +52,17 @@
         <TextView
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_18"
-                android:layout_width="80dp" android:layout_height="match_parent"
-                android:text="项目成员:"
+                android:layout_width="100dp" android:layout_height="match_parent"
+                android:text="项目组："
                 android:gravity="center"/>
         <TextView
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="****"/>
+                android:textSize="@dimen/sp_18"
+                android:textColor="@color/black"
+                android:text="芭芭拉冲鸭"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="match_parent"
@@ -65,15 +71,17 @@
         <TextView
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_18"
-                android:layout_width="80dp" android:layout_height="match_parent"
-                android:text="项目版本:"
+                android:layout_width="100dp" android:layout_height="match_parent"
+                android:text="软件版本："
                 android:gravity="center"/>
         <TextView
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="****"/>
+                android:textSize="@dimen/sp_18"
+                android:textColor="@color/black"
+                android:text="1.0"/>
     </LinearLayout>
 
 
