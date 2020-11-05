@@ -124,19 +124,17 @@ public class UserFragment extends Fragment {
         view.findViewById(R.id.exit_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isConnected){
-                    MyWebSocket.OK = false;
-                    MyWebSocket.myWebSocket = null;
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("phone", "");
-                    editor.putString("identity", "");
-                    editor.clear();
-                    editor.commit();
-                    Intent intent = new Intent(getActivity(), Login_activity.class);
-                    getActivity().startActivity(intent);
-                    getActivity().finish();
-                }
-                Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
+                MyWebSocket.OK = false;
+                MyWebSocket.myWebSocket = null;
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("phone", "");
+                editor.putString("identity", "");
+                editor.clear();
+                editor.commit();
+                MainActivity.user = null;
+                Intent intent = new Intent(getActivity(), Login_activity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
             }
         });
 
@@ -157,10 +155,12 @@ public class UserFragment extends Fragment {
                             if(ide.equals("S")){
                                 StudentData student = new StudentData();
                                 student.getStudent(new JSONObject(info));
+                                student.SetUser(getContext());
                                 MainActivity.user = student;
                             }else {
                                 TeacherData teacher = new TeacherData();
                                 teacher.getTeacher(new JSONObject(info));
+                                teacher.SetUser(getContext());
                                 MainActivity.user = teacher;
                             }
                             isConnected = true;
