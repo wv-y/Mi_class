@@ -54,7 +54,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user, container, false);
-        sp = getActivity().getSharedPreferences("user_login_info", MODE_PRIVATE);
+        sp = getContext().getSharedPreferences("user_login_info", Context.MODE_PRIVATE);
         initView(view);
         setHasOptionsMenu(true);
         isConnected = MainActivity.user != null;
@@ -125,7 +125,6 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(isConnected){
-                    sp = getActivity().getSharedPreferences("user_login_info", MODE_PRIVATE);
                     MyWebSocket.OK = false;
                     MyWebSocket.myWebSocket = null;
                     SharedPreferences.Editor editor = sp.edit();
@@ -164,6 +163,7 @@ public class UserFragment extends Fragment {
                                 teacher.getTeacher(new JSONObject(info));
                                 MainActivity.user = teacher;
                             }
+                            isConnected = true;
                         }
                         catch (JSONException e){
                             Toast.makeText(getContext(),"用户解析错误",Toast.LENGTH_SHORT).show();
@@ -175,7 +175,6 @@ public class UserFragment extends Fragment {
     }
 
     private void initData(){
-        sp = getContext().getSharedPreferences("user_login_info",MODE_PRIVATE);
         final Map<String, String> map = new HashMap<>();
         map.put("user_phone", sp.getString("phone",""));
         new Thread(new Runnable() {
@@ -196,7 +195,7 @@ public class UserFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        initData();
+        if(!isConnected)initData();
     }
 
 

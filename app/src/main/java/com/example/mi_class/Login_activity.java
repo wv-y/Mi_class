@@ -44,7 +44,6 @@ public class Login_activity extends AppCompatActivity {
     private Button back;
     private HashMap<String, String> params;
     private Handler handler;
-
     private boolean is_show_password = true;// 输入框密码是否是隐藏的，默认为true
 
     @Override
